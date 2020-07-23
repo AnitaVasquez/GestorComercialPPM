@@ -1,0 +1,171 @@
+﻿@using System.Web.Optimization
+@using WebHelpers.Mvc5.Enum
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>
+        @if (!string.IsNullOrWhiteSpace(ViewBag.Title))
+        {
+            @ViewBag.Title@: -
+        }
+        Gestión PPM
+    </title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    @Styles.Render("~/Bundles/css")
+
+    <link href="@Url.Content("~/Content/themes/wui/AwesomeMvc.css?v=107")" rel="stylesheet" type="text/css" id="aweStyle" />
+
+    <link href="~/Content/MvcGrid/mvc-grid.css" rel="stylesheet">
+    <link href="~/Content/css/animsition.min.css" rel="stylesheet" />
+
+    @* Tipo de letra para remplazar ubuntu font *@
+    <link href="https://fonts.googleapis.com/css?family=Blinker&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://printjs-4de6.kxcdn.com/print.min.css">
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <link href="~/Content/css/toastr.min.css" rel="stylesheet" />
+
+    <link href="~/Content/css/Loader.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/css/select2.min.css">
+
+    <script language="JavaScript" type="text/javascript" src="~/Scripts/jquery-3.3.1.min.js"></script>
+
+    <link href="~/Content/css/EstilosPPM.css" rel="stylesheet" />
+
+    <script src="~/Scripts/Highcharts-4.0.1/js/highcharts.js"></script>
+    @*<script src="~/Scripts/Highcharts-4.0.1/js/modules/canvas-tools.js"></script>*@
+    <script src="~/Scripts/Highcharts-4.0.1/js/modules/exporting.js"></script>
+    <script src="~/Scripts/Highcharts-4.0.1/js/modules/drilldown.js"></script>
+     
+    <script type="text/javascript" src="~/Scripts/jquery.mask.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery.mask.min.js"></script>
+      
+</head>
+<body class="hold-transition skin-blue fixed sidebar-mini ">
+    <div class="wrapper">
+        @Html.Partial("_Header")
+        @Html.Partial("_Sidebar")
+
+        <div class="content-wrapper">
+            @*<section class="content-header">
+                    <h1>
+                        @ViewBag.Title
+                        <small>@ViewBag.Description</small>
+                    </h1>
+                </section>*@
+
+            <section class="content">
+                <div id="preloader"></div>
+                @RenderBody()
+            </section>
+        </div>
+
+        <footer class="main-footer">
+            <!-- To the right -->
+            <div class="pull-right hidden-xs">
+                @*Guipuzcoa E14-46 y Mallorca, Edificio QPH, Quito - Ecuador*@
+                <strong>Versión 1.0.0</strong>
+            </div>
+            <!-- Default to the left -->
+            <strong>Copyright &copy; @DateTime.Now.Year <a href="https://www.ppm.com.ec" target="_blank">PPM</a>.</strong> Todos los derechos reservados.
+        </footer>
+
+        @Html.Partial("_ControlSidebar")
+    </div>
+
+    @Html.Partial("_Exportar")
+    @Html.Partial("_Parcial")
+    @Html.Partial("_CargaMasiva", new List<GestionPPM.Entidades.Modelo.CargaMasiva>())
+    @Html.Partial("_Help")
+    @Html.Partial("_ParcialComentario")
+
+
+    <script src="@RouteJs.RouteJsHandler.HandlerUrl"></script>
+    <script src="@EnumHandler.HandlerUrl"></script>
+
+
+    @Scripts.Render("~/Bundles/js")
+
+    @RenderSection("drag", required: false)
+
+    <script src="~/Content/js/toastr.min.js"></script>
+    <script src="~/Content/js/animsition.min.js"></script>
+
+    <!--Script de funcionalidades del Grid -->
+    <script src="~/Scripts/MvcGrid/mvc-grid.js"></script>
+
+    <!--Efectos de las transiciones cuando se cargan las paginas, existen redireccionamientos y se carga data-->
+    <script src="~/Content/js/EfectosTransicionesCargas.js"></script>
+
+    <!--Traducción de textos del grid -->
+    <script src="~/Content/js/TranslateMVCGrid.js"></script>
+
+    <script src="~/Content/js/FuncionesBasicasGrid.js"></script>
+
+
+    <script type="text/javascript" src="~/Scripts/jquery.mask.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery.mask.min.js"></script>
+
+
+    <script src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
+
+    <!--Initialize MVC.Grid instances after rendering grid html -->
+    <script>
+        [].forEach.call(document.getElementsByClassName('mvc-grid'), function (element) {
+            new MvcGrid(element);
+        });
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.full.min.js"></script>
+
+    <script src="~/Content/js/AccionesAjax.js"></script>
+    <script src="~/Scripts/jquery.tabletojson.min.js"></script>
+
+    <script src="~/Scripts/jquery.blockUI.js"></script>
+
+    @*call init after utils.js and validate.js*@
+    @Html.Awe().Init()
+
+    <script>
+        $(document).ready(function () {
+            $('a[href="https://www.aspnetawesome.com"]').remove();
+            $(".o-cptn").text("Seleccione una opción.");
+            $(".o-empt").text("No existen elementos.");
+        })
+
+        $(window).on('load', function () {
+            $("#preloader").fadeOut();
+            $("#preloader").delay(400).fadeOut("slow");
+            //$('#preloader').fadeOut('slow', function () {
+            //    $(this).remove();
+
+            //});
+        });
+
+        $(".textarea").wysihtml5();
+        $("body").on('DOMSubtreeModified', "#main-Modal", function (e) { 
+            $("#archivos-adjuntos-cotizaciones .tree-hit").hide();
+            $("#archivos-adjuntos-actas .tree-hit").hide();
+            $("#archivos-adjuntos-solicitud .tree-hit").hide();
+            $("#brandingLogo").hide();
+        });
+
+    </script>
+
+    <script src="~/Content/js/FuncionesGenericas.js"></script>
+
+
+    @RenderSection("ViewSpecificJavascript", required: false)
+
+    @RenderSection("SeccionScriptMultiSelect", required: false)
+
+    @RenderSection("SeccionScriptAutocomplete", required: false)
+
+</body>
+</html>

@@ -1,0 +1,153 @@
+﻿@using GestionPPM.Entidades.Metodos
+
+
+<script>
+    var urlAccionSeleccionGuardar = '@Url.Action("_Create", "Acta")';
+
+    $(document).ready(function () {
+        $("#seccion-titulo-modal").text('@Html.Raw(ViewBag.TituloModal)');
+    });
+
+    $("#seleccion-acta").click(function () {
+        debugger
+        var flag = validarCamposRequeridos("form-seleccionActa");
+        if (flag)
+            seleccionarActa();
+        else
+            toastr.error('@Mensajes.MensajeDatosObligatorios')
+    })
+
+    //Verificar validacion con ID o con texto
+    $("#tipo_acta").on('change', function (e) {
+        debugger
+        var valor = $(e.currentTarget).val();
+        var texto = $(e.currentTarget).find("option:selected").text();
+
+        switch (texto) {
+            case "ACTA DE CLIENTE":
+                $("#seccion-filtros").show();
+                $("#seccion-filtro-cliente").show();
+                break;
+            case "ACTA DE CONTABILIDAD FINANCIERA":
+                $("#seccion-filtros").show();
+                $("#seccion-filtro-cliente").hide();
+                break;
+            case "ACTA DE REUNIÓN":
+            case "ACTA DE CIERRE DE PROYECTOS":
+            case "ACTA DE INICIO DE PROYECTOS":
+                $("#seccion-filtros").hide();
+                break;
+            default:
+                $("#seccion-filtros").hide();
+                break;
+        }
+    })
+
+    $("#id_cliente").on('change',function () {
+        debugger
+        $("#ejecutivo").empty();
+        cargarEjecutivoCliente();
+        var id = getContactosCliente();
+        return false;
+    })
+
+
+    function seleccionarActa() {
+        debugger
+        var tipoActa = $("#tipo_acta").val();
+
+        var idCliente = parseInt($("#id_cliente").val());
+        var fechaInicio = $("#FechaInicio").val();
+        var fechaFin = $("#FechaFin").val();
+        var ejecutivoID = $("#ejecutivo").val();
+
+        location.href = '@Url.Action("Create", "Acta")?tipoActa=' + tipoActa + '&idCliente=' + idCliente + '&fechaInicio=' + fechaInicio + '&fechaFin=' + fechaFin + '&ejecutivoID=' + ejecutivoID;
+    }
+
+    function getContactosCliente() {
+        return $("#id_cliente").val();
+    }
+
+    function cargarEjecutivoCliente() {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetDependientesClienteContactos", "CodigoCotizacion")',
+            dataType: 'json',
+            data: { id: $("#id_cliente").val() },
+            success: function (data) {
+                debugger
+                $("#ejecutivo").empty();
+                // states contains the JSON formatted list
+                // of states passed from the controller
+                $.each(data, function (i, catalogo) {
+                    debugger
+                    $("#ejecutivo").append('<option value="' + catalogo.Value + '">' + catalogo.Text + '</option>');
+                });
+            },
+            error: function (ex) {
+                debugger
+                console.log(ex)
+            }
+        });
+    }
+</script>
+
+<form action="#" id="form-seleccionActa" role="form" data-toggle="validator" method="post" accept-charset="utf-8">
+    <div class="row">
+        <div class="col-md-offset-2 col-md-8">
+            <div class="form-horizontal">
+
+                <div class="form-group">
+                    <label class="etiqueta-seccion control-label col-md-3">Tipo de Acta: <span class="requerido"> *</span></label>
+                    <div class="col-md-7">
+                        @Html.DropDownList("tipo_acta", ActaEntity.ObtenerListadoTiposActas(), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido" })
+                    </div>
+                </div>
+
+                <div id="seccion-filtros" style="display: none;">
+                    <div class="form-group">
+                        <label class="etiqueta-seccion control-label col-md-3">Cliente: <span class="requerido"> *</span></label>
+                        <div class="col-md-9">
+                            @Html.DropDownList("id_cliente", ClienteEntity.ObtenerListadoClientes(), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido", required = "" })
+                        </div>
+                    </div>
+
+                    <div id="seccion-filtro-cliente" style="display: none;">
+                        <div class="form-group">
+                            <label class="etiqueta-seccion control-label col-md-3">Ejecutivo/a: <span class="requerido"> *</span></label>
+                            <div class="col-md-9">
+                                @Html.DropDownList("ejecutivo", new List<SelectListItem>(), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido", required = "" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="etiqueta-seccion control-label col-md-3">Fecha: <span class="requerido"> *</span></label>
+                        <div class="col-md-9">
+                            <div class="input-group input-daterange">
+                                @Html.Editor("FechaInicio", new { htmlAttributes = new { @class = "form-control campo-requerido", @type = "date", id = "FechaInicio", @Value = DateTime.Now.ToString("yyyy-MM-dd") } })
+                                <div class="input-group-addon" title="Hasta." style="cursor: help;"><i class="fa fa-calendar" aria-hidden="true"></i> </div>
+                                @Html.Editor("FechaFin", new { htmlAttributes = new { @class = "form-control campo-requerido", @type = "date", id = "FechaFin", @Value = DateTime.Now.ToString("yyyy-MM-dd") } })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-4 col-md-12">
+                        <input id="seleccion-acta" type="button" value="Seleccionar" class="btn btn-default" />
+                    </div>
+                </div>
+
+
+
+
+
+
+                @*@Html.Editor("FechaFin", new { htmlAttributes = new { @class = "form-control campo-requerido", @type = "date", id = "FechaFin", @Value = @Modelo.FechaFin.ToString("yyyy-MM-dd") } })*@
+
+
+            </div>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,1009 @@
+﻿<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{B93A3695-6A53-4F65-B89D-839F276866DF}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>GestionPPM.Entidades</RootNamespace>
+    <AssemblyName>GestionPPM.Entidades</AssemblyName>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <Use64BitIISExpress />
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Hangfire.Core, Version=1.7.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Hangfire.Core.1.7.6\lib\net46\Hangfire.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Hangfire.SqlServer, Version=1.7.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Hangfire.SqlServer.1.7.6\lib\net45\Hangfire.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Office.Interop.Outlook, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Office.Interop.Outlook.15.0.4797.1003\lib\net20\Microsoft.Office.Interop.Outlook.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.Owin, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.3.0.0\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.3.0.0\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.6.8\lib\net45\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="RestSharp, Version=106.6.10.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.106.6.10\lib\net452\RestSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.IO, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.4.3.0\lib\net462\System.IO.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Net.Http, Version=4.1.1.3, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Net.Http.4.3.4\lib\net46\System.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.4.3.0\lib\net462\System.Runtime.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Security.Cryptography.Algorithms, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Algorithms.4.3.0\lib\net463\System.Security.Cryptography.Algorithms.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Encoding, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Encoding.4.3.0\lib\net46\System.Security.Cryptography.Encoding.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Primitives.4.3.0\lib\net46\System.Security.Cryptography.Primitives.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.X509Certificates, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.X509Certificates.4.3.0\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.7\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.7\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Modelo\GestionPPM.Context.tt">
+      <DependentUpon>GestionPPM.edmx</DependentUpon>
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>GestionPPM.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Modelo\GestionPPM.edmx.diagram">
+      <DependentUpon>GestionPPM.edmx</DependentUpon>
+    </Content>
+    <Content Include="Modelo\GestionPPM.tt">
+      <DependentUpon>GestionPPM.edmx</DependentUpon>
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>GestionPPM.cs</LastGenOutput>
+    </Content>
+    <Content Include="Modelo\PlaceToPay\PlaceToPay.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>PlaceToPay.edmx</DependentUpon>
+      <LastGenOutput>PlaceToPay.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Modelo\PlaceToPay\PlaceToPay.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>PlaceToPay.edmx</DependentUpon>
+      <LastGenOutput>PlaceToPay.cs</LastGenOutput>
+    </Content>
+    <Content Include="obj\Debug\GestionPPM.Entidades.csproj.FileListAbsolute.txt" />
+    <Content Include="obj\Debug\GestionPPM.Entidades.dll" />
+    <Content Include="obj\Debug\GestionPPM.Entidades.pdb" />
+    <Content Include="obj\Debug\TempPE\Modelo.GestionPPM.Context.cs.dll" />
+    <Content Include="obj\Debug\TempPE\Modelo.GestionPPM.cs.dll" />
+    <Content Include="obj\Debug\TempPE\Modelo.GestionPPM.Designer.cs.dll" />
+    <Content Include="obj\Release\GestionPPM.Entidades.csproj.FileListAbsolute.txt" />
+    <Content Include="obj\Release\GestionPPM.Entidades.dll" />
+    <Content Include="obj\Release\GestionPPM.Entidades.pdb" />
+    <Content Include="obj\Release\TempPE\Modelo.GestionPPM.Context.cs.dll" />
+    <Content Include="obj\Release\TempPE\Modelo.GestionPPM.cs.dll" />
+    <Content Include="obj\Release\TempPE\Modelo.GestionPPM.Designer.cs.dll" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Helpers\Tools.cs" />
+    <Compile Include="Metodos\ActaEntity.cs" />
+    <Compile Include="Metodos\AuditoriaEntity.cs" />
+    <Compile Include="Metodos\ANSClienteEntity.cs" />
+    <Compile Include="Metodos\ProductosGestorEntity.cs" />
+    <Compile Include="Metodos\ProductosGeneralGestorEntity.cs" />
+    <Compile Include="Metodos\SolicitudDeReversoEntity.cs" />
+    <Compile Include="Metodos\SublineaNegocioEntity.cs" />
+    <Compile Include="Metodos\LineaNegocioEntity.cs" />
+    <Compile Include="Metodos\ComercioPlaceToPayEntity.cs" />
+    <Compile Include="Metodos\ManejoPermisosEntity.cs" />
+    <Compile Include="Metodos\MatrizPresupuestoEntity.cs" />
+    <Compile Include="Metodos\FacturasComercialEntity.cs" />
+    <Compile Include="Metodos\PrefacturasSAFIEntity.cs" />
+    <Compile Include="Metodos\CodigoProductoEntity.cs" />
+    <Compile Include="Metodos\CostoSublineaNegocioEntity.cs" />
+    <Compile Include="Metodos\BodegaEntity.cs" />
+    <Compile Include="Metodos\OrganigramaEntity.cs" />
+    <Compile Include="Metodos\SAFIEntity.cs" />
+    <Compile Include="Metodos\SolicitudClienteEntity.cs" />
+    <Compile Include="Metodos\NotaCreditoPTOPEntity.cs" />
+    <Compile Include="Metodos\FacturaPTOPEntity.cs" />
+    <Compile Include="Metodos\CargaPTOPEntity.cs" />
+    <Compile Include="Metodos\CatalogoEntity.cs" />
+    <Compile Include="Metodos\ClienteEntity.cs" />
+    <Compile Include="Metodos\CodigoCotizacionEntity.cs" />
+    <Compile Include="Metodos\ComercioEntity.cs" />
+    <Compile Include="Metodos\ContactoClienteEntity.cs" />
+    <Compile Include="Metodos\CotizacionEntity.cs" />
+    <Compile Include="Metodos\GestionContratosComerciosEntity.cs" />
+    <Compile Include="Metodos\MenuEntity.cs" />
+    <Compile Include="Metodos\NotificacionEntity.cs" />
+    <Compile Include="Metodos\PerfilesEntity.cs" />
+    <Compile Include="Metodos\ProyectosAsigandosEntity.cs" />
+    <Compile Include="Metodos\AsignacionEntity.cs" />
+    <Compile Include="Metodos\RolEntity.cs" />
+    <Compile Include="Metodos\ImpuestoEntity.cs" />
+    <Compile Include="Metodos\ParametrosSistemaEntity.cs" />
+    <Compile Include="Metodos\SolicitudClienteExternoEntity.cs" />
+    <Compile Include="Metodos\SolicitudClienteInternoEntity.cs" />
+    <Compile Include="Metodos\TablaPlanesEntity.cs" />
+    <Compile Include="Metodos\TarifarioEntity.cs" />
+    <Compile Include="Metodos\TipoNotificacionEntity.cs" />
+    <Compile Include="Metodos\UsuarioEntity.cs" />
+    <Compile Include="Modelo\AccountViewModels.cs" />
+    <Compile Include="Modelo\Acta.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ActaCompleta.cs" />
+    <Compile Include="Modelo\ActaInfo.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ActaInformacionAdicional.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ActasInfo.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ActasInformacionGeneralInfo.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ActualizacionSAFI.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ActualizarFacturaSAFI.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\AdjuntosSolicitud.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ANSCliente.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\AprobacionCotizacion.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\AsignacionSolicitudes.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\AsignacionSolicitudUsuario.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\AuditLog.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\AutoCompleteUI.cs" />
+    <Compile Include="Modelo\Bodega.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\CabeceraDetalleCotizador_Result.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\CalculoValoresFacturaPTOP.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\CambiarClave.cs" />
+    <Compile Include="Modelo\CamposPersonalizadosSolicitud.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\CodigoActaInfo.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\CodigoProducto.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ComentarioSolicitud.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ComentariosSolicitudInfo.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ConsultarCodigoCotizacion.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ConsultarDatosClienteSAFI.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ConsultarEstructuraOrganigramaByRangoNivel.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ConsultarHijosOrganigramaPorUsuarioID.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ConsultarPrefacturaSAFI.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ConsultarPrefacturaSAFIDetalle.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ConsultarPresupuestoFacturados.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\CostosSublineaNegocioInfo.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\CostoSublineaNegocio.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\DetalleActaAcuerdos.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\DetalleActaCliente.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\DetalleActaCondicionesGenerales.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\DetalleActaContabilidad.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\DetalleActaEntregables.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\DetalleActaParticipantes.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\DetalleActaResponsables.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\DetalleActaTemasTratar.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\DetallesActa.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\DetallesActaParcial.cs" />
+    <Compile Include="Modelo\EstructuraOrganigramaInfo.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\FirmasActaParcial.cs" />
+    <Compile Include="Modelo\HistorialDetalleAsignacionProyectosInfo.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\LineaNegocio.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ListadoANSCliente.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ListadoANSDelCliente.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ListadoBodega.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ListadoCodigosPrefacturar.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ListadoFacturarSAFI.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ListadoPresupuestoPrefacturaSAFI.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ListadoPresupuestosAprobacionEjecutivo.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ListadoPresupuestosFacturar.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ListadoProducto.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ListadoProductosGestor.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\MarcaPortales.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\MatrizPresupuestoInfo.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\MenuRutaAcceso.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\NivelOrganigramaInfo.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\Organigrama.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\OrganigramaInfo.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\OrganigramaParcial.cs" />
+    <Compile Include="Modelo\PlaceToPay\ComercioPlaceToPay.cs">
+      <DependentUpon>PlaceToPay.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\PlaceToPay\ComercioPlaceToPayInfo.cs">
+      <DependentUpon>PlaceToPay.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\PlaceToPay\PlaceToPay.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PlaceToPay.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\PlaceToPay\PlaceToPay.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PlaceToPay.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\PlaceToPay\PlaceToPay.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PlaceToPay.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\PrefacturaSAFIInfo.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\PrefacturasSAFIInfo.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ProdutosGeneralGestor.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ProdutosGestor.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\RespuestaComentario.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ResultadoConsolidacionPrefacturas.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ResultadoConsolidacionPrefacturasDetallado.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ResumenSolicitudesSolicitanteInfo.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\RolMenuPermiso.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\SAFIGeneral.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\SAFIGeneralDetalle.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\SecuencialTipoActa.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\SolicitudClienteExternoInfo.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\SolicitudClienteInternoInfo.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\SolicitudesDeAnulacionFactura.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\SolicitudesDeNotaDeCredito.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\SolicitudesDeReverso.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\Solicitud_Adjuntos.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\Solicitud_Campos_Personalizados.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\Solicitud_Cliente_Usuario.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\Solicitud_Portales.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\Solicitud_Url_Externo.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\AdjutoSolicitudParcial.cs" />
+    <Compile Include="Modelo\SublineaNegocio.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\TipoOrganigrama.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\TrackingAsignacionProyectoInfo.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\UrlExternoParcial.cs" />
+    <Compile Include="Modelo\CargaMasiva.cs" />
+    <Compile Include="Modelo\CargaPTOP.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\CargaPTOPExcel.cs" />
+    <Compile Include="Modelo\Catalogo.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ConsultarCargaPTOP.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\DatosSolicitudCliente.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\Documento.cs" />
+    <Compile Include="Modelo\Cliente.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ClienteExcel.cs" />
+    <Compile Include="Modelo\ClienteInfo.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ClienteLineaNegocio.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ClientesInfo.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\CodigoCotizacion.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\CodigoCotizacionExcel.cs" />
+    <Compile Include="Modelo\CodigoCotizacionGeneradoInfo.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\CodigoCotizacionInfo.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\Comercio.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ComercioExcel.cs" />
+    <Compile Include="Modelo\Contactos.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ContactosClientes.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ContactosClientesInfo.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ContactosCodigoCotizacion.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ContactosInfo.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\Cotizador.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\DatosProyecto.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\DatosProyectoCotizacion.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\DetalleCotizador.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\DetalleProyectosAsignados.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\DetalleUltimoAvance.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\Empresa.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\FacturaPTOPSAFI.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\GeneraCodigoNotaCredito.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\GeneraFactruasPTOPSAFI.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\GestionContratosComercios.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\GestionPPM.Context.cs">
+      <DependentUpon>GestionPPM.Context.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Include="Modelo\GestionPPM.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Include="Modelo\GestionPPM.Designer.cs">
+      <DependentUpon>GestionPPM.edmx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Include="Modelo\GuardarCabeceraCotizador.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\Impuesto.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ListadoAsignacionSolicitudes.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ListadoAvanceProyectosTotal.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ListadoAvanceProyectoUsuario.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ListadoCabeceraCotizadorPDF.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ListadoCabeceraCotizador_Result.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ListadoCargaPTOP.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ListadoCargaPTOPExcel.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ListadoCatalogo.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ListadoCatalogosPadres.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ListadoCliente.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ListadoClienteLineaNegocio.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ListadoClientes.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ListadoClientes_Result.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ListadoCodigoCotizacion_Result.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ListadoComercios.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ListadoContacto.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ListadoContactosClientes_Result.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ListadoContactos_Result.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ListadoDetalleCotizador_Result.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ListadoFacturasPTOPSAFI.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ListadoImpuesto.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ListadoMenu.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ListadoMenu_Result.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ListadoOrdenMenu.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ListadoParametrosSistemas.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ListadoPerfil.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ListadoPerfil_Result.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ListadoProyectos.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ListadoRol.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ListadoRol_Result.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ListadoSubcatalogos.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ListadoSublineaNegocioCodigoCotizacion.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ListadoSublineaNegocioCodigoCotizacion_Result.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ListadoTablaCostos.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ListadoTablaPlanes.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ListadoTarifario_Result.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ListadoTipoNotificaciones.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ListadoUsuarios.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\Menu.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\MultiSelectJQueryUi.cs" />
+    <Compile Include="Modelo\NotaCreditoPTOP.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\Notificaciones.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\NotificacionesCompletasInfo.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ParametrosSistema.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\Perfil.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\PerfilMenu.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ProyectosAsignados.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\RequestData.cs" />
+    <Compile Include="Modelo\Respuesta.cs" />
+    <Compile Include="Modelo\Rol.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\RolPerfil.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\SistemaContable\SCCabecera.cs" />
+    <Compile Include="Modelo\SistemaContable\SCCabeceraRet.cs" />
+    <Compile Include="Modelo\SistemaContable\SCDetalle.cs" />
+    <Compile Include="Modelo\SistemaContable\SCDetalleRet.cs" />
+    <Compile Include="Modelo\SistemaContable\SCMundialMilesRet.cs" />
+    <Compile Include="Modelo\SistemaContable\SCMundialMiles.cs" />
+    <Compile Include="Modelo\SistemaContable\Wrapper.cs" />
+    <Compile Include="Modelo\SistemaContable\WraperNotaCreditoWs.cs" />
+    <Compile Include="Modelo\SolicitudCliente.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\SublineaNegocioCodigoCotizacion.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\SublineaNegocioCodigoCotizacionInfo.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\SublineasNegocioCodigoCotizacionParcial.cs" />
+    <Compile Include="Modelo\CamposPersonalizadosParcial.cs" />
+    <Compile Include="Modelo\TablaPlanes.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\Tarifario.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\TarifarioInfo.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\TipoNotificacion.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\TreeViewJQueryUI.cs" />
+    <Compile Include="Modelo\UrlExternosSolicitud.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\usp_b_catalogo_codigo.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\usp_b_catalogo_codigo_id.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\usp_b_catalogo_codigo_id_Result.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\usp_b_catalogo_codigo_Result.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\usp_b_catalogo_hijos.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\usp_b_catalogo_hijos_Result.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\usp_b_catalogo_id.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\usp_b_catalogo_id_Result.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\usp_b_datos_cotizador.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\usp_b_datos_detalle_cotizador.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\usp_b_datos_detalle_cotizador_Result.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\usp_b_datos_usuario.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\usp_b_lista_catalogo.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\usp_b_lista_catalogo_Result.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\usp_b_lista_menu_Result.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\usp_b_lista_perfil_Result.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\usp_b_lista_rol.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\usp_b_lista_rol_Result.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\usp_b_lista_usuario.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\usp_b_nume_hijo_cata.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\usp_b_opci_menu_usua.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\usp_b_opci_menu_usua_Result.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\usp_b_usuario.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\usp_b_usuario_Result.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\usp_g_cabecera_cotizador.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\usp_g_codigo_documento.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\usp_g_codigo_usuario.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\Usuario.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ProductosGestorCE.cs" />
+    <Compile Include="Modelo\UsuarioCE.cs" />
+    <Compile Include="Modelo\UsuarioRolMenuPermiso.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\WsDocumentoSAFI.cs" />
+    <Compile Include="obj\Debug\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
+    <Compile Include="obj\Debug\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
+    <Compile Include="obj\Debug\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
+    <Compile Include="obj\Release\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
+    <Compile Include="obj\Release\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
+    <Compile Include="obj\Release\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="obj\Debug\CoreCompileInputs.cache" />
+    <Content Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
+    <Content Include="obj\Debug\edmxResourcesToEmbed\Modelo\GestionPPM.csdl" />
+    <Content Include="obj\Debug\edmxResourcesToEmbed\Modelo\GestionPPM.msl" />
+    <Content Include="obj\Debug\edmxResourcesToEmbed\Modelo\GestionPPM.ssdl" />
+    <Content Include="obj\Debug\GestionPPM.Entidades.csproj.CopyComplete" />
+    <Content Include="obj\Debug\GestionPPM.Entidades.csproj.CoreCompileInputs.cache" />
+    <Content Include="obj\Debug\GestionPPM.Entidades.csprojAssemblyReference.cache" />
+    <Content Include="obj\Debug\GestionPPM.Entidades.csprojResolveAssemblyReference.cache" />
+    <Content Include="obj\Release\edmxResourcesToEmbed\Modelo\GestionPPM.csdl" />
+    <Content Include="obj\Release\edmxResourcesToEmbed\Modelo\GestionPPM.msl" />
+    <Content Include="obj\Release\edmxResourcesToEmbed\Modelo\GestionPPM.ssdl" />
+    <Content Include="obj\Release\GestionPPM.Entidades.csproj.CopyComplete" />
+    <Content Include="obj\Release\GestionPPM.Entidades.csproj.CoreCompileInputs.cache" />
+    <Content Include="obj\Release\GestionPPM.Entidades.csprojAssemblyReference.cache" />
+    <EntityDeploy Include="Modelo\PlaceToPay\PlaceToPay.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>PlaceToPay.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Modelo\PlaceToPay\PlaceToPay.edmx.diagram">
+      <DependentUpon>PlaceToPay.edmx</DependentUpon>
+    </Content>
+    <None Include="packages.config" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EntityDeploy Include="Modelo\GestionPPM.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>GestionPPM.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GestionPPM.Repositorios\GestionPPM.Repositorios.csproj">
+      <Project>{193a62d3-c112-419e-a34c-3ba2f9d91101}</Project>
+      <Name>GestionPPM.Repositorios</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="bin\" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>53018</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:53018/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.0\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,196 @@
+﻿@model GestionPPM.Entidades.Modelo.TablaPlanes
+
+@{
+    ViewBag.Title = "Editar Tabla Costos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@* Formato para el template de datos *@
+<link href="~/Content/css/personalizar.css" rel="stylesheet" />
+
+<link rel="stylesheet" type="text/css" href="~/Content/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="~/Content/themes/icon.css">
+<link rel="stylesheet" type="text/css" href="~/Content/css/demo.css">
+
+<script type="text/javascript" src="~/Scripts/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.min.js"></script>
+
+   
+<style>
+    .alinear-derecha {
+        text-align: left;
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+
+    var slt = document.getElementById('cobro_porcentaje');
+    var valor = slt.options[slt.selectedIndex].value;
+
+    debugger;
+
+        if (valor == 'False') {
+            $('#tipo_descuento').text('US$');
+        }
+
+    });
+</script>
+
+
+<form action="#" id="form-planes" role="form" data-toggle="validator" method="post" accept-charset="utf-8">
+
+
+    <div class="row">
+        <div class="col-md-offset-2 col-md-8">
+            <div class="panel">
+
+                <div class="panel-heading-create custom-header-panel">
+                    <h4>@Etiquetas.TituloPanelEdicionTablaPlan</h4>
+                </div>
+
+                <div class="panel-body">
+                    <div class="form-horizontal">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        @Html.HiddenFor(model => model.id_plan)
+                        @Html.HiddenFor(model => model.estado)
+
+                        <div class="form-group">
+                            @*@Html.LabelFor(model => model.tipo_planes, htmlAttributes: new { @class = "control-label col-md-2" })*@
+                            <label class="control-label col-md-3">Nombre Plan:<span class="requerido">*</span></label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.nombre_plan, new { htmlAttributes = new { @class = "form-control campo-requerido", maxlength = 150, required = "" } })
+                                @Html.ValidationMessageFor(model => model.nombre_plan, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Tipo Cobro:<span class="requerido">*</span></label>
+                            <div class="col-md-8">
+                                <div>
+                                    @Html.DropDownList("cobro_porcentaje", new SelectList(new List<SelectListItem> { new SelectListItem { Text = "Porcentaje", Value = "True"},
+new SelectListItem { Text = "Valor", Value = "False" },}, "Value", "Text", null), new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.cobro_porcentaje, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Transacciones Mínimas:<span class="requerido">*</span></label>
+                            <div class="input-group" style="padding-left:15px">
+                                <span class="input-group-addon"> N # </span>
+                                <input id="transaccion_minima" name="transaccion_minima" class="transaccion_minima easyui-numberbox campo-requerido" style="height:35px; padding:10px;" required="" value="@ViewBag.TransaccionMinima" data-options="max:9999999999, precision:0, groupSeparator:'.', decimalSeparator:','">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Transacciones Máximas:<span class="requerido">*</span></label>
+                            <div class="input-group" style="padding-left:15px">
+                                <span class="input-group-addon">N #</span>
+                                <input id="transaccion_maxima" name="transaccion_maxima" class="valor_planes easyui-numberbox campo-requerido" style="height:35px; padding:10px;" required="" value="@ViewBag.TransaccionMaxima" data-options="max:9999999999, precision:0, groupSeparator:'.', decimalSeparator:','">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Valor Mínimo:<span class="requerido">*</span></label>
+                            <div class="input-group" style="padding-left:15px">
+                                <span class="input-group-addon">US$</span>
+                                <input id="valor_minimo" name="valor_minimo" class="valor_minimo easyui-numberbox campo-requerido" style="height:35px; padding:10px;" required="" value="@ViewBag.ValorMinimo" data-options="max:9999999999.99, precision:2, groupSeparator:'.', decimalSeparator:','">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Valor Máximo:<span class="requerido">*</span></label>
+                            <div class="input-group" style="padding-left:15px">
+                                <span class="input-group-addon">US$</span>
+                                <input id="valor_maximo" name="valor_maximo" class="valor_maximo easyui-numberbox campo-requerido" style="height:35px; padding:10px;" required="" value="@ViewBag.VamorMaximo" data-options="max:9999999999.99, precision:2, groupSeparator:'.', decimalSeparator:','">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Costo Transacción:<span class="requerido">*</span></label>
+                            <div class="input-group" style="padding-left:15px">
+                                <span id="tipo_descuento" class="input-group-addon">&nbsp;&nbsp;&nbsp;%&nbsp;&nbsp;</span>
+                                <input id="costo_x_transaccion" name="costo_x_transaccion" class="costo_x_transaccion easyui-numberbox campo-requerido" style="height:35px; padding:10px;" required="" value="@ViewBag.CostoTransaccion" data-options="max:9999999999.99, precision:2, groupSeparator:'.', decimalSeparator:','">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Cargo Fijo:<span class="requerido">*</span></label>
+                            <div class="input-group" style="padding-left:15px">
+                                <span class="input-group-addon">US$</span>
+                                <input id="valor_fijo" name="valor_fijo" class="valor_fijo easyui-numberbox campo-requerido" style="height:35px; padding:10px;" required="" value="@ViewBag.CargoFijo" data-options="max:9999999999.99, precision:2, groupSeparator:'.', decimalSeparator:','">
+                            </div>
+                        </div>
+
+                        <br />
+
+                        <div class="form-group">
+                            <div class="col-md-offset-4 col-md-12">
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <input type="button" id="editar" value="Guardar" class="btn btn-default" />
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                @Html.ActionLink("Regresar", "Index", null, new { @class = "btn btn-default" })
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>
+
+@section ViewSpecificJavascript {
+     
+    <script>
+        var urlAccionEditar = '@Url.Action("Edit","TablaPlanes")';
+        var urlAccionListado = '@Url.Action("Index", "TablaPlanes")';
+
+        //Dropdownlist Selectedchange event
+        $("#cobro_porcentaje").change(function () {
+            debugger
+
+            var slt = document.getElementById('cobro_porcentaje');
+            var valor = slt.options[slt.selectedIndex].value;
+            var sp = "&nbsp;"
+
+            if (valor == 'True') {
+                $('#tipo_descuento').text('%');
+            } else {
+                $('#tipo_descuento').text('US$');
+            }
+        })
+           
+        $("#editar").click(function () {
+            debugger
+            var flag = true;
+            // your code here (But not asynchronous code such as Ajax because it does not wait for response and move to next line.)
+            $('#form-planes .campo-requerido').each(function (index, value) {
+                //debugger
+                if ((($(this).val() == "" || $(this).val() === null) && $(this).is(":visible"))) {
+                    //console.log('Please fill all the fields');
+                    flag = false;
+                }
+            });
+            if (flag) { 
+                    guardar();  
+            } else {
+                toastr.error('@Mensajes.MensajeDatosObligatorios')
+            }
+        })
+
+        function guardar() {
+            debugger  
+
+            var data_form = JSON.stringify({ "planes": $('#form-planes').serializeObject() })
+            _Guardar(data_form, urlAccionEditar, urlAccionListado)
+             
+        } 
+         
+    </script>
+}
+
+
+

@@ -1,0 +1,45 @@
+﻿@{
+
+    ViewBag.Title = "Manual de Usuario";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/Content/css/personalizar.css" rel="stylesheet" />
+
+<div class="panel panel-default" style="background-color: #FBF6F3 !important;">
+    <div class="panel-heading custom-header-panel">
+        <h3 class="panel-title roboto" style="color:#ffffff;">Manual de Usuario</h3>
+    </div>
+
+    <div class="panel-body">
+        <div class="embed-container">
+
+            <iframe id="MostrarHelpUsuario" src="@(ViewBag.Iframe)#view=FitH" allowfullscreen></iframe>
+        </div>
+    </div>
+</div>
+
+<style>
+    .embed-container {
+        margin: auto;
+        height: 50%;
+        margin-bottom: 10px;
+        overflow: hidden;
+        overflow-x: auto;
+        overflow-y: auto;
+        padding-bottom: 30.25%;
+        padding-top: 10px;
+        position: relative;
+    }
+
+        .embed-container iframe,
+        .embed-container object,
+        .embed-container embed {
+            height: 100% !important;
+            left: 0;
+            position: absolute;
+            top: 0;
+            width: 100% !important;
+            bottom: 0;
+            right: 0;
+        }
+</style>

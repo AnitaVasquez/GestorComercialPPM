@@ -1,0 +1,205 @@
+﻿@{
+    ViewBag.Title = "Prefacturas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@* Formato para el template de datos *@
+<link href="~/Content/css/personalizar.css" rel="stylesheet" />
+<style>
+    .checkbox input[type="checkbox"] {
+        opacity: 0;
+    }
+
+    .checkbox label {
+        position: relative;
+        display: inline-block;
+        /*16px width of fake checkbox + 6px distance between fake checkbox and text*/
+        padding-left: 22px;
+    }
+
+        .checkbox label::before,
+        .checkbox label::after {
+            position: absolute;
+            content: "";
+            /*Needed for the line-height to take effect*/
+            display: inline-block;
+        }
+
+        /*Outer box of the fake checkbox*/
+        .checkbox label::before {
+            height: 16px;
+            width: 16px;
+            border: 1px solid;
+            left: 0px;
+            /*(24px line-height - 16px height of fake checkbox) / 2 - 1px for the border
+     *to vertically center it.
+     */
+            top: 3px;
+        }
+
+        /*Checkmark of the fake checkbox*/
+        .checkbox label::after {
+            height: 5px;
+            width: 9px;
+            border-left: 2px solid;
+            border-bottom: 2px solid;
+            transform: rotate(-45deg);
+            left: 4px;
+            top: 7px;
+        }
+
+    /*Hide the checkmark by default*/
+    .checkbox input[type="checkbox"] + label::after {
+        content: none;
+    }
+
+    /*Unhide on the checked state*/
+    .checkbox input[type="checkbox"]:checked + label::after {
+        content: "";
+    }
+
+    /*Adding focus styles on the outer-box of the fake checkbox*/
+    .checkbox input[type="checkbox"]:focus + label::before {
+        outline: rgb(59, 153, 252) auto 5px;
+    }
+</style>
+
+@*<div class="checkbox">
+        <input type="checkbox" id="uno">
+        <label for="uno"></label>
+    </div>*@
+
+@Html.AjaxGrid(Url.Action("IndexGrid"))
+
+@section ViewSpecificJavascript {
+    <script>
+        debugger
+        var idGrid = "grid-DocumentoSAFI";
+        var urlAccionReporteExcel = '@Url.Action("DescargarReporteFormatoExcel", "AprobarPresupuesto")';
+        var urlAccionReportePDF = '@Url.Action("DescargarReporteFormatoPDF", "AprobarPresupuesto")';
+        var urlAccionReporteCSV = '@Url.Action("DescargarReporteFormatoCSV", "AprobarPresupuesto")';
+
+        var urlAccionImpresionMasiva = '@Url.Action("GeneracionPrefactura", "AprobarPresupuesto")';
+        var urlAccionDescarga = '@Url.Action("DescargarArchivo", "AprobarPresupuesto")';
+
+        var urlAccionAprobacionMasiva = '@Url.Action("AprobacionFinalPrefactura", "AprobarPresupuesto")'; 
+
+        var elementosSeleccionadosGrid = [];
+
+        $(document).ready(function () {
+            debugger
+            //DeshabilitarAccionExportarPDF();
+            //DeshabilitarAccionExportarCSV();
+        })
+
+        $(document).click(function (e) {
+            debugger
+            var elemento = $(e.currentTarget.activeElement)[0];
+            if (elemento.id === 'recargar') {
+                debugger
+                recargarGridByID(idGrid);
+
+                // Limpiar Selecciones
+                $("#seleccionar-todo").prop('checked', false);
+                elementosSeleccionadosGrid = [];
+            }
+
+            if (elemento.id === 'nuevo') {
+                debugger
+                return;
+            }
+
+            if (elemento.id === '') {
+
+            }
+
+            if (elemento.id === 'ExportarGridExcel') {
+                debugger
+                location.href = urlAccionReporteExcel;
+
+            }
+            if (elemento.id === 'ExportarGridPDF') {
+                debugger
+                reporteGridPDF(urlAccionReportePDF);
+            }
+            if (elemento.id === 'ExportarGridCSV') {
+                debugger
+                location.href = urlAccionReporteCSV;
+            }
+
+            if (elemento.id === 'aprobar-seleccion') {
+                debugger
+                console.log(elementosSeleccionadosGrid.toString())
+                if (elementosSeleccionadosGrid.length === 0) {
+                    toastr.error("Seleccione al menos un presupuesto para aprobar")
+                } else {
+                    let elementos = elementosSeleccionadosGrid.toString();
+                    _GuardarGenerico(JSON.stringify({ listadoIDs: elementos, ajax: true }), urlAccionAprobacionMasiva)
+                }
+            } 
+             
+            if (elemento.id === 'impresion-masiva') {
+                debugger
+                console.log(elementosSeleccionadosGrid.toString())
+                if (elementosSeleccionadosGrid.length === 0) {
+                    toastr.error("Seleccione al menos un presupuesto para imprimir")
+                } else {
+                    let elementos = elementosSeleccionadosGrid.toString();
+                    DescargarArchivosGeneral({ listadoIDs: elementos }, urlAccionImpresionMasiva, urlAccionDescarga)
+                }
+            }
+
+            if (elemento.id === 'seleccionar-todo') {
+                debugger
+                var chk = e.target;
+                let currentArray = elementosSeleccionadosGrid;
+                if (chk.checked) {
+                    $(".seleccion-item").prop('checked', true);
+                    let items = GetElementosSeleccionadosGrid("seleccion-item");
+                    elementosSeleccionadosGrid = AgregarMultiplesElementosArreglo(currentArray, items);
+                } else {
+                    elementosSeleccionadosGrid = EliminarMultiplesElementosArreglo(currentArray, GetElementosSeleccionadosGrid("seleccion-item"))
+                    $(".seleccion-item").prop('checked', false);
+                }
+            }
+
+            if (elemento.className === 'seleccion-item') {
+                debugger
+                $("#seleccionar-todo").prop('checked', false);
+
+                var chk = e.target;
+                var id = parseInt($(e.target).attr("id"));
+                if (chk.checked) {
+                    //elementosSeleccionadosGrid.push(id)
+                    elementosSeleccionadosGrid = AgregarElementoArreglo(elementosSeleccionadosGrid, id);
+                    //console.log(id)
+                    //elementosSeleccionadosGrid.push()
+                } else {
+                    elementosSeleccionadosGrid = EliminarElementoArreglo(elementosSeleccionadosGrid, id);
+                    //console.log(id)
+                } 
+            }
+
+            if (elemento.id === 'Ayuda') {
+
+                $('#help-modal').modal({
+                    'show': 'true',
+                    'backdrop': 'static',
+                    'keyboard': false
+                })
+            }
+        });
+
+        $(document).keydown(callBackBusqueda);
+        $(document).keypress(callBackBusqueda);
+        $(document).keyup(callBackBusqueda);
+
+        function callBackBusqueda(e) {
+            debugger
+            var elemento = $(e.currentTarget.activeElement)[0];
+            //Validar que los Grids tengan filtros de búsqueda
+            var filtrosBusqueda = document.getElementById('GridSearch');
+            busquedaGrid(idGrid);
+        }
+    </script>
+} 

@@ -1,0 +1,50 @@
+﻿@-moz-document url-prefix() {
+    input[type="date"] {
+        padding-top: 0px;
+    }
+}
+
+@supports (-moz-appearance:none) {
+    input[type="date"] {
+        padding-top: 0px;
+    }
+}
+
+/* custom background for panel  */
+.container {
+    padding-top: 50px !important;
+    background-color: #bf2a2a !important;
+}
+
+/* custom background header panel */
+.custom-header-panel {
+    background-color: #3c4252 !important;
+    border-color: #3c4252 !important;
+    color: white;
+}
+
+.no-margin-form-group {
+    margin: 0 !important;
+}
+
+.requerido {
+    color: red;
+}
+
+.panel-heading-create {
+    padding: 1px 15px;
+    border-bottom: 1px solid transparent;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px
+}
+
+.btn-orange-md {
+    background: #FF791F !important;
+    border-bottom: 3px solid #ae4d13 !important;
+    color: white;
+}
+
+    .btn-orange-md:hover {
+        background: #d86016 !important;
+        color: white !important;
+    }

@@ -1,0 +1,165 @@
+﻿@model GestionPPM.Entidades.Modelo.SolicitudClienteInternoInfo
+
+<link rel="stylesheet" type="text/css" href="~/Content/themes/default/tree.css">
+<link href="~/Content/themes/default/menu.css" rel="stylesheet" />
+
+<script type="text/javascript" src="~/Scripts/jquery.easyui.min.js"></script>
+
+<script>
+    var urlAccionCargarData = '@Url.Action("AdjuntarArchivoSolicitud", "SolicitudesClienteInterno", new { idSolicitud = Model.id_solicitud })';
+    var urlAccionEliminarArchivoAdjunto = '@Url.Action("EliminarArchivoSolicitud", "SolicitudesClienteInterno")';
+
+    $(document).ready(function () {
+        $("#seccion-titulo-modal").text('@Html.Raw(ViewBag.TituloModal)');
+        $("#texto-adjuntos-vacio").text('@Html.Raw(ViewBag.AdjuntosVacio)');
+    });
+
+    function myLoadFilter(data, parent) {
+            debugger
+			var state = $.data(this, 'tree');
+
+            function setData() {
+                debugger
+		    	var serno = 1;
+		        var todo = [];
+		        for(var i=0; i<data.length; i++){
+		            todo.push(data[i]);
+		        }
+		        while(todo.length){
+		            var node = todo.shift();
+		            if (node.id == undefined){
+		            	node.id = '_node_' + (serno++);
+		            }
+		            if (node.children){
+		                node.state = 'closed';
+		                node.children1 = node.children;
+		                node.children = undefined;
+		                todo = todo.concat(node.children1);
+		            }
+		        }
+		        state.tdata = data;
+		    }
+            function find(id) {
+                debugger
+		    	var data = state.tdata;
+		    	var cc = [data];
+		    	while(cc.length){
+		    		var c = cc.shift();
+		    		for(var i=0; i<c.length; i++){
+		    			var node = c[i];
+		    			if (node.id == id){
+		    				return node;
+		    			} else if (node.children1){
+		    				cc.push(node.children1);
+		    			}
+		    		}
+		    	}
+		    	return null;
+		    }
+
+		    setData();
+
+		    var t = $(this);
+		    var opts = t.tree('options');
+		    opts.onBeforeExpand = function(node){
+	    		var n = find(node.id);
+	    		if (n.children && n.children.length){return}
+		    	if (n.children1){
+		    		var filter = opts.loadFilter;
+		    		opts.loadFilter = function(data){return data;};
+		    		t.tree('append',{
+		    			parent:node.target,
+		    			data:n.children1
+		    		});
+		    		opts.loadFilter = filter;
+		    		n.children = n.children1;
+		    	}
+		    };
+
+        debugger
+        if (data.length == 0)
+            $("#seccion-adjuntos-vacio").show();
+
+        return data;
+    }
+    
+    $('#file-upload').change(function () {
+        var nombreArchivo = $('#file-upload')[0].files[0].name;
+        $('.custom-file-upload').text(nombreArchivo);
+    });
+
+        $('#adjuntar-archivo').click(function () {
+            debugger
+            var archivo = $("#file-upload").get(0);
+
+            if (archivo.files.length === 0) {
+                console.log("No se seleccionaron archivos.");
+                return;
+            }
+            AdjuntarArchivo(archivo, urlAccionCargarData, "seccion-archivos-adjuntos", "archivos-solicitud-interna");
+        });
+
+    function descargarArchivoAdjunto() {
+        debugger
+        var node = $('#archivos-solicitud-interna').tree('getSelected');
+        var rutaArchivo = node.desc;
+        var esCarpeta = node.esCarpeta;
+        if (!esCarpeta)
+            location.href = '@Url.Action("DescargarArchivoAdjunto", "SolicitudesClienteInterno")?path=' + rutaArchivo;
+        else
+            toastr.warning("Solo puede descargar archivos.");
+    }
+
+    function eliminarArchivoAdjunto() {
+        debugger
+        var node = $('#archivos-solicitud-interna').tree('getSelected');
+        console.log(node)
+
+        var rutaArchivo = node.desc;
+
+        EliminarArchivoAdjunto(rutaArchivo, urlAccionEliminarArchivoAdjunto, "seccion-archivos-adjuntos", "archivos-solicitud-interna");
+
+        $('#archivos-solicitud-interna').tree('remove', node.target);
+    }
+
+
+</script>
+
+
+<div class="row">
+    <div class="col-sm-9">
+        @*<input style="width: 100%; background-color:#00AD8E;border-color: #00AD8E;" class="btn btn-primary" type="file" name="uploadFile" value="Examinar" />*@
+        <label title="Cargar archivo" for="file-upload" class="custom-file-upload">
+            <i class="fa fa-cloud-upload"></i> Seleccionar Archivo
+        </label>
+        <input id="file-upload" type="file" @*accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"*@ />
+    </div>
+    <div class="col-sm-3">
+        <input style="width: 100%; background-color:#00AD8E;border-color: #00AD8E;" class="btn btn-primary" type="submit" id="adjuntar-archivo" value="Adjuntar" />
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <div id="progressbar-5">
+            <div class="progress-label">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="seccion-archivos-adjuntos" class="easyui-panel" style="padding:5px;">
+    <ul id="archivos-solicitud-interna" class="easyui-tree" data-options="url:'@Url.Action("_GetArchivosAdjuntos", "SolicitudesClienteInterno", new { id =  Model.id_solicitud })',method:'get',loadFilter:myLoadFilter,animate:true,onContextMenu: function(e,node){
+                    e.preventDefault();
+                    $(this).tree('select',node.target);
+                    $('#menu-archivo').menu('show',{
+                        left: e.pageX,
+                        top: e.pageY
+                    });
+                }"></ul>
+</div>
+
+<div id="menu-archivo" class="easyui-menu" style="width:120px;">
+    <div onclick="descargarArchivoAdjunto()" data-options="iconCls:'glyphicon glyphicon-floppy-save'">Descargar</div>
+    <div onclick="eliminarArchivoAdjunto()" data-options="iconCls:'glyphicon glyphicon-trash'">Eliminar</div>
+</div>
+

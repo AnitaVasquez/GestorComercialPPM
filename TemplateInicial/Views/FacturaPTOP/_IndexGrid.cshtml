@@ -1,0 +1,33 @@
+﻿@model IEnumerable<GestionPPM.Entidades.Modelo.ListadoFacturasPTOPSAFI>
+@{
+    var acciones = (List<string>)ViewBag.AccionesUsuario;
+}
+
+@(Html
+            .Grid(Model)
+            .Build(columns =>
+            {
+                columns.Add(model => model.ID).Titled("Id");
+                columns.Add(model => model.Cliente).Titled("Cliente");
+                columns.Add(model => model.Identificacion).Titled("Identificación");
+                columns.Add(model => model.anio).Titled("Año");
+                columns.Add(model => model.mes).Titled("Mes");
+                columns.Add(model => model.detalle).Titled("Detalle");
+                columns.Add(model => model.subtotal).Titled("Subtotal");
+                columns.Add(model => model.fecha_factura).Titled("Fecha Factura");
+                columns.Add(model => model.numero_factura).Titled("# Factura");
+                columns.Add(model => model.numero_nota_credito).Titled("# Nota Crédito");
+                columns.Add(model => model.EstadoFactura).Titled("Estado Factura");
+                columns.Add(model => model.FacturadoSAFI).Titled("Facturado SAFI");
+                columns.Add(model => "<a data-backdrop='static' data-toggle='modal' data-target='#contenido-modal' onclick='_GetCreate({id:" + model.ID + "},\"" + @Url.Action("_RegistrarFactura", "FacturaPTOP") + "\");' style='cursor: pointer;background-color:#00AD8E;border-color:#00AD8E; display:" + (model.FacturadoSAFI.ToUpper().Contains("NO") || Auxiliares.GestionBontonesGrid(acciones, "ACCIONES-SIST-01-REGI-FACT-SAFI").Equals("ocultar-accion-catalogo") ? "block" : "none") + ";' class='btn btn-danger " + Auxiliares.GestionBontonesGrid(acciones, "ACCIONES-SIST-01-REGI-FACT-SAFI") + "' id='eliminar' data-id=\"" + model.ID + "\"><i class='glyphicon glyphicon-file' aria-hidden='true'></i></a>" +
+                 " <a data-backdrop='static' data-toggle='modal' data-target='#contenido-modal' onclick='_GetCreate({id:" + model.ID + "},\"" + @Url.Action("_AnularDocumento", "FacturaPTOP") + "\");' style='cursor: pointer;background-color:#FF5E00;border-color:#FF5E00; display:" + (((model.FacturadoSAFI.ToUpper().Contains("SI") && model.numero_nota_credito.Contains("00") && model.EstadoFactura.ToUpper().Contains("ANULADO")) || (model.FacturadoSAFI.ToUpper().Contains("SI") && model.numero_nota_credito.Contains("") && model.EstadoFactura.ToUpper().Contains("ACTIVO"))) && Auxiliares.GestionBontonesGrid(acciones, "ACCIONES-SIST-01-ANU-FACT-SAFI").Equals("ocultar-accion-catalogo") ? "none" : "block") + ";' class='btn btn-danger " + Auxiliares.GestionBontonesGrid(acciones, "ACCIONES-SIST-01-ANU-FACT-SAFI") + "' id='anular-factura' data-id=\"" + model.ID + "\"><i class='glyphicon glyphicon-remove' aria-hidden='true'></i></a>").Encoded(false);
+            })
+            .Empty(Mensajes.MensajeNoDataListado)
+            .Id("grid-FacturaPTOP")
+            .Pageable(pager =>
+            {
+                pager.PagesToDisplay = 5;
+                pager.RowsPerPage = 10;
+            })
+            .Filterable()
+            .Sortable())

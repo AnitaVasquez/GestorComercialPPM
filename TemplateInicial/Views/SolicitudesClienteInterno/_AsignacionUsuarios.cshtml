@@ -1,0 +1,74 @@
+﻿@using GestionPPM.Entidades.Modelo
+@using GestionPPM.Entidades.Metodos
+
+@{
+    var Usuarios = (string)ViewBag.Modelo;
+}
+@* Formato para el template de datos *@
+<link href="~/Content/css/personalizar.css" rel="stylesheet" />
+
+<link href="~/Content/themes/default/combobox.css" rel="stylesheet" />
+<link href="~/Content/themes/default/combo.css" rel="stylesheet" />
+<link href="~/Content/themes/default/tagbox.css" rel="stylesheet" />
+<link href="~/Content/themes/default/searchbox.css" rel="stylesheet" />
+<link href="~/Content/themes/default/textbox.css" rel="stylesheet" />
+
+<script src="~/Scripts/easyloader.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.easyui.min.js"></script>
+<script src="~/Scripts/locale/easyui-lang-es.js"></script>
+
+<script>
+    var urlAccionGuardar = '@Url.Action("CreateOrUpdate", "SolicitudesClienteInterno")';
+
+    $(document).ready(function () {
+        debugger
+        easyloader.locale = 'es';
+        $("#seccion-titulo-modal").text('@Html.Raw(ViewBag.TituloModal)');
+    });
+
+    $("#guardar-UsuariosAginados").click(function () {
+        debugger
+        var flag = validarCamposRequeridosFormularioCompleto("form-UsuariosAginados");
+        if (flag)
+            guardarUsuariosAginados();
+        else
+            toastr.error('@Mensajes.MensajeDatosObligatorios')
+    })
+
+    function guardarUsuariosAginados() {
+        debugger
+        var data_form = JSON.stringify({ "solicitudID": $('#solicitudID').val(), "usuariosAsignados": $('#idsUsuariosAsignados').val() })
+        _GuardarModal(data_form, urlAccionGuardar);
+    }
+
+</script>
+
+<form action="#" id="form-UsuariosAginados" role="form" data-toggle="validator" method="post" accept-charset="utf-8">
+    <div class="row">
+        @Html.Hidden("solicitudID", (int)ViewBag.SolicitudID)
+
+        <div class="form-group">
+            <label style="text-align: right;" class="control-label col-md-2">Usuarios: <span class="requerido"> *</span></label>
+            <div class="col-md-10">
+                <input class="easyui-tagbox auto-ajustar campo-requerido" id="idsUsuariosAsignados" name="idsUsuariosAsignados" style="width:100%" data-options="
+                            url: '@Url.Action("_GetUsuariosInternosAsignados", "SolicitudesClienteInterno")',
+                            method: 'get',
+                            value: '@Usuarios',
+                            valueField: 'id',
+                            textField: 'text',
+                            limitToList: true,
+                            hasDownArrow: true,
+                            ">
+            </div>
+        </div> 
+    </div>
+    <div class="row" style="margin-top: 10px;">
+        <div class="form-group">
+            <div class="col-md-offset-4 col-md-12">
+                <input id="guardar-UsuariosAginados" type="button" value="Guardar" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+</form>
+
+

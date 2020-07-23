@@ -1,0 +1,16 @@
+﻿@model IEnumerable<GestionPPM.Entidades.Modelo.ComentariosSolicitudInfo>
+
+@(Html
+        .Grid(Model)
+        .Build(columns =>
+        {
+            columns.Add(model => model.Fecha).Titled("Fecha").Formatted("{0:d}");
+            columns.Add(model => model.NombresCompletosSolicitante).Titled("Responsable");
+            columns.Add(model => model.Comentario).Titled("Comentario");
+            columns.Add(model => Auxiliares.ConvertToLinkDescargaHtml(model.IDComentarioSolicitud.ToString(), model.NombreArchivo, Url.Action("DescargarArchivo", "SolicitudesClienteInterno"))).Css("fixed-width").Titled("Adjunto").AppendCss("celda-grande").Encoded(false);
+            columns.Add(model => Auxiliares.ConvertToListHtmlRespuestas(model.Respuestas, model.IDSRespuestas, Url.Action("GeneracionPrefactura", "DocumentoSAFI"))).Css("fixed-width").Titled("Respuestas").AppendCss("celda-grande").Filterable(true).Encoded(false);
+            columns.Add(model => "<button title='Agregar Respuesta.' onclick=' ResponderComentario_(" + model.IDComentarioSolicitud + ",\"" + @Url.Action("GuardarRespuestComentario", "SolicitudesClienteInterno") + "\",\"" + model.SolicitudID + "\");' background-color:#FF5E00;border-color:#FF5E00;' class='btn btn-default' id='eliminar' data-id=\"" + model.IDComentarioSolicitud + "\"><span class='glyphicon glyphicon-share-alt' aria-hidden='true'></span></button>").AppendCss("celda-pequenia").Encoded(false);
+        })
+        .Empty(Mensajes.MensajeNoDataListado)
+        .Id("grid-Comentarios-Solicitud")
+)

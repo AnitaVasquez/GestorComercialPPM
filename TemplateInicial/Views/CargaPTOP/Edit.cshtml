@@ -1,0 +1,190 @@
+﻿@model GestionPPM.Entidades.Modelo.CargaPTOP
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@* Formato para el template de datos *@
+<link href="~/Content/css/personalizar.css" rel="stylesheet" />
+
+<link rel="stylesheet" type="text/css" href="~/Content/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="~/Content/themes/icon.css">
+<link rel="stylesheet" type="text/css" href="~/Content/css/demo.css">
+
+<script type="text/javascript" src="~/Scripts/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.min.js"></script>
+
+<style>
+    .fila-seccion {
+        margin-bottom: 15px;
+    }
+
+    .etiqueta-seccion {
+        text-align: right;
+    }
+</style>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel">
+
+            <div class="panel-heading-create custom-header-panel">
+                <h4>@Etiquetas.TituloPanelCargaPTOP</h4>
+            </div>
+
+            <div class="panel-body">
+
+                <form action="#" id="form-CargaPTOP" role="form" data-toggle="validator" method="post" accept-charset="utf-8">
+                     
+                    @Html.HiddenFor(model => model.id_carga_ptop) 
+
+                    <div class="row">
+                        <div class="col-lg-12">
+
+                            <div class="box-body">
+
+                                <div class="row fila-seccion">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class=" etiqueta-seccion control-label col-md-2">ID Comercio: <span class="requerido"> *</span></label>
+                                            <div class="col-md-10">
+                                                @Html.DropDownList("id_comercio", ViewBag.ListadoComercios as List<SelectListItem>, Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido", required = "", disabled = "disabled" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row fila-seccion">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="etiqueta-seccion control-label col-md-2">Detalle: <span class="requerido"> *</span></label>
+                                            <div class="col-md-10">
+                                                @Html.EditorFor(model => model.detalle, new { htmlAttributes = new { @class = "form-control campo-requerido", maxlength = 50, required = "" } })
+                                                @Html.ValidationMessageFor(model => model.detalle, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row fila-seccion">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="etiqueta-seccion control-label col-md-2">Observación:</label>
+                                            <div class="col-md-10">
+                                                @Html.EditorFor(model => model.observaciones, new { htmlAttributes = new { @class = "form-control", maxlength = 500 } })
+                                                @Html.ValidationMessageFor(model => model.observaciones, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row fila-seccion">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class=" etiqueta-seccion control-label col-md-2">Facturacion Mensual: <span class="requerido"> *</span></label>
+                                            <div class="col-md-10">
+                                                @Html.DropDownList("id_facturable_mensual", ViewBag.ListadoMensual as List<SelectListItem>, Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido", required = "" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row fila-seccion">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class=" etiqueta-seccion control-label col-md-2">Facturar Certificación: <span class="requerido"> *</span></label>
+                                            <div class="col-md-10">
+                                                @Html.DropDownList("id_facturable_certificacion", ViewBag.ListadoCertificacion as List<SelectListItem>, Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido", required = "" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row fila-seccion">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="etiqueta-seccion control-label col-md-4">Valor Certificación:<span class="requerido">*</span></label>
+                                            <div class="col-md-8">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">US$</span>
+                                                    <input id="valor_certificacion" name="valor_certificacion" class="valor_certificacion easyui-numberbox campo-requerido" style="height:35px; padding:10px;" required="" value="@ViewBag.Certificacion" data-options="max:9999999999.99, precision:2, groupSeparator:'.', decimalSeparator:','">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> 
+                            </div>
+                        </div>
+                    </div>
+
+                    <br />
+
+                    <div class="row">
+                        <div class="col-md-offset-2 col-md-8">
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <div class="col-md-offset-4 col-md-12">
+                                        <input id="editar-CargaPTOP" value="Guardar" type="button" class="btn btn-default" />
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        @Html.ActionLink("Regresar", "Index", null, new { @class = "btn btn-default" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section ViewSpecificJavascript {
+    <script>
+        var urlAccionEditar = '@Url.Action("Edit","CargaPTOP")';
+        var urlAccionListado = '@Url.Action("Index", "CargaPTOP")';
+          
+        $("#editar-CargaPTOP").click(function () {
+            debugger
+            var flag = validarCamposRequeridosFormularioCompleto("form-CargaPTOP");
+
+            if (flag)
+            {
+                var slt = document.getElementById('id_facturable_certificacion'); 
+                var valor = slt.options[slt.selectedIndex].innerText;  
+
+                var slt1 = document.getElementById('id_facturable_mensual');
+                var valor1 = slt1.options[slt1.selectedIndex].innerText;
+
+                if (valor == 'NO' && $('#valor_certificacion').val() == 0 && valor1 != "NO") {
+                    guardar();
+                } else {
+                    debugger;
+
+                    if (valor == 'SI' && $('#valor_certificacion').val() == 0 ) {
+                        toastr.error("No se puede facturar con valor 0,00 ")
+                    } else {
+                        toastr.error("Revise las opciones de Facturación")
+                    }
+
+                }              
+            }
+            else
+            {
+                toastr.error('@Mensajes.MensajeDatosObligatorios')
+            }           
+        })
+
+         
+        function guardar() {
+            var formulario = $('#form-CargaPTOP').serializeArray().reduce(function (a, x) { a[x.name] = x.value; return a; }, {});
+
+            debugger 
+            var data_form = JSON.stringify({ "carga": formulario })
+            _Guardar(data_form, urlAccionEditar, urlAccionListado)
+        }
+    </script>
+}

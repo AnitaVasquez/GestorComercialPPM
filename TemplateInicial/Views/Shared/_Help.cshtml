@@ -1,0 +1,100 @@
+﻿
+
+<div class="row">
+    <div class="modal fade" id="help-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document" id="mdialTamanio">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">X</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Manual de Usuario</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="zonaCargandoContenido" align="center">
+                    </div>
+                    <img id="loading-contenido" src="@Url.Content("~/Content/img/loader-grid.gif")" style="display: none;  width: 20%;" />
+
+                    <div class="embed-container">
+                        <object data='@(ViewBag.Iframe)#view=FitH' type='application/pdf' allowfullscreen></object>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <style>
+
+            .embed-container {
+                height: 0;
+                margin-bottom: 18px;
+                overflow-x: auto;
+                overflow-y: auto; /* 16/9 ratio */
+                padding-top: 30px; /* IE6 workaround*/
+                position: relative;
+            }
+
+                .embed-container iframe,
+                .embed-container object,
+                .embed-container embed {
+                    height: 100% !important;
+                    left: 0;
+                    position: absolute;
+                    top: 0;
+                    border: 0;
+                    width: 100% !important;
+                }
+
+            @@media only screen and (min-width: 300px) {
+                .embed-container {
+                    padding-bottom: 75%;
+                }
+
+                #mdialTamanio {
+                    width: 80% !important;
+                }
+            }
+
+            /* Small devices (portrait tablets and large phones, 600px and up) */
+            @@media only screen and (min-width: 600px) {
+                .embed-container {
+                    padding-bottom: 75%;
+                }
+
+                #mdialTamanio {
+                    width: 80% !important;
+                }
+            }
+
+            /* Medium devices (landscape tablets, 768px and up) */
+            @@media only screen and (min-width: 768px) {
+                .embed-container {
+                    padding-bottom: 75%;
+                }
+
+                #mdialTamanio {
+                    width: 80% !important;
+                }
+            }
+
+            /* Large devices (laptops/desktops, 992px and up) */
+            @@media only screen and (min-width: 992px) {
+                .embed-container {
+                    padding-bottom: 50%;
+                }
+
+                #mdialTamanio {
+                    width: 75% !important;
+                }
+            }
+
+            /* Extra large devices (large laptops and desktops, 1200px and up) */
+            @@media only screen and (min-width: 1200px) {
+                .embed-container {
+                    padding-bottom: 60%;
+                }
+
+                #mdialTamanio {
+                    width: 55% !important;
+                }
+            }
+        </style>
+
+

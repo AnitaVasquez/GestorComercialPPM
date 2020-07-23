@@ -1,0 +1,26 @@
+﻿@model IEnumerable<GestionPPM.Entidades.Modelo.CostosSublineaNegocioInfo>
+@{
+    var acciones = (List<string>)ViewBag.AccionesUsuario;
+}
+
+@(Html
+            .Grid(Model)
+            .Build(columns =>
+            {
+                columns.Add(model => model.TextoCatalogoSublineaNegocio).Titled("Sublínea de Negocio").AppendCss("celda-grande");
+                columns.Add(model => model.TextoCatalogoTipoSolicitud).Titled("Tipo de Solicitud").AppendCss("celda-grande");
+                columns.Add(model => model.TextoCatalogoSubTipoSolicitud).Titled("Subtipo de Solicitud").AppendCss("celda-grande");
+                columns.Add(model => (((Math.Round(model.Valor, 2).ToString("N2").Replace(",", "-")).Replace(".", ",")).Replace("-", "."))).AppendCss("alinear-derecha").Titled("Valor (US$)");
+                columns.Add(model => "<button style='background-color:#00AD8E;border-color: #00AD8E;' class='btn btn-success " + Auxiliares.GestionBontonesGrid(acciones, "ACCIONES-SIST-01-EDIT-FORM") + "' onclick='_GetCreate({id:" + model.IDCostoSublineaNegocio + "},\"" + @Url.Action("_Formulario", "CostoSublineaNegocio") + "\", true);' id='editar' data-id=\"" + model.IDCostoSublineaNegocio + "\"><span class='glyphicon glyphicon-pencil' aria-hidden='true'></span></button>" +
+                   "<button title='Eliminar.' onclick='ConfirmarEliminacion_(" + model.IDCostoSublineaNegocio + ",\"" + @Url.Action("Eliminar", "CostoSublineaNegocio") + "\");' background-color:#FF5E00;border-color:#FF5E00;' class='btn btn-danger " + Auxiliares.GestionBontonesGrid(acciones, "ACCIONES-SIST-01-ELIMINAR") + "' id='eliminar' data-id=\"" + model.IDCostoSublineaNegocio + "\"><span class='glyphicon glyphicon-trash' aria-hidden='true'></span></button>").AppendCss("celda-pequenia").Encoded(false);
+            })
+            //.RowAttributed(model => new { data_id = model.CuerpoCorreo })
+            .Empty(Mensajes.MensajeNoDataListado)
+            .Id("grid-CostoSublineaNegocio")
+            .Pageable(pager =>
+            {
+                pager.PagesToDisplay = 5;
+                pager.RowsPerPage = 10;
+            })
+            .Filterable()
+            .Sortable())

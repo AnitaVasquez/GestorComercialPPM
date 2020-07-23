@@ -1,0 +1,91 @@
+﻿
+@* Formato para el template de datos *@
+<link href="~/Content/css/personalizar.css" rel="stylesheet" />
+<script>
+    $(document).ready(function () {
+        $("#seccion-titulo-modal").text('@Html.Raw(ViewBag.TituloModal)');
+
+        $('#texto-TituloMatrizPresupuesto').editable({
+            //url: '/post',
+            title: 'Título para reporte de Matriz de Presupuesto.',
+            anim: true,
+            placement: 'top',
+            tpl: '<textarea maxlength="100"></textarea>'
+        });
+
+        $('#texto-TituloMatrizPresupuesto').editable('option', 'validate', function (v) {
+            if (!v) return 'Campo requerido.';
+        });
+
+    });
+
+    $("#seleccion-codigo").click(function () {
+        debugger
+        var flag = validarCamposRequeridosFormularioCompleto("form-seleccionCodigoCotizacion");
+        if (flag)
+            seleccion();
+        else
+            toastr.error('@Mensajes.MensajeDatosObligatorios')
+    })
+
+    function seleccion() {
+        debugger
+        var valor = $("#ejecutivo").val();
+
+        if (valor == "") {
+            valor=0
+        }
+        var ejecutivo = $("#ejecutivo option:selected").text();
+        var titulo = $("#texto-TituloMatrizPresupuesto").text();
+
+        var fechaInicial = $("#FechaInicio").val();
+        var fechaFinal = $("#FechaFin").val();
+
+        location.href = '@Url.Action("ReporteMatriz", "FacturasPresupuestos")?id=' + valor + "&tituloReporte=" + titulo + "&ejecutivo=" + ejecutivo + "&fechaInicio=" + fechaInicial + "&fechaFin=" + fechaFinal;
+    }
+
+
+</script>
+
+<form action="#" id="form-seleccionCodigoCotizacion" role="form" data-toggle="validator" method="post" accept-charset="utf-8">
+    <div class="row">
+        <div class="col-md-offset-2 col-md-8">
+            <div class="form-horizontal">
+
+                <div class="form-group">
+                    <label class="etiqueta-seccion control-label col-md-3">Ejecutivo:</label>
+                    <div class="col-md-9">
+                        @Html.DropDownList("ejecutivo", ViewBag.listadoEjecutivos as List<SelectListItem>, Etiquetas.TituloComboVacio, new { @class = "form-control", required = "" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="etiqueta-seccion control-label col-md-3">Fecha: <span class="requerido"> *</span></label>
+                    <div class="col-md-9">
+                        <div class="input-group input-daterange">
+                            @Html.Editor("FechaInicio", new { htmlAttributes = new { @class = "form-control campo-requerido", @type = "date", id = "FechaInicio", @Value = DateTime.Now.ToString("yyyy-MM-dd") } })
+                            <div class="input-group-addon" title="Hasta." style="cursor: help;"><i class="fa fa-calendar" aria-hidden="true"></i> </div>
+                            @Html.Editor("FechaFin", new { htmlAttributes = new { @class = "form-control campo-requerido", @type = "date", id = "FechaFin", @Value = DateTime.Now.ToString("yyyy-MM-dd") } })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="etiqueta-seccion control-label col-md-3">Título: <span class="requerido"> *</span></label>
+                    <div class="col-md-9">
+                        <div>
+                            <b><span><a href="#" id="texto-TituloMatrizPresupuesto" data-type="text" data-pk="1">PRESUPUESTOS-FACTURAS</a></span></b>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div class="col-md-offset-4 col-md-12">
+                        <input id="seleccion-codigo" type="button" value="Seleccionar" class="btn btn-default" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

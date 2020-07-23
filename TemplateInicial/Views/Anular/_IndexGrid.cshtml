@@ -1,0 +1,39 @@
+﻿@model IEnumerable<GestionPPM.Entidades.Modelo.PrefacturaSAFIInfo>
+@{
+    var acciones = (List<string>)ViewBag.AccionesUsuario;
+}
+@(Html
+        .Grid(Model)
+        .Build(columns =>
+        {
+            columns.Add(model => "<input class='seleccion-item' type='checkbox' id= \"" + model.id_facturacion_safi + "\" />").Titled(Html.CheckBox("CheckAll", false, new { @id = "seleccionar-todo", @title = "Seleccionar todos los elementos mostrados en la página." })).Encoded(false);
+            columns.Add(model => model.id_facturacion_safi).Titled("ID Documento").Css("hidden");
+            columns.Add(model => model.codigo_cotizacion).Titled("Código de Cotización").AppendCss("celda-grande");
+            columns.Add(model => model.numero_prefactura).Titled("Número PreFactura").AppendCss("celda-grande");
+            columns.Add(model => model.numero_factura).Titled("Número Factura").AppendCss("celda-grande");
+
+            columns.Add(model => model.nombre_comercial_cliente).Titled("Cliente").AppendCss("celda-grande");
+            columns.Add(model => model.detalle_cotizacion).Titled("Detalle").AppendCss("celda-grande");
+            columns.Add(model => model.Ejecutivo).Titled("Ejecutivo").AppendCss("celda-grande");
+
+            columns.Add(model => model.cantidad).Titled("Cantidad").AppendCss("celda-grande");
+            columns.Add(model => (((Math.Round(model.subtotal_pago, 2).ToString("N2").Replace(",", "-")).Replace(".", ",")).Replace("-", "."))).Titled("Subtotal").AppendCss("celda-grande");
+            columns.Add(model => (((Math.Round(model.iva_pago, 2).ToString("N2").Replace(",", "-")).Replace(".", ",")).Replace("-", "."))).Titled("IVA").AppendCss("celda-grande");
+            columns.Add(model => (((Math.Round(model.total_pago, 2).ToString("N2").Replace(",", "-")).Replace(".", ",")).Replace("-", "."))).Titled("Total").AppendCss("celda-grande");
+            columns.Add(model =>
+            " <a title='Generar Nota de Crédito' data-backdrop='static' data-toggle='modal' data-target='#contenido-modal' onclick='_GetCreate({id:" + model.id_facturacion_safi + "},\"" + @Url.Action("_Reversar", "Anular") + "\");' style='cursor: pointer;background-color:#ffc52d;border-color:#ffc52d; display:" + (!Auxiliares.GestionBontonesGrid(acciones, "ACCIONES-SIST-01-REVERSAR").Equals("ocultar-accion-catalogo") ? "block" : "none") + ";' class='btn btn-success " + Auxiliares.GestionBontonesGrid(acciones, "ACCIONES-SIST-01-REVERSAR") + "' id='reversar' data-id=\"" + model.id_facturacion_safi + "\"><i style='color: black;' class='fa fa-clone' aria-hidden='true'></i></a>"
+            /*+" <button style='background-color:#FFC52D;border-color: #FFC52D;'  class='btn btn-warning' onclick='location.href=\"" + @Url.Action("GeneracionPrefactura", "DocumentoSAFI", new { listadoIDs = model.id_facturacion_safi, descargaDirecta = true }) + "\"' id='imprimir-prefactura' data-id=\"" + model.id_facturacion_safi + "\"><span class='glyphicon glyphicon-print' aria-hidden='true' style='color:black'></span></button>"*/).AppendCss("celda-pequenia").Encoded(false);
+        })
+        //.RowAttributed(model => new { data_id = model.CuerpoCorreo })
+        .Empty(Mensajes.MensajeNoDataListado)
+        .Id("grid-DocumentoSAFI")
+        .Pageable(pager =>
+        {
+            pager.PagesToDisplay = 5;
+            pager.RowsPerPage = 10;
+        })
+        .Filterable()
+        .Sortable())
+
+
+

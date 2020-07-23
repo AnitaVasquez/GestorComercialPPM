@@ -1,0 +1,100 @@
+﻿@model GestionPPM.Entidades.Modelo.CambiarClave
+
+@{
+    ViewBag.Title = "Crear Usuario";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="~/Content/css/personalizar.css" rel="stylesheet" />
+
+<script>
+    $(document).ready(function () {
+
+        var resultado = @Html.Raw(Json.Encode(ViewBag.Resultado));
+        var estado = @Html.Raw(Json.Encode(ViewBag.Estado));
+
+        if (estado != "" && estado != null) {
+            if (estado == "True") {
+                toastr.success(resultado)
+            } else {
+                toastr.error(resultado)
+            }
+        }
+    });
+
+</script>
+
+
+@using (Html.BeginForm())
+{
+    
+    <div class="row">
+        <div class="col-md-12">
+            <form id="rol" class="form-horizontal" method="POST" role="form" action="/Candidate/editprofileex/">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="row">
+                    <div class="col-md-offset-2 col-md-8">
+                        <div style="color:crimson">
+                            @ViewBag.Mensaje
+                        </div>
+                        <br />
+                        <div class="panel">
+                            <div class="panel-heading custom-header-panel">
+                                <h3 class="panel-title roboto">Cambiar Clave</h3>
+                            </div>
+
+                            <div class="panel-body">
+                                <div class="form-horizontal">
+                                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                    <br />
+                                    <div class="form-group">
+
+                                        <label class="control-label col-md-3">Contraseña Actual: <span class="requerido"> *</span></label>
+                                        <div class="col-md-7">
+                                            @Html.EditorFor(model => model.ContraseniaActual, new { htmlAttributes = new { @class = "form-control", type = "password", maxlength = 25 } })
+                                            @Html.ValidationMessageFor(model => model.ContraseniaActual, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <hr />
+
+                                    <br />
+
+                                    <div class="form-group">
+                                        @*@Html.LabelFor(model => model.usua_email, htmlAttributes: new { @class = "control-label col-md-2" })*@
+                                        <label class="control-label col-md-3">Contraseña Nueva: <span class="requerido"> *</span></label>
+                                        <div class="col-md-7">
+                                            @Html.EditorFor(model => model.ContraseniaNueva, new { htmlAttributes = new { @class = "form-control", type = "password", maxlength = 25 }  })
+                                            @Html.ValidationMessageFor(model => model.ContraseniaNueva, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        @*@Html.LabelFor(model => model.usua_email, htmlAttributes: new { @class = "control-label col-md-2" })*@
+                                        <label class="control-label col-md-3">Confirmar Contraseña: <span class="requerido"> *</span></label>
+                                        <div class="col-md-7">
+                                            @Html.EditorFor(model => model.ConfirmarContrasenia, new { htmlAttributes = new { @class = "form-control", type = "password", maxlength = 25 } })
+                                            @Html.ValidationMessageFor(model => model.ConfirmarContrasenia, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <br />
+
+                                    <div class="form-group">
+                                        <div class="col-md-offset-4 col-md-12">
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <input type="submit" value="Guardar" class="btn btn-default" />
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <a href="~/Home/Index/"  class = "btn btn-default">Regresar</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+} 

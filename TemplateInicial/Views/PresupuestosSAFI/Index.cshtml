@@ -1,0 +1,148 @@
+﻿
+@{
+    ViewBag.Title = "Presupuestos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@* Formato para el template de datos *@
+<link href="~/Content/css/personalizar.css" rel="stylesheet" />
+
+<style>
+    .alinear-derecha {
+        text-align: right;
+    }
+</style>
+
+
+<div id="cargando-grid"></div>
+
+
+@Html.AjaxGrid(Url.Action("IndexGrid"))
+
+@section ViewSpecificJavascript {
+    <script>
+        debugger
+        var idGrid = "grid-Prefacturar";
+        var urlAccionReporteExcel = '@Url.Action("DescargarReporteFormatoExcel", "PresupuestosSAFI")';
+        var urlAccionReportePDF = '@Url.Action("DescargarReporteFormatoPDF", "PresupuestosSAFI")';
+        var urlAccionReporteCSV = '@Url.Action("DescargarReporteFormatoCSV", "PresupuestosSAFI")';
+        var urlAccionGuardarCodigoCotizacion = '@Url.Action("EnvioMasivoSistemaContable", "PresupuestosSAFI")';
+        var urlAccionListado = '@Url.Action("Index", "PresupuestosSAFI")';
+
+        var resultado = '@Html.Raw(ViewBag.Resultado)';
+        var estado = @Html.Raw(Json.Encode(ViewBag.Estado));
+
+        var elementosSeleccionadosGrid = [];
+
+        $(document).ready(function () {
+            if (resultado.length > 0)
+                toastr.info(resultado)
+        })
+
+
+        $(document).click(function (e) {
+            debugger
+            var elemento = $(e.currentTarget.activeElement)[0];
+
+            if (elemento.id === 'recargar') {
+                debugger
+                recargarGridByID(idGrid);
+            }
+
+            if (elemento.id === 'nuevo') {
+                debugger
+                toastr.warning("Acción no permitida");
+                return;
+            }
+
+            if (elemento.id === 'ExportarGridExcel') {
+                debugger
+                location.href = urlAccionReporteExcel;
+
+            }
+            if (elemento.id === 'ExportarGridPDF') {
+                debugger
+                reporteGridPDF(urlAccionReportePDF);
+            }
+            if (elemento.id === 'ExportarGridCSV') {
+                debugger
+                location.href = urlAccionReporteCSV;
+            }
+            if (elemento.id === 'Ayuda') {
+
+                $('#help-modal').modal({
+                    'show': 'true',
+                    'backdrop': 'static',
+                    'keyboard': false
+                })
+            }
+            if (elemento.id === 'presupuestos-data') {
+                debugger
+                if (elementosSeleccionadosGrid.length > 0)
+                    guardar();
+                else
+                    toastr.error('Tiene que seleccionar al menos una cotización')
+            }
+
+            if (elemento.id === 'seleccionar-todo') {
+                debugger
+                var chk = e.target;
+                let currentArray = elementosSeleccionadosGrid;
+                if (chk.checked) {
+                    $(".seleccion-item").prop('checked', true);
+                    let items = GetElementosSeleccionadosGrid("seleccion-item");
+                    elementosSeleccionadosGrid = AgregarMultiplesElementosArreglo(currentArray, items);
+                } else {
+                    elementosSeleccionadosGrid = EliminarMultiplesElementosArreglo(currentArray, GetElementosSeleccionadosGrid("seleccion-item"))
+                    $(".seleccion-item").prop('checked', false);
+                }
+            }
+
+            if (elemento.className === 'seleccion-item') {
+                debugger
+                $("#seleccionar-todo").prop('checked', false);
+
+                var chk = e.target;
+                var id = parseInt($(e.target).attr("id"));
+                if (chk.checked) {
+                    elementosSeleccionadosGrid = AgregarElementoArreglo(elementosSeleccionadosGrid, id);
+                } else {
+                    elementosSeleccionadosGrid = EliminarElementoArreglo(elementosSeleccionadosGrid, id);
+                }
+            }
+
+        });
+
+        $(document).keydown(callBackBusqueda);
+        $(document).keypress(callBackBusqueda);
+        $(document).keyup(callBackBusqueda);
+
+        function callBackBusqueda(e) {
+            debugger
+            var elemento = $(e.currentTarget.activeElement)[0];
+            //Validar que los Grids tengan filtros de búsqueda
+            var filtrosBusqueda = document.getElementById('GridSearch');
+            busquedaGrid(idGrid);
+        }
+
+        function getCodigoCotizacion() {
+            debugger
+            var idsCodigoCotizacion = [];
+            var CodigoCotizacion = elementosSeleccionadosGrid;
+            //CodigoCotizacion = CodigoCotizacion.split(',');
+
+            for (var i = 0; i < CodigoCotizacion.length; i++) {
+                let id = parseInt(CodigoCotizacion[i]);
+                idsCodigoCotizacion.push(id);
+            }
+            return idsCodigoCotizacion;
+        }
+
+        function guardar() {
+            debugger
+            var data_form = JSON.stringify({ "codigoCotizacion": getCodigoCotizacion()})
+            _GuardarPrefacturasLoading(data_form, urlAccionGuardarCodigoCotizacion, urlAccionListado)
+        }
+
+    </script>
+} 

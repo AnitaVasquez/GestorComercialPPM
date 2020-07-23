@@ -1,0 +1,93 @@
+﻿@model GestionPPM.Entidades.Modelo.GestionContratosComercios
+@using GestionPPM.Entidades.Modelo 
+  
+@* Formato para el template de datos *@
+<link href="~/Content/css/personalizar.css" rel="stylesheet" /> 
+  
+<script>
+    var urlAccionEditarStatusCodigo = '@Url.Action("GestionComercios", "Comercio")';
+
+    $(document).ready(function () {
+        $("#seccion-titulo-modal").text('@Html.Raw(ViewBag.TituloModal)');
+    });
+
+    $("#guardar-status").click(function () {
+        debugger
+        var flag = validarCamposRequeridosFormularioCompleto("form-gestionComercio");
+        if (flag)  
+            guardarStatus();  
+        else
+            toastr.error('@Mensajes.MensajeDatosObligatorios')
+    })
+
+    function guardarStatus() {
+        debugger
+        var data_form = JSON.stringify({ "gestion": $('#form-gestionComercio').serializeObject() })
+        _GuardarModalStatusCodigoCotizacion(data_form, urlAccionEditarStatusCodigo);
+    }
+      
+</script>
+
+ 
+<form action="#" id="form-gestionComercio" role="form" data-toggle="validator" method="post" accept-charset="utf-8">
+    <div class="row">
+        <div class="col-md-offset-2 col-md-8">
+            <div class="form-horizontal">
+
+                @Html.Hidden("id_comercio", Model.id_comercio)
+                @Html.Hidden("id_estatus_contrato_anterior", Model.id_estatus_contrato_anterior)
+
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class=" etiqueta-seccion control-label col-md-4">Estatus Contrato: <span class="requerido"> *</span></label>
+                        <div class="col-md-8" style="padding-left: 20px;">
+                            @Html.DropDownList("id_estatus_contrato_actual", ViewBag.ListadoEstatusContrato as List<SelectListItem>, Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido", required = "" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class=" etiqueta-seccion control-label col-md-4">Canal de Comunicación: <span class="requerido"> *</span></label>
+                        <div class="col-md-8" style="padding-left: 20px;">
+                            @Html.DropDownList("id_canal_comunicacion", ViewBag.ListadoCanalComunicacion as List<SelectListItem>, Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido", required = "" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class=" etiqueta-seccion control-label col-md-4">Tipificación: <span class="requerido"> *</span></label>
+                        <div class="col-md-8" style="padding-left: 20px;">
+                            @Html.DropDownList("id_tipificacion", ViewBag.ListadoTipificacion as List<SelectListItem>, Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido", required = "" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="etiqueta-seccion control-label col-md-4">Observaciones: <span class="requerido"> *</span></label>
+                        <div class="col-md-8">
+                            @Html.TextArea("observaciones", null, new { @class = "form-control campo-requerido", rows = 3, @style = "resize: none;", maxlength = 300, required = "" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br />
+
+    <div class="row">
+        <div class="col-md-offset-2 col-md-8">
+            <div class="form-horizontal">  
+                <div class="form-group">
+                    <div class="col-md-offset-4 col-md-12">
+                        <input id="guardar-status" type="button" value="Guardar Gestión" class="btn btn-default" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form> 
+ 

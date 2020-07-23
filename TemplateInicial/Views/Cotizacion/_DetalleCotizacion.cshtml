@@ -1,0 +1,430 @@
+﻿@model GestionPPM.Entidades.Modelo.Cotizador
+@using GestionPPM.Entidades.Modelo
+@using GestionPPM.Entidades.Metodos
+ 
+@* Formato para el template de datos *@
+<link href="~/Content/css/personalizar.css" rel="stylesheet" /> 
+<link rel="stylesheet" type="text/css" href="~/Content/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="~/Content/themes/icon.css">
+<link rel="stylesheet" type="text/css" href="~/Content/css/demo.css">
+ 
+<script type="text/javascript" src="~/Scripts/jquery.min.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.easyui.min.js"></script>
+
+<script type="text/javascript" src="~/Scripts/bootstrap.js"></script>
+
+<style>
+    .fila-seccion {
+        margin-bottom: 15px;
+    }
+
+    .etiqueta-seccion {
+        text-align: right;
+    }
+
+    .awe-txt-field.awe-field {
+        min-width: 100% !important;
+    }
+
+    .alinear-derecha {
+        text-align: right;
+        min-width: 15em;
+    }
+
+    .valores-alineacion {
+        text-align: right;
+    }
+</style>
+ 
+
+<div class="row seccion-costos-tarifario" hidden="">
+
+    <div class="col-xs-12">
+
+        <div class="form-group">
+            <label style="cursor: help" title="Nombre del Entregable">Código:</label>
+            <input type="text" id="codigoEntregable_modal" name="codigoEntregable_modal" class="form-control">
+            <input type="text" id="codigoEntregable_modal" hidden value="@ViewBag.codigoEntregable_modal" />
+        </div>
+    </div>
+
+</div>
+
+<div class="row seccion-costos-tarifario">
+
+    <div class="col-xs-12">
+
+        <div class="form-group">
+            <label style="cursor: help" title="Tipo de Producto y/o Servicio">Detalle del Entregable:<span class="requerido"> *</span></label>
+            <input type="text" id="nombreEntregable_modal" name="nombreEntregable_modal" class="form-control">
+            <input type="text" id="nombreEntregable_modal" hidden value="@ViewBag.nombreEntregable_modal" />
+        </div>
+    </div>
+
+</div>
+
+<div class="row seccion-costos-tarifario">
+
+    <div class="col-xs-6">
+
+        <div class="form-group">
+            <label style="cursor: help" title="Tipo de Producto y/o Servicio">Tipo de Producto y/o Servicio:</label>
+            @Html.DropDownList("tarifarioConGestion_modal", TarifarioEntity.ObtenerListadoTarifario(false, (string)ViewBag.idTarifarioConGestion_modal), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido", required = "" })
+            <input type="text" id="idTarifarioConGestion_modal" hidden value="@ViewBag.idTarifarioConGestion_modal" />
+        </div>
+    </div>
+
+
+    <div class="col-xs-2">
+        <div class="form-group">
+            <label style=" cursor: help" title="Cantidad Tarifario Servicio Producto">Cantidad:</label>
+            <input id="cantidadTarifarioConGestion_modal" name="cantidadTarifarioConGestion_modal" class="cantidadTarifarioConGestion_modal easyui-numberbox campo-requerido" style="height:35px; padding:10px; text-align: right; width:100%;" required="" value="0,000000" data-options="max:9999999999, groupSeparator:'.', decimalSeparator:','">
+        </div>
+    </div>
+    <div class="col-xs-2">
+
+        <div class="form-group">
+            <label style="cursor: help" title="Valor Unitario Tarifario Servicio Producto">Valor Unitario:</label>
+            <input id="valorUnitarioTarifarioConGestion_modal" name="valorUnitarioTarifarioConGestion_modal" class="valorUnitarioTarifarioConGestion_modal easyui-numberbox campo-requerido" style="height:35px; padding:10px; text-align: right; width:100%;" required="" value="0,000000" data-options="max:9999999999.999999,precision:6, groupSeparator:'.', decimalSeparator:','">
+        </div>
+
+    </div>
+    <div class="col-xs-2">
+        <div class="form-group">
+            <label style="        cursor: help" title="Costo Unitario Tarifario Servicio Producto">Costo Total:</label>
+            <input id="costoUnitarioTarifarioConGestion_modal" name="costoUnitarioTarifarioConGestion_modal" class="costoUnitarioTarifarioConGestion_modal easyui-numberbox campo-requerido alinear-derecha" style="height:35px; padding:10px; text-align: right; text-align: right; width:100%;" required="" value="0,000000" data-options="max:9999999999.999999, precision:6, groupSeparator:'.', decimalSeparator:','">
+        </div>
+    </div>
+
+</div>
+
+<div class="row seccion-costos-tarifario">
+
+    <div class="col-xs-6">
+
+        <div class="form-group">
+            <label style=" cursor: help" title="Tarifario de Gestión">Gestión:</label>
+            @Html.DropDownList("tarifarioSinGestion_modal", TarifarioEntity.ObtenerListadoTarifario(true, (string)ViewBag.idTarifarioSinGestion_modal), Etiquetas.TituloComboVacio, new { @class = "form-control" })
+            <input type="text" id="idTarifarioSinGestion_modal" hidden value="@ViewBag.idTarifarioSinGestion_modal" />
+        </div>
+
+    </div>
+
+    <div class="col-xs-2">
+
+        <div class="form-group">
+            <label style=" cursor: help" title="Cantidad Tarifario de Gestión">Cantidad:</label>
+            <input id="cantidadTarifarioSinGestion_modal" name="cantidadTarifarioSinGestion_modal" class="cantidadTarifarioSinGestion_modal easyui-numberbox campo-requerido" style="height:35px; padding:10px; text-align: right; width:100%;" required="" value="0,000000" data-options="max:9999999999, groupSeparator:'.', decimalSeparator:','">
+        </div>
+
+    </div>
+
+    <div class="col-xs-2">
+        <div class="form-group">
+            <label>Valor Unitario:</label>
+            <input id="valorUnitarioTarifarioSinGestion_modal" name="valorUnitarioTarifarioSinGestion_modal" class="valorUnitarioTarifarioSinGestion_modal easyui-numberbox campo-requerido" style="height:35px; padding:10px; text-align: right; width:100%;" required="" value="0,000000" data-options="max:9999999999.999999, precision:6, groupSeparator:'.', decimalSeparator:','">
+        </div>
+    </div>
+
+
+    <div class="col-xs-2">
+        <div class="form-group">
+            <label style=" cursor: help" title="Costo Unitario Tarifario de Gestión">Costo Total:</label>
+            <input id="costoUnitarioTarifarioSinGestion_modal" name="costoUnitarioTarifarioSinGestion_modal" class="costoUnitarioTarifarioSinGestion_modal easyui-numberbox campo-requerido" style="height:35px; padding:10px; text-align: right; width:100%;" required="" value="0,000000" data-options="max:9999999999.999999, precision:6, groupSeparator:'.', decimalSeparator:','">
+
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="col-lg-offset-6">
+        <div class="form-group">
+            <div>
+                <input type="button" value="Agregar" class="btn btn-default" id="cerrar-modal" data-dismiss="modal" />
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    //carga de listas de productos y gestion
+    var listadoTipoServicio = @Html.Raw(Json.Encode(TarifarioEntity.ObtenerListaTarifarioTablaDinamica(false)));
+    var listadoTipoGestion = @Html.Raw(Json.Encode(TarifarioEntity.ObtenerListaTarifarioTablaDinamica(true)));
+    var soloVisualizacion = '@ViewBag.visualizacion';
+    var codigoServicioId = '@ViewBag.idTarifarioConGestion_modal';
+    var valorInicialInputs = "0.000000";
+
+    //nombre de la ventana
+    $("#seccion-titulo-modal").text("Entregable");
+
+    var etiquetaVUP = document.getElementById('valorUnitarioTarifarioConGestion_modal');
+    var etiquetaCTP = document.getElementById('costoUnitarioTarifarioConGestion_modal');
+
+   $(document).ready(function () {
+
+       //llenar valores en caso de editar o ser nuevo
+        inicializarvalores();
+
+       //si es edicion de una existente
+        if (soloVisualizacion == "True") {
+            //$(".seccion-costos-tarifario :input").attr("disabled", true);
+        }
+
+        //cambia la cantidad de productos/servicios
+        $('#_easyui_textbox_input1').change(function (value) {
+            var valor = $(value.currentTarget).val();
+            calcularCostoTarifarioConGestion_modal();
+        });
+
+        //cambia el valor unitario de productos/servicios
+        $('#_easyui_textbox_input2').change(function (value) {
+            var valor = $(value.currentTarget).val();
+            //alert(valor);
+            calcularCostoTarifarioConGestion_modal();
+            //CalcularTotalTarifario();
+        });
+
+        //cambia la cantidad de gestion
+        $('#_easyui_textbox_input4').change(function (value) {
+            var valor = $(value.currentTarget).val();
+            calcularCostoTarifarioSinGestion_modal();
+        });
+
+        //cambia el valor unitario de productos/servicios
+        $('#_easyui_textbox_input5').change(function (value) {
+            var valor = $(value.currentTarget).val();
+            calcularCostoTarifarioSinGestion_modal();
+        });
+
+       //cambia la seleccion de la lista de producto o servicio
+        $('#tarifarioSinGestion_modal').change(function (value) {
+            var valor = $(value.currentTarget).val();
+            if (!valor)
+            {
+                $("#valorUnitarioTarifarioSinGestion_modal").numberbox('setValue', valorInicialInputs);
+                $("#cantidadTarifarioSinGestion_modal").numberbox('setValue', valorInicialInputs);
+                $("#costoUnitarioTarifarioSinGestion_modal").numberbox('setValue', valorInicialInputs);
+            }
+
+            //asignar un valor al combo de productos o servicios
+            $("#idTarifarioSinGestion_modal").val(valor);
+
+            cargarCostoTarifarioSinGestion_modal();
+            calcularCostoTarifarioSinGestion_modal();
+        });
+
+        //obtener el tipo de gestion
+        $('#tarifarioConGestion_modal').change(function (value) {
+
+            var etiquetaVUP1 = document.getElementById('_easyui_textbox_input2');
+            var valor = $(value.currentTarget).val();
+
+            if (!valor) {
+                $('#valorUnitarioTarifarioConGestion_modal').numberbox('setValue', valorInicialInputs);
+            }
+
+            var codigoCatalogoTarifario = 0;
+            var valorTarifario = 0;
+            var tarifario = listadoTipoServicio.find(s => s.id_tarifario == valor);
+
+            if (tarifario !== undefined) {
+                codigoCatalogoTarifario = tarifario.tipo;
+                valorTarifario = tarifario.valor_tarifario;
+            }
+
+            if (codigoCatalogoTarifario == 153) {
+
+                etiquetaVUP.readonly = true;
+                etiquetaVUP1.readonly = true;
+
+                etiquetaVUP.disabled = true;
+                etiquetaVUP1.disabled = true;
+
+            } else {
+
+                etiquetaVUP.readonly = false;
+                etiquetaVUP1.readonly = false;
+
+                etiquetaVUP.disabled = false;
+                etiquetaVUP1.disabled = false;
+            }
+
+            $("#idTarifarioConGestion_modal").val(valor);
+            cargarCostoTarifarioConGestion_modal();
+            calcularCostoTarifarioConGestion_modal();
+        });
+
+    });
+
+    function calcularCostoTarifarioConGestion_modal() {
+
+        //cantidad de productos o servicios
+        var cantidad = parseInt($("#_easyui_textbox_input1").val());
+
+        //valor unitario por producto o servicio
+        var valorUnitario = $("#_easyui_textbox_input2").val();
+
+        valorUnitario = valorUnitario.replace(".", "");
+        valorUnitario = valorUnitario.replace(",", ".");
+
+        var total = cantidad * valorUnitario;
+
+        if (isNaN(total))
+            total = 0;
+
+
+        $('#costoUnitarioTarifarioConGestion_modal').numberbox('setValue', total);
+    }
+
+    function calcularCostoTarifarioSinGestion_modal() {
+
+        //cantidad de gestion
+        var cantidad = parseInt($("#_easyui_textbox_input4").val());
+
+        //valor unitario por gestion
+        var valorUnitario = $("#_easyui_textbox_input5").val();
+
+        valorUnitario = valorUnitario.replace(".", "");
+        valorUnitario = valorUnitario.replace(",", ".");
+
+        var total = cantidad * valorUnitario;
+
+        if (isNaN(total))
+            total = 0.00;
+
+        $("#costoUnitarioTarifarioSinGestion_modal").numberbox('setValue', total);
+    }
+
+    //obtener el valor de la gestion
+    function cargarCostoTarifarioSinGestion_modal() {
+        $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetTarifario")',
+                    dataType: 'json',
+                    data: { id: $("#idTarifarioSinGestion_modal").val() },
+                    success: function (data) {
+                        var tarifario = data.DataTarifario;
+                        var valorTarifario = formatearNumeroMilesDecimales(tarifario.valor_tarifario)
+
+                        $("#valorUnitarioTarifarioSinGestion_modal").numberbox('setValue', valorTarifario);
+
+                        calcularCostoTarifarioSinGestion_modal();
+                    },
+                    error: function (ex) {
+                        //toastr.error(ex)
+                        console.log(ex)
+                    }
+        });
+    }
+
+    //obtener el valor del producto o servicio
+    function cargarCostoTarifarioConGestion_modal() {
+        $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetTarifario")',
+                    dataType: 'json',
+                    data: { id: $("#idTarifarioConGestion_modal").val() },
+                    success: function (data) {
+                        var tarifario = data.DataTarifario;
+                        var valorTarifario = tarifario.valor_tarifario;
+
+                        $('#valorUnitarioTarifarioConGestion_modal').numberbox('setValue', valorTarifario);
+
+                        calcularCostoTarifarioConGestion_modal();
+                    },
+                    error: function (ex) {
+                        //toastr.error(ex)
+                        console.log(ex)
+                    }
+        });
+    }
+
+    //inicializar valores
+    function inicializarvalores() {
+
+        //productos o servicios
+        var etiquetaVUP0 = document.getElementById('_easyui_textbox_input2');
+        var etiquetaVUP1 = document.getElementById('_easyui_textbox_input3');
+
+        //gestion
+        var etiquetaVUP2 = document.getElementById('_easyui_textbox_input5');
+        var etiquetaVUP3 = document.getElementById('_easyui_textbox_input6');
+
+        etiquetaVUP0.readonly = true;
+        etiquetaVUP0.disabled = true;
+
+        etiquetaVUP1.readonly = true;
+        etiquetaVUP1.disabled = true;
+
+        etiquetaVUP2.readonly = true;
+        etiquetaVUP2.disabled = true;
+
+
+        etiquetaVUP3.readonly = true;
+        etiquetaVUP3.disabled = true;
+
+        //campos a inicializar si ingresa por crear
+        if (soloVisualizacion == "False") {
+            $('#nombreEntregable_modal').val('@ViewBag.entregable');
+            $('#cantidadTarifarioConGestion_modal').numberbox('setValue', 1);
+
+            //obtener el codigo del entregable
+            var codigoEntregable = '@ViewBag.codigoEntregable_modal';
+            $('#codigoEntregable_modal').val(codigoEntregable);
+        }
+        else
+        {
+            //obtener el codigo del entregable
+            var codigoEntregable = '@ViewBag.codigoEntregable_modal';
+            $('#codigoEntregable_modal').val(codigoEntregable);
+
+            //obtener el valor del entregable
+            var entregable = '@Html.Raw(ViewBag.entregable)';
+            $('#nombreEntregable_modal').val(entregable);
+
+            //recuperar valores de servicio
+            var cantidadTarifarioConGestion_modal = '@ViewBag.cantidadTarifarioConGestion_modal';
+            var valorUnitarioTarifarioConGestion_modal = '@ViewBag.valorUnitarioTarifarioConGestion_modal';
+            var costoUnitarioTarifarioConGestion_modal = '@ViewBag.costoUnitarioTarifarioConGestion_modal';
+
+            $("#cantidadTarifarioConGestion_modal").numberbox('setValue', cantidadTarifarioConGestion_modal);
+            $("#valorUnitarioTarifarioConGestion_modal").numberbox('setValue', valorUnitarioTarifarioConGestion_modal);
+            $("#costoUnitarioTarifarioConGestion_modal").numberbox('setValue', costoUnitarioTarifarioConGestion_modal);
+
+            //De gestión
+            var cantidadTarifarioSinGestion_modal = '@ViewBag.cantidadTarifarioSinGestion_modal';
+            var valorUnitarioTarifarioSinGestion_modal = '@ViewBag.valorUnitarioTarifarioSinGestion_modal';
+            var costoUnitarioTarifarioSinGestion_modal = '@ViewBag.costoUnitarioTarifarioSinGestion_modal';
+
+            $("#cantidadTarifarioSinGestion_modal").numberbox('setValue', cantidadTarifarioSinGestion_modal);
+            $("#valorUnitarioTarifarioSinGestion_modal").numberbox('setValue', valorUnitarioTarifarioSinGestion_modal);
+            $("#costoUnitarioTarifarioSinGestion_modal").numberbox('setValue', costoUnitarioTarifarioSinGestion_modal);
+
+            var codigoCatalogoTarifario = 0; 
+            var tarifario = listadoTipoServicio.find(s => s.id_tarifario == codigoServicioId);
+
+            if (tarifario !== undefined) {
+                codigoCatalogoTarifario = tarifario.tipo; 
+            }
+
+            if (codigoCatalogoTarifario == 153) {
+
+                etiquetaVUP.readonly = true; 
+                etiquetaVUP.disabled = true 
+
+                etiquetaVUP0.readonly = true;
+                etiquetaVUP0.disabled = true;
+
+            } else {
+
+                etiquetaVUP.readonly = false;
+                etiquetaVUP.disabled = false
+
+                etiquetaVUP0.readonly = false;
+                etiquetaVUP0.disabled = false;
+            }
+        }
+    }
+</script>
+ 

@@ -1,0 +1,107 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="cargando-grid"></div>
+
+@Html.AjaxGrid(Url.Action("IndexGrid"))
+
+@*Para que funcione el progress bar*@
+@section drag {
+    <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
+}
+
+@section ViewSpecificJavascript {
+    <script>
+        debugger
+        var idGrid = "grid-FacturaPTOP";
+
+        var idGridCargaMasiva = "grid-CargaMasiva";
+        var idFileUpload = "file-upload";
+        var classLabelFileUpload = "custom-file-upload";
+
+        var urlAccionReporteExcel = '@Url.Action("DescargarReporteFormatoExcel", "FacturaPTOP")';
+        var urlAccionReportePDF = '@Url.Action("DescargarReporteFormatoPDF", "FacturaPTOP")';
+        var urlAccionReporteCSV = '@Url.Action("DescargarReporteFormatoCSV", "FacturaPTOP")'; 
+
+        var resultado = @Html.Raw(Json.Encode(ViewBag.Resultado));
+        var estado = @Html.Raw(Json.Encode(ViewBag.Estado));
+
+       var perfiles = @Html.Raw(Json.Encode(ViewBag.PerfilesUsuario));
+
+            $(document).ready(function () {
+            debugger
+            if (estado != "" && estado != null) {
+                if (estado == "True") {
+                    toastr.success(resultado)
+                } else {
+                    toastr.error(resultado)
+                }
+            }
+        })
+
+        $(document).click(function (e) {
+            debugger
+            var elemento = $(e.currentTarget.activeElement)[0];
+            if (elemento.id === 'recargar') {
+                debugger 
+                recargarGridByID(idGrid);                 
+            }
+
+            if (elemento.id === 'nuevo') {
+                debugger
+                toastr.warning("Opción no permitida para este usuario");
+                return;
+            }
+
+            if (elemento.id === '') {
+                debugger
+                 
+
+            }
+
+            if (elemento.id === 'cargar-data') {
+                debugger
+                $("#grid-CargaMasiva").find("#seccion-botones-funciones").hide();
+                $("#grid-CargaMasiva").hide();
+            }
+
+            if (elemento.id === 'ExportarGridExcel') {
+                debugger
+                location.href = urlAccionReporteExcel;
+
+            }
+            if (elemento.id === 'ExportarGridPDF') {
+                debugger
+                reporteGridPDF(urlAccionReportePDF);
+            }
+            if (elemento.id === 'ExportarGridCSV') {
+                debugger
+                location.href = urlAccionReporteCSV;
+            }
+            if (elemento.id === 'Ayuda') {
+                
+                $('#help-modal').modal({
+                    'show': 'true',
+                    'backdrop': 'static',
+                    'keyboard': false
+                }) 
+            }
+        });
+
+        $(document).keydown(callBackBusqueda);
+        $(document).keypress(callBackBusqueda);
+        $(document).keyup(callBackBusqueda);
+
+        function callBackBusqueda(e) {
+            debugger
+            var elemento = $(e.currentTarget.activeElement)[0];
+            //Validar que los Grids tengan filtros de búsqueda
+            var filtrosBusqueda = document.getElementById('GridSearch');
+            busquedaGrid(idGrid);
+        }
+
+         
+    </script>
+} 

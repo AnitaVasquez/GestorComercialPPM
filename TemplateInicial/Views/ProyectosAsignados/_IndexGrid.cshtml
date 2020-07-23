@@ -1,0 +1,42 @@
+﻿
+@model IEnumerable<GestionPPM.Entidades.Modelo.ListadoAvanceProyectoUsuario>
+@{
+    var acciones = (List<string>)ViewBag.AccionesUsuario;
+}
+
+@(Html
+                .Grid(Model)
+                .Build(columns =>
+                {
+                    columns.Add(model => model.CodigoCotizacion).Titled("Código Cotización");
+                    columns.Add(model => model.NombreProyecto).Titled("NombreProyecto");
+                    columns.Add(model => model.Cliente).Titled("Cliente");
+                    columns.Add(model => model.Ejecutivo).Titled("Ejecutivo");
+                    columns.Add(model => model.Fase).Titled("Fase");
+                    columns.Add(model => model.HorasProg).Titled("Horas Prog.");
+                    columns.Add(model => model.FechaInicioProg).Titled("Inicio Prog.").Formatted("{0:d}");
+                    columns.Add(model => model.FechaFinProg).Titled("Fin Prog.").Formatted("{0:d}");
+                    columns.Add(model => model.HorasReal).Titled("Horas Real");
+                    columns.Add(model => model.FechaInicioReal).Titled("Inicio Real").Formatted("{0:d}");
+                    columns.Add(model => model.FechaFinReal).Titled("Fin Real").Formatted("{0:d}");
+                    columns.Add(model => (((Math.Round(Convert.ToDecimal(model.AvanceProgramado), 2).ToString("N2").Replace(",", "*")).Replace(".", ",")).Replace("*", ".")) + "%").AppendCss("alinear*derecha").Titled("Avance Prog.");
+                    columns.Add(model => (((Math.Round(Convert.ToDecimal(model.AvanceReal), 2).ToString("N2").Replace(",", "*")).Replace(".", ",")).Replace("*", ".")) + "%").AppendCss("alinear*derecha").Titled("Avance Real");
+                    columns.Add(model => (((Math.Round(Convert.ToDecimal(model.Avance), 2).ToString("N2").Replace(",", "*")).Replace(".", ",")).Replace("*", ".")) + "%").AppendCss("alinear*derecha").Titled("Avance Regi.");
+                    columns.Add(model => (((Math.Round(Convert.ToDecimal(model.RealProgramado), 2).ToString("N2").Replace(",", "*")).Replace(".", ",")).Replace("*", ".")) + "%").AppendCss("alinear*derecha").Titled("Real Vs Prog. (%) ");
+                    columns.Add(model => model.Dias).Titled("Real Vs Prog. (Días) ");
+                    columns.Add(model => model.FechaAvance).Titled("Fecha Avance").Formatted("{0:d}");
+                    columns.Add(model => "<button style='background-color:#00AD8E;border-color: #00AD8E; display:" + (model.id == 0 || Auxiliares.GestionBontonesGrid(acciones, "ACCIONES-SIST-01-ACTUALIZAR").Equals("ocultar-accion-catalogo") ? "none" : "block") + ";' class='btn btn-success " + Auxiliares.GestionBontonesGrid(acciones, "ACCIONES-SIST-01-ACTUALIZAR") + "' onclick='location.href=\"" + @Url.Action("Edit", "ProyectosAsignados", new { id = model.id }) + "\"' id='editar' data-id=\"" + model.id + "\"><span class='glyphicon glyphicon-pencil' aria-hidden='true'></span></button>").Encoded(false);
+                })
+            .Empty(Mensajes.MensajeNoDataListado)
+            .Id("grid-AvanceProyecto")
+            .Pageable(pager =>
+            {
+                pager.PagesToDisplay = 5;
+                pager.RowsPerPage = 10;
+            })
+            .Filterable()
+            .Sortable())
+
+
+
+

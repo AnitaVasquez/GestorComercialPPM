@@ -1,0 +1,407 @@
+﻿@model GestionPPM.Entidades.Modelo.Catalogo
+@using GestionPPM.Entidades.Modelo
+
+@{
+    ViewBag.Title = "Crear Subcatálogo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var CatalogoEtapaGeneral = (Catalogo)ViewBag.EtapaGeneral;
+    var CatalogoEstatusDetallado = (Catalogo)ViewBag.EstatusDetallado;
+    var CatalogoEstatusGeneral = (Catalogo)ViewBag.EstatusGeneral;
+
+}
+
+@* Formato para el template de datos *@
+<link href="~/Content/css/personalizar.css" rel="stylesheet" />
+<style>
+    .fila-seccion {
+        margin-bottom: 15px;
+    }
+
+    .etiqueta-seccion {
+        text-align: right;
+    }
+</style>
+@if (!string.IsNullOrEmpty(ViewBag.CodigoCatalago) && ViewBag.CodigoCatalago == "ACCIONES-SIST-01")
+{
+    <script>
+        $(document).ready(function () {
+            $("#descripcion").show();
+        });
+    </script>
+}
+
+<script>
+    $(document).ready(function () {
+
+        //Obtener el tipo de usuario
+        var numero = '@ViewBag.numeroHijos';
+
+        //Tipo catalogo
+        var id_catalogo = '@ViewBag.IdCatalogo';
+
+        //Los campos que varian la visualizacion
+        var div_catalogo_padre = document.getElementById('catalogoPadre');
+        var div_opcion_padre = document.getElementById('opcionPadre');
+        var div_nombre_subcatalogo = document.getElementById('nombreSubcatalogo');
+        var div_etapa_general = document.getElementById('etapaGeneral');
+        var div_estatus_detallado = document.getElementById('estatusDetallado');
+        var div_estatus_general = document.getElementById('estatusGeneral');
+
+        //validar si es de tipo etapa cliente
+        if (numero == 0) {
+            div_catalogo_padre.hidden = true;
+            div_opcion_padre.hidden = true;
+            div_etapa_general.hidden = true;
+            div_estatus_detallado.hidden = true;
+            div_estatus_general.hidden = true;
+            div_nombre_subcatalogo.hidden = false;
+        } else {
+            div_catalogo_padre.hidden = false;
+            div_opcion_padre.hidden = true;
+            div_etapa_general.hidden = true;
+            div_estatus_detallado.hidden = true;
+            div_estatus_general.hidden = true;
+            div_nombre_subcatalogo.hidden = false;
+        }
+
+    });
+
+</script>
+
+<div class="panel">
+
+    <div class="panel-heading-create custom-header-panel">
+        <h4>Datos Subcatálogo</h4>
+    </div>
+
+    <div class="panel-body">
+        <form action="#" id="form-subcatalogo" role="form" data-toggle="validator" method="post" accept-charset="utf-8">
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="box box-default">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Subcatálogo</h3>
+                        </div>
+                        <div class="box-body">
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-6" id="catalogoPadre">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3">Tipo: <span class="requerido"> *</span></label>
+                                        <div class="col-md-9" onchange="ShowSelected();">
+                                            @Html.DropDownList("id_catalogo", ViewBag.ListadoHijosPadre as List<SelectListItem>, new { @class = "form-control campo-requerido" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6" id="opcionPadre">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3">Subcatálogo: <span class="requerido"> *</span></label>
+                                        <div class="col-md-9">
+                                            @Html.DropDownList("id_catalogo_padre", ViewBag.ListadoCatalogoPadre as List<SelectListItem>, new { @class = "form-control campo-requerido" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-12" id="nombreSubcatalogo">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4">Nombre del Subcatálogo: <span class="requerido"> *</span></label>
+                                        <div class="auto-ajustar col-md-10">
+                                            @Html.EditorFor(model => model.nombre_catalgo, new { htmlAttributes = new { @class = "form-control campo-requerido", maxlength = 150 } })
+                                            @Html.ValidationMessageFor(model => model.nombre_catalgo, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @if (!string.IsNullOrEmpty(ViewBag.CodigoCatalago) && ViewBag.CodigoCatalago == "ACCIONES-SIST-01")
+                            {
+                                <div class="row fila-seccion">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-4">Código del Subcatálogo: <span class="requerido"> *</span></label>
+                                            <div class="auto-ajustar col-md-10">
+                                                @Html.EditorFor(model => model.codigo_catalogo, new { htmlAttributes = new { @class = "form-control campo-requerido", maxlength = 50, id = "codigo_catalogo" } })
+                                                @Html.ValidationMessageFor(model => model.codigo_catalogo, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            }
+
+                            <div class="row fila-seccion" id="descripcion" hidden="">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4">Descripción del Subcatálogo: <span class="requerido"> *</span></label>
+                                        <div class="auto-ajustar col-md-10">
+                                            @Html.EditorFor(model => model.descripcion_catalogo, new { htmlAttributes = new { @class = "form-control campo-requerido", maxlength = 150, id = "descripcion_catalogo" } })
+                                            @Html.ValidationMessageFor(model => model.descripcion_catalogo, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-12" id="etapaGeneral">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4">Etapa General: <span class="requerido"> *</span></label>
+                                        <div class="auto-ajustar col-md-10">
+                                            @Html.Editor("general", new { htmlAttributes = new { @class = "form-control", @Value = CatalogoEtapaGeneral.nombre_catalgo, maxlength = 150 } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-12" id="estatusDetallado">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4">Estatus Detallado: <span class="requerido"> *</span></label>
+                                        <div class="auto-ajustar col-md-10">
+                                            @Html.Editor("detallado", new { htmlAttributes = new { @class = "form-control", @Value = CatalogoEstatusDetallado.nombre_catalgo, maxlength = 150 } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-12" id="estatusGeneral">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4">Estatus General: <span class="requerido"> *</span></label>
+                                        <div class="auto-ajustar col-md-10">
+                                            @Html.Editor("statusGeneral", new { htmlAttributes = new { @class = "form-control", @Value = CatalogoEstatusGeneral.nombre_catalgo, maxlength = 150 } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <div class="col-md-offset-5 col-md-12">
+
+                                            @if (!string.IsNullOrEmpty(ViewBag.CodigoCatalago) && ViewBag.CodigoCatalago == "ACCIONES-SIST-01")
+                                            {
+                                                <input id="guardarSubcatalogoAcciones" value="Guardar" type="button" class="btn btn-default" />
+                                            }
+                                            else
+                                            {
+                                                <input id="guardarSubcatalogo" value="Guardar" type="submit" class="btn btn-default" />
+                                            }
+
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            @Html.ActionLink("Regresar", "Index", null, new { @class = "btn btn-default" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div id="datos">
+        @Html.AjaxGrid(Url.Action("IndexGridSubcatalogo"))
+    </div>
+</div>
+
+@section ViewSpecificJavascript {
+    <script>
+        var idGrid = "grid-Subcatalogo";
+
+        var urlAccionGuardar = '@Url.Action("CreateSubCatalogo", "Catalogo")';
+
+        var urlAccionListado = '@Url.Action("IndexSubcatalogo","Catalogo")';
+
+        var resultado = @Html.Raw(Json.Encode(ViewBag.Resultado));
+        var estado = @Html.Raw(Json.Encode(ViewBag.Estado));
+        console.log(resultado);
+        console.log(estado);
+
+        $(document).ready(function () {
+            if (estado != "" && estado != null) {
+                if (estado == "True") {
+                    toastr.success(resultado)
+                } else {
+                    toastr.error(resultado)
+                }
+            }
+         })
+
+        $(document).click(function (e) {
+            var elemento = $(e.currentTarget.activeElement)[0];
+
+            if (elemento.id === 'recargar') {
+
+                //tipo
+                var slt = document.getElementById('id_catalogo');
+                var id = slt.options[slt.selectedIndex].value;
+                var filtro = slt.options[slt.selectedIndex].text;
+
+                //subcatalogo
+                var sbct = document.getElementById('id_catalogo_padre');
+                var subcatalogo = sbct.options[sbct.selectedIndex].value;
+
+                if (id == 0) {
+                    recargarGridByCatalogos(idGrid, id, subcatalogo, filtro);
+                } else {
+                    recargarGridByCatalogos(idGrid);
+                }
+            }
+
+            if (elemento.id === 'nuevo') {
+
+            }
+
+            if (elemento.id === 'ExportarGridExcel') {
+
+            }
+
+            if (elemento.id === 'ExportarGridPDF') {
+
+            }
+
+            if (elemento.id === 'ExportarGridCSV') {
+
+            }
+        });
+
+        $(document).keyup(function (e) {
+            var elemento = $(e.currentTarget.activeElement)[0];
+            //Validar que los Grids tengan filtros de búsqueda
+            var filtrosBusqueda = document.getElementById('GridSearch');
+            busquedaGrid(idGrid);
+        });
+
+
+        $(document).ready(function () {
+            $("#id_catalogo").change(function () {
+
+                debugger;
+                //tipo
+                var slt = document.getElementById('id_catalogo');
+                var id = slt.options[slt.selectedIndex].value;
+                var filtro = slt.options[slt.selectedIndex].text;
+
+                //subcatalogo
+                var sbct = document.getElementById('id_catalogo_padre');
+                var subcatalogo = sbct.options[sbct.selectedIndex].value;
+
+                if (id == 0) {
+                    recargarGridByCatalogos(idGrid, id, subcatalogo, filtro);
+                } else {
+                    recargarGridByCatalogos(idGrid);
+                }
+            });
+
+            $("#id_catalogo_padre").change(function () {
+
+                debugger;
+
+                //tipo
+                var slt = document.getElementById('id_catalogo');
+                var id = slt.options[slt.selectedIndex].value;
+                var filtro = slt.options[slt.selectedIndex].text;
+
+                //subcatalogo
+                var sbct = document.getElementById('id_catalogo_padre');
+                var subcatalogo = sbct.options[sbct.selectedIndex].value;
+
+                recargarGridByCatalogos(idGrid, id, subcatalogo, filtro);
+            });
+        });
+    </script>
+}
+
+<script type="text/javascript">
+
+    var urlAccionGuardar = '@Url.Action("IndexSubcatalogo", "Catalogo");'
+
+    function ShowSelected() {
+        var slt = document.getElementById('id_catalogo');
+        var id = slt.options[slt.selectedIndex].value;
+        var div_opcion_padre = document.getElementById('opcionPadre');
+        //Tipo catalogo
+        var id_catalogo = '@ViewBag.IdCatalogo';
+
+        //Los campos que varian la visualizacion
+        var div_catalogo_padre = document.getElementById('catalogoPadre');
+        var div_opcion_padre = document.getElementById('opcionPadre');
+        var div_nombre_subcatalogo = document.getElementById('nombreSubcatalogo');
+        var div_etapa_general = document.getElementById('etapaGeneral');
+        var div_estatus_detallado = document.getElementById('estatusDetallado');
+        var div_estatus_general = document.getElementById('estatusGeneral');
+
+        if (id == 0) {
+            div_opcion_padre.hidden = false;
+            var valor = slt.options[slt.selectedIndex].text;
+            $("#descripcion_catalogo").val(valor);
+
+            if (id_catalogo == 167) {
+                div_nombre_subcatalogo.hidden = true;
+                div_etapa_general.hidden = false;
+                div_estatus_detallado.hidden = false;
+                div_estatus_general.hidden = false;
+            } else {
+                div_etapa_general.hidden = true;
+                div_estatus_detallado.hidden = true;
+                div_estatus_general.hidden = true;
+                div_nombre_subcatalogo.hidden = false;
+            }
+
+        } else {
+            div_opcion_padre.hidden = true;
+            div_etapa_general.hidden = true;
+            div_estatus_detallado.hidden = true;
+            div_estatus_general.hidden = true;
+            div_nombre_subcatalogo.hidden = false;
+        }
+        }
+
+    @*$("#guardarSubcatalogo").click(function () {
+        debugger
+                var flag = true;
+                $('#form-subcatalogo .campo-requerido').each(function (index, value) {
+                    if ($(this).val() == "" && $(this).is(":visible")) {
+                        flag = false;
+                    }
+                });
+                if (flag) {
+                    guardar();
+                } else {
+                    toastr.error('@Mensajes.MensajeDatosObligatorios')
+                }
+         })
+
+
+    function guardar() {
+        debugger
+        var data_form = JSON.stringify({ "catalogo": $('#form-subcatalogo').serializeObject() })
+         _GuardarSinVolverListado(data_form, urlAccionGuardar)
+    }*@
+
+
+    $("#guardarSubcatalogoAcciones").click(function () {
+            var flag = validarCamposRequeridos('form-subcatalogo');
+            if (flag) {
+                guardar();
+            }
+            else {
+                toastr.error('@Mensajes.MensajeDatosObligatorios')
+                return;
+            }
+        })
+
+    function guardar() {
+        var data_form = JSON.stringify({ "catalogo": $('#form-subcatalogo').serializeObject() })
+        _GuardarSinVolverListado(data_form, urlAccionGuardar)
+    }
+
+
+</script>

@@ -1,0 +1,24 @@
+﻿/*#cabecera-panel-ppm {
+    color: #fff !important;
+    background-color: #3C4252 !important;
+    border-color: #3C4252 !important;
+}*/
+
+.auto-ajustar {
+    width: 100%;
+}
+
+/* Estilo para multiselect tagbox componente*/
+.tagbox-label {
+    cursor: pointer !important;
+    border: 1px solid #d3d3d3 !important;
+    background-image: linear-gradient(to bottom, #FCFCFC 0, #F8F8F8 100%) !important;
+    background-color: #f8f8f8 !important;
+    height: 27px !important;
+    line-height: 27px !important;
+    margin: 4px 0px 4px 4px !important;
+}
+
+.fila-seleccionada {
+    background-color: white;
+}

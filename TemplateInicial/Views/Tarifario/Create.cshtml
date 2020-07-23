@@ -1,0 +1,157 @@
+﻿@model GestionPPM.Entidades.Modelo.Tarifario
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@* Formato para el template de datos *@
+<link href="~/Content/css/personalizar.css" rel="stylesheet" />
+
+<link rel="stylesheet" type="text/css" href="~/Content/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="~/Content/themes/icon.css">
+<link rel="stylesheet" type="text/css" href="~/Content/css/demo.css">
+
+<script type="text/javascript" src="~/Scripts/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.min.js"></script>
+ 
+
+<style>
+    .alinear-derecha {
+        text-align: left;
+    }
+</style>
+
+<form action="#" id="form-tarifario" role="form" data-toggle="validator" method="post" accept-charset="utf-8">
+
+    <div class="row">
+        <div class="col-md-offset-2 col-md-8">
+            <div class="panel">
+
+                <div class="panel-heading-create custom-header-panel">
+                    <h4>@Etiquetas.TituloPanelCreacionTarifario</h4>
+                </div>
+
+                <div class="panel-body">
+                    
+
+                    <div class="form-horizontal">
+                         
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Nombre Costo: <span class="requerido"> *</span></label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.tipo_tarifario, new { htmlAttributes = new { @class = "form-control campo-requerido", maxlength = 150, required = "" } })
+                                @Html.ValidationMessageFor(model => model.tipo_tarifario, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @*@Html.LabelFor(model => model.valor_tarifario, htmlAttributes: new { @class = "control-label col-md-2" })*@
+                            <label class="control-label col-md-3">Valor: <span class="requerido"> *</span></label>
+                            <div class="input-group" style="padding-left:15px">
+                                <span class="input-group-addon">US$</span>
+                                <input id="valor_tarifario" name="valor_tarifario" class="valor_tarifario easyui-numberbox campo-requerido" style="height:35px; padding:10px;" required="" value="0,000000" data-options="max:9999999999.999999,precision:6, groupSeparator:'.', decimalSeparator:','">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @*@Html.LabelFor(model => model.linea_negocio, htmlAttributes: new { @class = "control-label col-md-2" })*@
+                            <label class="control-label col-md-3">Línea de Negocio: <span class="requerido"> *</span></label>
+                            <div class="col-md-8">
+                                @*@Html.EditorFor(model => model.linea_negocio, new { htmlAttributes = new { @class = "form-control" } })*@
+                                @Html.DropDownList("linea_negocio", ViewBag.ListadoLineaNegocio as List<SelectListItem>, new { @class = "form-control campo-requerido", required = "" })
+                                @*@Html.ValidationMessageFor(model => model.linea_negocio, "", new { @class = "text-danger" })*@
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @*@Html.LabelFor(model => model.tipo, htmlAttributes: new { @class = "control-label col-md-2" })*@
+                            <label class="control-label col-md-3">Tipo: <span class="requerido"> *</span></label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("tipo", ViewBag.ListadoTipoTarifario as List<SelectListItem>, new { @class = "form-control campo-requerido", required = "" })
+                                @*@Html.ValidationMessageFor(model => model.tipo, "", new { @class = "text-danger" })*@
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @*@Html.LabelFor(model => model.gestion_tarifario, htmlAttributes: new { @class = "control-label col-md-2" })*@
+                            <label class="control-label col-md-3">Gestión: <span class="requerido"> *</span></label>
+                            <div class="col-md-8">
+                                <div>
+                                    @*@Html.EditorFor(model => model.gestion_tarifario)*@
+                                    @Html.DropDownList("gestion_tarifario", new SelectList(new List<SelectListItem> { new SelectListItem { Text = "Si", Value = "True"},
+new SelectListItem { Text = "No", Value = "False" },}, "Value", "Text", null), new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.gestion_tarifario, "", new { @class = "text-danger" })
+                                    @*@Html.ValidationMessageFor(model => model.gestion_tarifario, "", new { @class = "text-danger" })*@
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="display:none;" class="form-group">
+                            @Html.LabelFor(model => model.estado_tarifario, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                <div>
+                                    @Html.EditorFor(model => model.estado_tarifario)
+                                    @*@Html.ValidationMessageFor(model => model.estado_tarifario, "", new { @class = "text-danger" })*@
+                                </div>
+                            </div>
+                        </div>
+
+                        <br />
+
+                        <div class="form-group">
+                            <div class="col-md-offset-4 col-md-12">
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <input id="guardar" type="button" value="Guardar" class="btn btn-default" />
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                @Html.ActionLink("Regresar", "Index", null, new { @class = "btn btn-default" })
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>
+
+@section ViewSpecificJavascript {
+    <script>
+            var urlAccionGuardar = '@Url.Action("Create","Tarifario")';
+            var urlAccionListado = '@Url.Action("Index","Tarifario")';
+            $("#guardar").click(function () {
+                debugger
+                var flag = true;
+                // your code here (But not asynchronous code such as Ajax because it does not wait for response and move to next line.)
+                $('#form-tarifario .campo-requerido').each(function (index, value) {
+                    //debugger
+                    if ((($(this).val() == "" || $(this).val() === null) && $(this).is(":visible"))) {
+                        //console.log('Please fill all the fields');
+                        flag = false;
+                    }
+                });
+
+                if (flag)
+                {
+                    if ($("#valor_tarifario").val() == "" || $("#valor_tarifario").val() == null)
+                    {
+                    toastr.error('@Mensajes.MensajeDatosObligatorios')
+                    }
+                    else
+                    {
+                    guardar(); // continue the submit unbind preventDefault
+                    }
+                     
+                } else {
+                    toastr.error('@Mensajes.MensajeDatosObligatorios')
+                }
+            })
+
+            function guardar() {
+                debugger
+                var data_form = JSON.stringify({ "tarifario": $('#form-tarifario').serializeObject() })
+                _Guardar(data_form, urlAccionGuardar, urlAccionListado)
+            }
+    </script>
+}

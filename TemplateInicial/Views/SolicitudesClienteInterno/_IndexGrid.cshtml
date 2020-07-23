@@ -1,0 +1,47 @@
+﻿@model IEnumerable<GestionPPM.Entidades.Modelo.SolicitudClienteInternoInfo>
+@{
+
+    bool flag = (bool)ViewBag.PuedeReasigarUsuarios;
+    var acciones = (List<string>)ViewBag.AccionesUsuario;
+}
+
+@(Html
+    .Grid(Model)
+    .Build(columns =>
+    {
+        columns.Add(model => model.fecha_hora_solicitud).Titled("Fecha").Formatted("{0:d}").AppendCss("celda-grande");
+        columns.Add(model => model.FechaFinalizacionSolicitud.Year < 2000 ? string.Empty : model.FechaFinalizacionSolicitud.ToString("dd/MM/yyyy")).Titled("Fecha Fin").Formatted("{0:d}").AppendCss("celda-grande");
+        columns.Add(model => model.fecha_hora_solicitud.HasValue ? model.fecha_hora_solicitud.Value.ToString("HH:mm:ss") : string.Empty).Titled("Hora").AppendCss("celda-grande");
+        columns.Add(model => model.CodigoSolicitud).Titled("N. Solicitud").AppendCss("celda-grande");
+        columns.Add(model => model.TextoCatalogoEstadoSolicitud).Titled("Estado Solicitud").AppendCss("celda-grande");
+        columns.Add(model => model.NombresCompletosSolicitante).Titled("Solicitante").AppendCss("celda-grande");
+        columns.Add(model => model.NombreProyectoSolicituCliente).Titled("Asunto").AppendCss("celda-grande");
+        columns.Add(model => model.TextoCatalogoTipo).Titled("Tipo de Solicitud").AppendCss("celda-grande");
+        columns.Add(model => model.TextoCatalogoSubTipo).Titled("Subtipo de Solicitud").AppendCss("celda-grande");
+        columns.Add(model => model.TextoCatalogoMarca).Titled("Marca").Encoded(false).RenderedAs(model => model.TextoCatalogoTipo == "MANTENIMIENTO" ? "<p>" + model.Portales + "</p>" : "<p>" + model.TextoCatalogoMarca + "</p>").Css("celda-grande");
+        columns.Add(model => model.cantidad).Titled("Cantidad").AppendCss("celda-grande");
+        columns.Add(model => model.Urgente).Titled("Tipo").Encoded(false).RenderedAs(model => model.Urgente == true ? "<p style='color: red'>" + "URGENTE" + "</p>" : "<p style='color: green'>" + "NORMAL" + "</p>").Css("celda-centrada");
+        columns.Add(model =>
+                            "<button title='Crear Código de Cotización.' style='background-color:#00B5E6;border-color: #00B5E6; display:" + (model.id_codigo_cotizacion == null ? "inline-block" : "none") +"' class='btn btn-success " + Auxiliares.GestionBontonesGrid(acciones, "ACCIONES-SIST-01-ACTUALIZAR") + "' onclick='location.href=\"" + @Url.Action("Edit", "CodigoCotizacion", new { id = model.id_codigo_cotizacion, solicitudID = model.id_solicitud }) + "\"' id='crear-codigo-cotizacion' data-id=\"" + model.id_codigo_cotizacion + "\"><span class='glyphicon glyphicon-file'></span></button>" +
+                             "<a title='Asignación a usuarios.' data-backdrop='static' data-toggle='modal' data-target='#contenido-modal' onclick='_GetCreate({id:" + model.id_solicitud + "},\"" + @Url.Action("_AsignacionUsuarios", "SolicitudesClienteInterno") + "\");' style='cursor: pointer;background-color:#FFC52D;border-color:#FFC52D;display:" + (flag && Auxiliares.GestionBontonesGrid(acciones, "ACCIONES-SIST-01-ASIG-USUA").Equals("ocultar-accion-catalogo") ? "none" : "inline-block") + "' class='btn btn-danger " + Auxiliares.GestionBontonesGrid(acciones, "ACCIONES-SIST-01-ASIG-USUA") + "' id='asignacion-usuarios' data-id=\"" + model.id_solicitud + "\"><i style='color: black;' class='fa fa-user-plus' aria-hidden='true'></i></a>" +
+                             " <a title='Asignar ANS/SLA' data-backdrop='static' data-toggle='modal' data-target='#contenido-modal' onclick='_GetCreate({id:" + model.id_solicitud + "},\"" + @Url.Action("_AsignarSLA_ANS", "SolicitudesClienteInterno") + "\");'  class='btn btn-danger " + Auxiliares.GestionBontonesGrid(acciones, "ACCIONES-SIST-01-ASIG-ANS") + "' id='cambiarEstadoSolicitud' data-id=\"" + model.id_solicitud + "\"><i class='fa fa-exchange' aria-hidden='true'></i></a>" +
+                             " <a data-backdrop='static' data-toggle='modal' data-target='#contenido-modal' onclick='_GetCreate({id:" + model.id_solicitud + "},\"" + @Url.Action("_CambiarEstadoSolicitud", "SolicitudesClienteInterno") + "\");' style='cursor: pointer;background-color:#FF5E00;border-color:#FF5E00;' class='btn btn-danger " + Auxiliares.GestionBontonesGrid(acciones, "ACCIONES-SIST-01-EST-SOLI") + "' id='aprobarCodigoCotizacion' data-id=\"" + model.id_codigo_cotizacion + "\"><i class='glyphicon glyphicon-random' aria-hidden='true'></i></a>" +
+                             "<button style='background-color:#00AD8E;border-color: #00AD8E;' class='btn btn-success " + Auxiliares.GestionBontonesGrid(acciones, "ACCIONES-SIST-01-CREAR-CODCOT") + "' data-backdrop='static' data-toggle='modal' data-target='#contenido-modal' onclick='_GetCreate({id:" + model.id_solicitud + "},\"" + @Url.Action("_EditarSolicitud", "SolicitudesClienteInterno") + "\");' id='editar' data-id=\"" + model.id_codigo_cotizacion + "\"><span class='glyphicon glyphicon-pencil' aria-hidden='true'></span></button>" +
+                             " <a title='Comentarios.' data-backdrop='static' data-toggle='modal' data-target='#contenido-modal' onclick='_GetCreate({id:" + model.id_solicitud + "},\"" + @Url.Action("_Comentario", "SolicitudesClienteInterno") + "\");' style='cursor: pointer;background-color:#ccc;border-color:#ccc;' class='btn btn-danger " + Auxiliares.GestionBontonesGrid(acciones, "ACCIONES-SIST-01-COMENTARIO") + "' id='comentario-solicitud' data-id=\"" + model.id_solicitud + "\"><i style='color: black;' class='fa fa-commenting-o' aria-hidden='true'></i></a>"+
+                             "<a title='Ver Solicitud.' data-backdrop='static' data-toggle='modal' data-target='#contenido-modal' onclick='_GetCreate({id:" + model.id_solicitud + "},\"" + @Url.Action("_ImprimirSolicitud", "SolicitudesClienteInterno") + "\");' style='cursor: pointer;background-color:#00AD8E;border-color:#00AD8E;' ' class='btn btn-danger " + Auxiliares.GestionBontonesGrid(acciones, "ACCIONES-SIST-01-IMPRIMIRSOL") + " id='ver-solicitud' data-id=\"" + model.id_solicitud + "\"><i style='color: black;' class='glyphicon glyphicon-print' aria-hidden='true'></i></a>" +
+                             " <a title='Ver archivos adjuntos.' data-backdrop='static' data-toggle='modal' data-target='#contenido-modal' onclick='_GetCreate({id:" + model.id_solicitud + "},\"" + @Url.Action("_AdjuntarArchivos", "SolicitudesClienteInterno") + "\");' style='cursor: pointer;background-color:#FF5E00;border-color:#FF5E00;' class='btn btn-danger " + Auxiliares.GestionBontonesGrid(acciones, "ACCIONES-SIST-01-ADJUNTOS") + "' id='ver-adjuntos' data-id=\"" + model.id_solicitud + "\"><i style='color: black;' class='glyphicon glyphicon-folder-open' aria-hidden='true'></i></a>").Css("columna-acciones").Encoded(false);
+
+        //"<button title='Eliminar.' onclick='ConfirmarEliminacion_(" + model.id_solicitud + ",\"" + @Url.Action("Eliminar", "CostoSublineaNegocio") + "\");' background-color:#FF5E00;border-color:#FF5E00;' class='btn btn-danger' id='eliminar' data-id=\"" + model.id_solicitud + "\"><span class='glyphicon glyphicon-trash' aria-hidden='true'></span></button>"
+        //"<button title='Eliminar.' onclick='ConfirmarEliminacion_(" + model.id_solicitud + ",\"" + @Url.Action("Eliminar", "CostoSublineaNegocio") + "\");' background-color:#FF5E00;border-color:#FF5E00;' class='btn btn-danger' id='eliminar' data-id=\"" + model.id_solicitud + "\"><span class='glyphicon glyphicon-trash' aria-hidden='true'></span></button>"
+    })
+    //.RowAttributed(model => new { data_id = model.CuerpoCorreo })
+    .RowAttributed(model => new { @class = model.Urgente  ? "SolicitudFilaUrgente" : string.Empty })
+    .Empty(Mensajes.MensajeNoDataListado)
+    .Id("grid-SolicitudesClienteInterno")
+    .Pageable(pager =>
+    {
+        pager.PagesToDisplay = 5;
+        pager.RowsPerPage = 10;
+    })
+    .Filterable()
+    .Sortable())

@@ -1,0 +1,31 @@
+﻿@model IEnumerable<GestionPPM.Entidades.Modelo.ListadoCodigosPrefacturar>
+@{
+    var acciones = (List<string>)ViewBag.AccionesUsuario;
+}
+
+@(Html
+            .Grid(Model)
+            .Build(columns =>
+            {
+                columns.Add(model => "<input class='seleccion-item' type='checkbox' id= \"" + model.Id + "\" />").Titled(Html.CheckBox("CheckAll", false, new { @id = "seleccionar-todo", @title = "Seleccionar todos los elementos mostrados en la página." })).Encoded(false);
+                columns.Add(model => model.CodigoCotizacion).Titled("Código de Cotización");
+                columns.Add(model => model.Detalle).Titled("Detalle");
+                columns.Add(model => model.RUC).Titled("RUC");
+                columns.Add(model => model.Cliente).Titled("Cliente");
+                columns.Add(model => model.Correo).Titled("Correo");
+                columns.Add(model => model.Ejecutivo).Titled("Ejecutivo");
+                columns.Add(model => (((Math.Round(Convert.ToDecimal(model.Valor), 2).ToString("N2").Replace(",", "-")).Replace(".", ",")).Replace("-", "."))).AppendCss("alinear-derecha").Titled("Subtotal (US$)");
+                columns.Add(model => "<button title='Generar Presupuesto SAFI' onclick='ConfirmarPresupuesto_(" + model.Id + ",\"" + @Url.Action("PresupuestoIndividual", "PresupuestosSAFI") + "\");' background-color:#00AD8E;border-color:#00AD8E;' class='btn btn-success " + Auxiliares.GestionBontonesGrid(acciones, "ACCIONES-SIST-01-PRESUPUESTO-SAFI") + "' id='presupuesto-safi' data-id=\"" + model.Id + "\"><span class='glyphicon glyphicon-send' aria-hidden='true'></span></button>").Encoded(false);
+            })
+            .Empty(Mensajes.MensajeNoDataListado)
+            .Id("grid-Prefacturar")
+            .Pageable(pager =>
+            {
+                pager.PagesToDisplay = 5;
+                pager.RowsPerPage = 10;
+            })
+            .Filterable()
+            .Sortable())
+
+
+

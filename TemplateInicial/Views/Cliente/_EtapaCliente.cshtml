@@ -1,0 +1,22 @@
+﻿@model GestionPPM.Entidades.Modelo.Cliente
+
+<div class="form-group">
+    <label class="control-label col-md-2">Etapa General: <span class="requerido"> *</span></label>
+    <div class="col-md-10">
+        @Html.DropDownList("estapa_general", ViewBag.ListadoEtapaGeneral as List<SelectListItem>, new { @class = "form-control campo-requerido" })
+    </div>
+</div>
+
+<div class="form-group">
+    <label class="control-label col-md-2">Estatus Detallado: <span class="requerido"> *</span></label>
+    <div class="col-md-10">
+        @Html.DropDownList("estatus_detallado", ViewBag.ListadoEstatusDetallado as List<SelectListItem>, new { @class = "form-control campo-requerido" })
+    </div>
+</div>
+
+<div class="form-group">
+    <label class="control-label col-md-2">Estatus General: <span class="requerido"> *</span></label>
+    <div class="col-md-10">
+        @Html.DropDownList("estatus_general", ViewBag.ListadoEstatusGeneral as List<SelectListItem>, new { @class = "form-control campo-requerido" })
+    </div>
+</div>

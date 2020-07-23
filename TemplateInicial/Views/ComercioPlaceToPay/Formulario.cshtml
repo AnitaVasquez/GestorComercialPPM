@@ -1,0 +1,663 @@
+﻿@model GestionPPM.Entidades.Modelo.PlaceToPay.ComercioPlaceToPay
+@using GestionPPM.Entidades.Modelo
+@using GestionPPM.Entidades.Metodos
+
+@{
+    ViewBag.Title = "Formulario";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    UsuarioCE usuario = (UsuarioCE)ViewBag.Usuario;
+}
+
+<link href="~/Content/css/personalizar.css" rel="stylesheet" />
+<style>
+    .fila-seccion {
+        margin-bottom: 15px;
+    }
+
+    .etiqueta-seccion {
+        text-align: right;
+    }
+
+    .input-bloqueado {
+        pointer-events: none;
+    }
+
+    .alinear-derecha {
+        text-align: right;
+        min-width: 15em;
+    }
+</style>
+<div class="panel">
+
+    <div class="panel-heading-create custom-header-panel">
+        <h4>Comercio Place To Pay </h4>
+    </div>
+
+    <div class="panel-body">
+        <form action="#" id="form-ComercioPlaceToPay" role="form" data-toggle="validator" method="post" accept-charset="utf-8">
+
+            <div class="col-md-12">
+
+                <div class="col-lg-12 seccion-detalles-caso">
+                    <div class="box box-default">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Información Principal</h3>
+
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                            </div>
+                        </div>
+
+                        @Html.Hidden("IDComercioPlaceToPay", Model.IDComercioPlaceToPay)
+                        @Html.Hidden("Fecha", Model.Fecha)
+                        @Html.Hidden("CodigoUnico", Model.CodigoUnico)
+                        @Html.Hidden("MID", Model.MID)
+                        @Html.Hidden("Especialidad", Model.Especialidad)
+                        @Html.Hidden("Marca", Model.Marca)
+
+                        @Html.Hidden("Prefijo1", Model.Prefijo1)
+                        @Html.Hidden("Telefono1", Model.Telefono1)
+                        @Html.Hidden("Prefijo2", Model.Prefijo2)
+                        @Html.Hidden("Telefono2", Model.Telefono2)
+                        @Html.Hidden("Prefijo3", Model.Prefijo3)
+                        @Html.Hidden("Telefono3", Model.Telefono3)
+                        @Html.Hidden("Prefijo4", Model.Prefijo4)
+                        @Html.Hidden("Telefono4", Model.Telefono4)
+
+                        @Html.Hidden("CreatedAt", Model.CreatedAt)
+                        @Html.Hidden("CreatedBy", Model.CreatedBy)
+
+                        @Html.Hidden("UpdatedAt", Model.UpdatedAt)
+                        @Html.Hidden("UpdatedBy", Model.UpdatedBy)
+
+                        <div class="box-body">
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Fecha:<span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.Editor("FechaAfiliacion", new { htmlAttributes = new { @class = "form-control campo-requerido", @type = "date", id = "FechaAfiliacion", @Value = Model.FechaAfiliacion.Value.ToString("yyyy-MM-dd") , required = "required" } })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Region:<span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("Region", CatalogoEntity.ObtenerListadoCatalogosByCodigo("REGION-01", (Model.Region ?? 0).ToString()), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido", required = "required" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Nombres Ejecutivo:<span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            <input type="text" name="NombresEjecutivo" id="NombresEjecutivo" value="@usuario.nombre_usuario" class="form-control" required/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Apellidos Ejecutivo:<span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            <input type="text" name="ApellidosEjecutivo" id="ApellidosEjecutivo" value="@usuario.apellido_usuario" class="form-control" required/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row  fila-seccion">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-2">Correo Electrónico: <span class="requerido"> *</span></label>
+                                        <div class="col-md-10">
+                                           @Html.Editor("CorreoElectronicoEjecutivo", new
+                                      {
+                                          htmlAttributes = new
+                                          {
+                                              @class = "form-control",
+                                              maxlength = 200,
+                                              @Value = usuario.mail_usuario,
+                                              required="required"
+                                          }
+                                      })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-md-12">
+
+                <div class="col-lg-12 seccion-detalles-caso">
+                    <div class="box box-default">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Información Comercio</h3>
+
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                            </div>
+                        </div>
+
+                        <div class="box-body">
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">RUC:<span class="requerido"> *</span></label>
+                                        <div class="col-md-7">
+                                           @*@Html.Editor("RUC", new { htmlAttributes = new { @class = "form-control", @Value = Model.RUC, maxlength = "13", placeHolder="Búsqueda", required = "" } })*@
+                                            <input id="RUC" maxlength="20" name="RUC" value="@Model.RUC" class="form-control advancedAutoComplete auto-ajustar" type="text" autocomplete="off" placeholder="Búsqueda">
+                                        </div>
+                                        <div class="col-md-1" id="cargar-informacion-comercio" style="display: none; margin-top: 10px;">
+                                            <i style="color: #3C4252;" class="fa fa-spinner fa-spin"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Mail:<span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.Editor("Mail", new { htmlAttributes = new { @class = "form-control campo-requerido", @Value = Model.Mail, maxlength = "100", required = "" } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Código Principal o Sucursal:<span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("TipoCodigo", CatalogoEntity.ObtenerListadoCatalogosByCodigo("TIPOCODIGO-01", (Model.TipoCodigo ?? 0).ToString()), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido", required = "" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Forma de Contacto:<span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("FormaContacto", CatalogoEntity.ObtenerListadoCatalogosByCodigo("FORMACONTACTO-01", (Model.FormaContacto ?? 0).ToString()), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido", required = "" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Nombres del Contacto :<span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.Editor("NombresContacto", new { htmlAttributes = new { @class = "form-control campo-requerido", @Value = Model.NombresContacto, maxlength = "255", required = "" } })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Apellidos del Contacto:<span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                           @Html.Editor("ApellidosContacto", new { htmlAttributes = new { @class = "form-control campo-requerido", @Value = Model.ApellidosContacto, maxlength = "255", required = "" } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                            <div class="row  fila-seccion">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label title="Administrador" class="etiqueta-seccion control-label col-md-2">Correo Electrónico del Líder de Proyecto del Comercio: <span class="requerido"> *</span></label>
+                                        <div class="col-md-10">
+                                            @Html.Editor("CorreoElectronicoLiderProyectoComercio", new
+                                      {
+                                          htmlAttributes = new
+                                          {
+                                              @class = "form-control campo-requerido",
+                                              maxlength = 255,
+                                              @Value = Model.CorreoElectronicoLiderProyectoComercio,
+                                              required="required"
+                                          }
+                                      })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr />
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Nombres del Administrador :<span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.Editor("NombresAdministrador", new { htmlAttributes = new { @class = "form-control campo-requerido", @Value = Model.NombresAdministrador, maxlength = "255", required = "" } })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Apellidos del Administrador:<span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.Editor("ApellidosAdministrador", new { htmlAttributes = new { @class = "form-control campo-requerido", @Value = Model.ApellidosAdministrador, maxlength = "255", required = "" } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Identificación del Administrador:<span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.Editor("IdentificacionAdministrador", new { htmlAttributes = new { @class = "form-control campo-requerido", @Value = Model.IdentificacionAdministrador, maxlength = "13", required = "" } })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Número de Celular del Administrador :<span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.Editor("NumeroCelularAdministrador", new { htmlAttributes = new { @class = "form-control campo-requerido campo-entero", @Value = Model.NumeroCelularAdministrador, maxlength = "15", required = "" } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr />
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Razón Social:<span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.Editor("RazonSocial", new { htmlAttributes = new { @class = "form-control campo-requerido", @Value = Model.RazonSocial, maxlength = "255", required = "" } })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Identificación Representante Legal:<span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.Editor("IdentificacionRepresentanteLegal", new { htmlAttributes = new { @class = "form-control campo-requerido", @Value = Model.IdentificacionRepresentanteLegal, maxlength = "13", required = "" } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Dirección del Comercio:<span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.Editor("DireccionComercio", new { htmlAttributes = new { @class = "form-control campo-requerido", @Value = Model.DireccionComercio, maxlength = "255", required = "" } })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Nombre Comercial del establecimiento:<span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.Editor("Establecimiento", new { htmlAttributes = new { @class = "form-control campo-requerido", @Value =Model.Establecimiento, maxlength = "255", required = "" } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Nombre del Representante Legal:<span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.Editor("NombreRepresentanteLegal", new { htmlAttributes = new { @class = "form-control campo-requerido", @Value = Model.NombreRepresentanteLegal, maxlength = "255", required = "" } })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Teléfono Particular:<span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.Editor("TelefonoParticular", new { htmlAttributes = new { @class = "form-control campo-requerido campo-entero", @Value = Model.TelefonoParticular, maxlength = "15", required = "" } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr />
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-2">Nombre del Banco:<span class="requerido"> *</span></label>
+                                        <div class="col-md-10">
+                                            @Html.Editor("BancoCuentaBancaria", new { htmlAttributes = new { @class = "form-control campo-requerido", @Value = Model.BancoCuentaBancaria, maxlength = "255", required = "" } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Tipo de Cuenta:<span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.Editor("TipoCuentaBancaria", new { htmlAttributes = new { @class = "form-control campo-requerido", @Value = Model.TipoCuentaBancaria, maxlength = "255", required = "" } })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Número de Cuenta:<span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.Editor("NumeroCuentaBancaria", new { htmlAttributes = new { @class = "form-control campo-requerido campo-entero", @Value = Model.NumeroCuentaBancaria, maxlength = "15", required = "" } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <hr />
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Número de Transacciones Mensuales:<span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @*@Html.Editor("NumeroTransaccionesMensuales", new { htmlAttributes = new { @class = "form-control campo-requerido campo-entero", @Value = Model.NumeroTransaccionesMensuales, maxlength = "7", required = "" } })*@
+                                            <input name="NumeroTransaccionesMensuales" id="NumeroTransaccionesMensuales" class="campo-entero form-control campo-requerido" value="@Model.NumeroTransaccionesMensuales" type="text" maxlength="5" required />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Producto Recomendado:<span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.Editor("ProductoRecomendado", new { htmlAttributes = new { @class = "form-control campo-requerido", @Value = Model.ProductoRecomendado, maxlength = "255", required = "" } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Monto por transacción promedio:<span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                                <div class="input-group">
+                                                    <div class="input-group-addon">
+                                                        <i class="fa fa-usd"></i>
+                                                    </div>
+                                                    <input name="MontoPromedioPorTransaccion" id="MontoPromedioPorTransaccion" class="campo-decimal-manual-1 form-control campo-requerido" value="@Model.MontoPromedioPorTransaccion" type="text" maxlength="18" required />
+                                                </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Segmento:<span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.Editor("Segmento", new { htmlAttributes = new { @class = "form-control campo-requerido", @Value = Model.Segmento, maxlength = "255", required = "" } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Industria:<span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.Editor("Industria", new { htmlAttributes = new { @class = "form-control campo-requerido", @Value = Model.Industria, maxlength = "255", required = "" } })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Tipo de Servicio:<span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.Editor("TipoDeServicio", new { htmlAttributes = new { @class = "form-control campo-requerido", @Value = Model.TipoDeServicio, maxlength = "255", required = "" } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr />
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Tipo de crédito a disponer:<span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.Editor("TiposCreditoDisponer", new { htmlAttributes = new { @class = "form-control campo-requerido", @Value = Model.TiposCreditoDisponer, maxlength = "255", required = "" } })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Plazos:<span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.Editor("Plazos", new { htmlAttributes = new { @class = "form-control campo-requerido campo-entero", @Value = Model.Plazos, maxlength = "7", required = "" } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Tipo de propuesta:<span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("TipoPropuesta", CatalogoEntity.ObtenerListadoCatalogosByCodigo("TIPOPROPUESTA-01", (Model.TipoPropuesta ?? 0).ToString()), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido", required = "" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Fases de Gestión:<span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("FaseGestion", CatalogoEntity.ObtenerListadoCatalogosByCodigo("FASESGESTIONP2P-01", (Model.FaseGestion ?? 0).ToString()), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido", required = "" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="row fila-seccion">
+                                <div class="form-group">
+                                    <label class="etiqueta-seccion control-label col-md-2">Propuesta adjunto:<span class="requerido"> *</span></label>
+                                    <div class="col-md-10">
+                                        <input title="@(!string.IsNullOrEmpty(Model.PropuestaAdjuntada) ? "Ya existe una propuesta adjunta." : string.Empty)" type="file" id="Adjunto" style="display: inline-block;"  class="form-control adjuntos-archivo" onchange="convertToBase64(this);" accept="application/pdf" />
+                                        <small>@Model.PropuestaAdjuntada</small>
+                                        @*<label for="Adjunto"> Cargar Archivo...</label>
+                                        <input type="file" class="form-control adjuntos-archivo" name="Adjuntos" id="Adjunto" onchange="convertToBase64(this);" accept="application/pdf" />*@
+
+                                        @Html.Hidden("PropuestaAdjuntada", Model.PropuestaAdjuntada)
+                                    </div>
+                                </div>
+                            </div>
+                            <hr />
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </form>
+
+        <div class="row fila-seccion">
+            <div class="col-xs-6" style="text-align: right;">
+                <input id="guardar" type="button" value="Guardar" class="btn btn-default" />
+            </div>
+            <div class="col-xs-6" style="text-align: left;">
+                @Html.ActionLink("Regresar", "Index", null, new { @class = "btn btn-default" })
+            </div>
+        </div>
+
+
+
+    </div>
+</div>
+
+@section ViewSpecificJavascript {
+    <script>
+        var urlAccionListado = '@Url.Action("Index")';
+        var urlAccionGuardar = '@Url.Action("Create")';
+        var urlAccionEditar = '@Url.Action("Edit")';
+
+        var archivosAdjuntos = [];
+
+        $(document).ready(function () {
+
+            //Autocomplete
+            $('#RUC').autoComplete({
+                resolver: 'custom',
+                noResultsText: 'No se encontraron resultados.',
+                events: {
+                    search: function (qry, callback) {
+                        $("#cargar-informacion-comercio").show();
+                        $.ajax(
+                            '@Url.Action("_GetInformacionPrincipalComercio")',
+                            {
+                                data: { 'busqueda': qry }
+                            }
+                        ).done(function (res) {
+                            callback(res.results)
+                            $("#cargar-informacion-comercio").hide();
+                            }).fail(function (jqXHR, textStatus, errorThrown) {
+                                if (jqXHR.status === 0) {
+                                    console.log(`Not connect: Verify Network. Status Response:  ${jqXHR.status}`);
+                                } else if (jqXHR.status == 404) {
+                                    console.log(`Requested page not found [404]. Status Response:  ${jqXHR.status}`);
+                                } else if (jqXHR.status == 500) {
+                                    console.log(`Internal Server Error [500]. Status Response:  ${jqXHR.status}`);
+                                } else if (textStatus === 'parsererror') {
+                                    console.log(`'Requested JSON parse failed. Response:  ${textStatus}`);
+                                } else if (textStatus === 'timeout') {
+                                    console.log(`'Time out error. Response:  ${textStatus}`);
+                                } else if (textStatus === 'abort') {
+                                    console.log(`'Ajax request aborted. Response:  ${textStatus}`);
+                                } else {
+                                    Common.AjaxFailureCallback(`'Uncaught Error:  ${jqXHR.responseText}`);
+                                }
+                                $("#cargar-informacion-comercio").hide();
+                            }).always(function () {
+                                $("#cargar-informacion-comercio").hide();
+                            });
+                    }
+                }
+            });
+
+            //Evento que se activa al seleccionar un elemento
+            $('#RUC').on('autocomplete.select', function (e, item) {
+                e.preventDefault();
+                var id = item.id;
+                var texto = item.text;
+
+                var descripcion = item.desc;
+                var registro = item.auxiliares2;
+
+                for (var prop in registro) {
+                    let elemento = registro[prop]
+                    //console.log(elemento)
+                    //$("#IDComercioPlaceToPay").val(elemento.IDComercioPlaceToPay)
+
+                    //$("#TipoCodigo").val(elemento.TipoCodigo)
+                    $("#TipoCodigo option:contains(" + 'PRINCIPAL' + ")").attr("selected", true);
+
+                    $("#Mail").val(elemento.Mail)
+                    $("#DireccionComercio").val(elemento.DireccionComercio)
+                    $("#Establecimiento").val(elemento.Establecimiento)
+                    $("#NombreRepresentanteLegal").val(elemento.NombreRepresentanteLegal)
+                    $("#RazonSocial").val(elemento.RazonSocial)
+                    $("#TelefonoParticular").val(elemento.TelefonoParticular)
+
+                    $("#CodigoUnico").val(elemento.CodigoUnico)
+                    $("#MID").val(elemento.MID)
+                    $("#Especialidad").val(elemento.Especialidad)
+                    $("#Marca").val(elemento.Marca)
+
+                    $("#Prefijo1").val(elemento.Prefijo1)
+                    $("#Telefono1").val(elemento.Telefono1)
+
+                    $("#Prefijo2").val(elemento.Prefijo2)
+                    $("#Telefono2").val(elemento.Telefono2)
+
+                    $("#Prefijo3").val(elemento.Prefijo3)
+                    $("#Telefono3").val(elemento.Telefono3)
+
+                    $("#Prefijo4").val(elemento.Prefijo4)
+                    $("#Telefono4").val(elemento.Telefono4)
+                }
+
+                return;
+            });
+        });
+
+        $("#guardar").click(function () {
+            var flag = validarCamposRequeridos("form-ComercioPlaceToPay");
+            if (flag)
+                guardar();
+            else {
+                //_ALERT_TOASTR.DANGER.Options.progressBar = true;
+                //_ALERT_TOASTR.DANGER.Options.timeOut = 1500;
+                //_ALERT_TOASTR.DANGER.Options.extendedTimeOut = 1500;
+                _ALERT_TOASTR.ShowAlert(_ALERT_TOASTR.DANGER, '@Mensajes.MensajeDatosObligatorios', '@Etiquetas.TituloError')
+            }
+        })
+
+        function guardar() {
+            let formulario = $('#form-ComercioPlaceToPay').serializeObject()
+            let accion = $("#IDComercioPlaceToPay").val() == 0 ? urlAccionGuardar : urlAccionEditar;
+            var data_form = JSON.stringify({ "formulario": formulario, "archivos": archivosAdjuntos })
+            Common.Ajax(_HTTP_METHOD.POST, accion, data_form, _TYPE_REQUEST.JSON, DoneRequest, true);
+        }
+
+        function DoneRequest(response) {
+            debugger
+            let resultado = response.Resultado; //Variable resultado
+
+            if (resultado.Estado) {
+                $('#form-ComercioPlaceToPay')[0].reset();
+
+                Common.DisplayAlert(_ALERT_TOASTR.SUCCESS, resultado.Respuesta);
+                swal({
+                    title: "¿Desear volver la listado principal?",
+                    icon: "info",
+                    buttons: ["Cancelar", "OK"],
+                    dangerMode: false,
+                }).then((confirm) => {
+                    if (confirm) {
+                        setTimeout(function () {
+                            window.location.replace(urlAccionListado);
+                        }, 500);
+                    }
+                    });
+            } else {
+                Common.DisplayAlert(_ALERT_TOASTR.DANGER, resultado.Respuesta);
+            }
+        }
+
+    </script>
+}
+
+@section SeccionScriptAutocomplete {
+    <script src="https://cdn.jsdelivr.net/gh/xcash/bootstrap-autocomplete@v2.2.2/dist/latest/bootstrap-autocomplete.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+}

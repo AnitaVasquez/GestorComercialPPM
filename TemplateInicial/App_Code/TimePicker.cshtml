@@ -1,0 +1,70 @@
+﻿
+
+@helper CallingComponent(string idComponente, string claseComponente, string claseIcono, string valor = "")
+{
+
+    @*<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>*@
+
+    <link href="~/Content/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+
+    <script src="~/Scripts/TimePicker/moment.min.js"></script>
+    <script src="~/Scripts/TimePicker/jquery.min.js"></script>
+    <script src="~/Scripts/TimePicker/bootstrap-datetimepicker.js"></script>
+
+    <div class="row">
+        <div class='col-sm-12'>
+            <div class="form-group">
+                <div class='input-group date @claseComponente' id='tmp-@idComponente'>
+                    <input type="text" name='@idComponente' id='@idComponente' class="form-control" data-date-language="es" value="@valor" onKeyPress="return acceptNum(event);" />
+                    <span class="input-group-addon">
+                        <span class="@claseIcono"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            $(function () {
+                $('#tmp-'+'@idComponente').datetimepicker({
+                    format: "HH:mm",//'LT', //moment().format('LT');
+                    tooltips: {
+                        today: 'Go to today',
+                        clear: 'Clear selection',
+                        close: 'Close the picker',
+                        selectMonth: 'Select Month',
+                        prevMonth: 'Previous Month',
+                        nextMonth: 'Next Month',
+                        selectYear: 'Select Year',
+                        prevYear: 'Previous Year',
+                        nextYear: 'Next Year',
+                        selectDecade: 'Select Decade',
+                        prevDecade: 'Previous Decade',
+                        nextDecade: 'Next Decade',
+                        prevCentury: 'Previous Century',
+                        nextCentury: 'Next Century'
+                    }
+                    //locale: 'it'
+                });
+            });
+
+            function GetValorComponenteTimePicker(idComponente) {
+                return $("#" + idComponente).find("input").val();
+            }
+
+            function SetValorComponenteTimePicker(idComponente, valor) {
+                return $("#" + idComponente).find("input").val(valor);
+            }
+            var nav4 = window.Event ? true : false;
+            function acceptNum(evt) {
+                // NOTE: Backspace = 8, Enter = 13, '0' = 48, '9' = 57
+                var key = nav4 ? evt.which : evt.keyCode;
+                return (key <= 13 || (key >= 48 && key <= 57) || key == 190);
+            }
+
+
+
+        </script>
+    </div>
+}

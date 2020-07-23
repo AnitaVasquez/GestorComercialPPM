@@ -1,0 +1,74 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Html.AjaxGrid(Url.Action("_IndexGrid"))
+
+@section ViewSpecificJavascript {
+    <script>
+        debugger
+        var idGrid = "grid-ComercioPlacoToPay";
+
+        var urlAccionCrear = '@Url.Action("Formulario")';
+
+        var urlAccionReporteExcel = '@Url.Action("DescargarReporteFormatoExcel")';
+        var urlAccionReportePDF = '@Url.Action("DescargarReporteFormatoPDF")';
+        var urlAccionReporteCSV = '@Url.Action("DescargarReporteFormatoCSV")';
+
+        $(document).ready(function () {
+            debugger
+            $("#ExportarGridPDF").hide();
+        })
+
+        $(document).click(function (e) {
+            var elemento = $(e.currentTarget.activeElement)[0];
+            var idRegistro = $(elemento).attr("data-id"); //$(elemento).data("id")
+
+            if (elemento.id === 'recargar') {
+                debugger
+                recargarGridByID(idGrid);
+            }
+
+            if (elemento.id === 'nuevo') {
+                debugger
+                location.href = urlAccionCrear;
+            }
+
+            if (elemento.id === '') {
+
+            }
+
+            if (elemento.id === 'ExportarGridExcel') {
+                debugger
+                location.href = urlAccionReporteExcel;
+
+            }
+            if (elemento.id === 'ExportarGridPDF') {
+                debugger
+                reporteGridPDF(urlAccionReportePDF);
+            }
+            if (elemento.id === 'ExportarGridCSV') {
+                debugger
+                location.href = urlAccionReporteCSV;
+            }
+
+            if (elemento.id === 'Ayuda') {
+
+                $('#help-modal').modal({
+                    'show': 'true',
+                    'backdrop': 'static',
+                    'keyboard': false
+                })
+            }
+        });
+
+        //$(document).keyup(function (e) {
+        //    var elemento = $(e.currentTarget.activeElement)[0];
+        //    var filtrosBusqueda = document.getElementById('GridSearch');
+        //    busquedaGrid(idGrid);
+        //});
+
+    </script>
+}
+

@@ -1,0 +1,34 @@
+﻿@model IEnumerable<GestionPPM.Entidades.Modelo.HistorialDetalleAsignacionProyectosInfo>
+
+<script>
+    var codigoCotizacion = '@ViewBag.codigoCotizacion';
+    var gridID = "grid-Historial-DetalleProyecto";
+
+    $(document).ready(function () {
+        $("#seccion-titulo-modal").text('@Html.Raw(ViewBag.TituloModal)');
+        $("#" + gridID).find("#Seccion-TituloGrid").html("<h5><i class='fa fa-search' aria-hidden='true'></i> " + codigoCotizacion + "</h5>");
+        $("#" + gridID).find("#seccion-botones-funciones").hide();
+    });
+</script>
+
+<div class="row">
+    <div class="col-sm-12">
+        @(Html
+                                    .Grid(Model)
+                                    .Build(columns =>
+                                    {
+                                        columns.Add(model => model.fecha_avance).Titled("Fecha").Formatted("{0:d}");
+                                        columns.Add(model => model.descripcion_avance).Titled("Detalle");
+                                        columns.Add(model => model.porcentaje_avance).Titled("Porcentaje Avance");
+
+                                        //columns.Add(model => model.porcentaje_cumplimiento).Titled("Porcentaje Cumplimiento");
+                                    })
+                                    .Empty(Mensajes.MensajeNoDataListado)
+                                    .Id("grid-Historial-DetalleProyecto")
+                //.Filterable()
+                //.Sortable()
+                //.Pageable()
+        )
+    </div>
+
+</div>

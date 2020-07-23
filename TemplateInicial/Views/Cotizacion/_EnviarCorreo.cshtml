@@ -1,0 +1,109 @@
+﻿
+@model GestionPPM.Entidades.Modelo.Cotizador
+@using GestionPPM.Entidades.Metodos
+
+@* Formato para el template de datos *@
+<link href="~/Content/css/personalizar.css" rel="stylesheet" />
+
+<script src="~/Scripts/bootstrap-wysihtml5.es-ES.js"></script>
+
+<script>
+    var urlAccionEditarStatusCodigo = '@Url.Action("EnviarCorreo", "Cotizacion")';
+
+    $(document).ready(function () {
+        $("#seccion-titulo-modal").text('@Html.Raw(ViewBag.TituloModal)');
+    });
+
+    $("#guardar-status").click(function () {
+        debugger
+        var flag = validarCamposRequeridosFormularioCompleto("form-codigoCotizacion");
+        if (flag) {
+            //var valor = $("input[name=tipo_correo]:checked").prop("value");
+            //if (valor == "personalizado") {
+                guardarStatus();
+            //} else
+
+
+        }
+        else
+            toastr.error('@Mensajes.MensajeDatosObligatorios')
+    })
+
+    function guardarStatus() {
+        debugger
+        var data_form = JSON.stringify({ "Cotizacion": $('#form-codigoCotizacion').serializeObject(), "cuerpo": ($("#cuerpo").val()) })
+        _GuardarModalStatusCodigoCotizacion(data_form, urlAccionEditarStatusCodigo);
+    }
+
+    $(".textarea").wysihtml5({ locale: "es-ES" });
+
+</script>
+
+
+<form action="#" id="form-codigoCotizacion" role="form" data-toggle="validator" method="post" accept-charset="utf-8">
+    <div class="row">
+        <div class="col-md-offset-2 col-md-8">
+            <div class="form-horizontal">
+
+                @Html.Hidden("id_cotizador", Model.id_cotizador)
+
+                <div class="form-group">
+                    <label class="etiqueta-seccion control-label col-md-3">Tipo Correo: <span class="requerido"> *</span></label>
+                    <div class="col-sm-7" onchange="MostrarCuerpo()">
+                        <label class="radio">
+                            <input type="radio" name="tipo_correo" value="estandar" checked>
+                            Estándar
+                        </label>
+                        <label class="radio">
+                            <input type="radio" name="tipo_correo" value="personalizado">
+                            Personalizado
+                        </label>
+                    </div>
+                </div>
+
+                <div class="row fila-seccion">
+
+                    <div class="col-md-12" id="cuerpoCorreo" hidden="">
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <textarea class="textarea form-control" id="cuerpo" placeholder="Ingrese el texto ..." style="width: 610px; height: 200px"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <br />
+
+                <div class="form-group">
+                    <div class="col-md-offset-5 col-md-12">
+                        <input id="guardar-status" type="button" value="Enviar Correo" class="btn btn-default" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<script type="text/javascript">
+
+    function MostrarCuerpo() {
+
+        debugger;
+
+        var etiquetaTMC = document.getElementById('cuerpoCorreo');
+
+        if (typeof etiquetaTMC !== null && etiquetaTMC !== 'undefined') {
+
+            var valor = $("input[name=tipo_correo]:checked").prop("value");
+
+            debugger;
+
+            if (valor == "estandar") {
+                etiquetaTMC.hidden = true;
+            } else {
+                etiquetaTMC.hidden = false;
+            }
+        }
+    }
+</script>

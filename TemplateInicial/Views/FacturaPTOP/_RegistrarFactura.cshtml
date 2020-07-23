@@ -1,0 +1,78 @@
+﻿@model GestionPPM.Entidades.Modelo.FacturaPTOPSAFI 
+  
+@* Formato para el template de datos *@
+<link href="~/Content/css/personalizar.css" rel="stylesheet" /> 
+  
+<script>
+    var urlAccionEditarStatusCodigo = '@Url.Action("RegistrarFactura", "FacturaPTOP")';
+
+    $(document).ready(function () {
+        $("#seccion-titulo-modal").text('@Html.Raw(ViewBag.TituloModal)');
+    });
+
+    $("#guardar-status").click(function () {
+        debugger
+        var flag = validarCamposRequeridosFormularioCompleto("form-generarFactura");
+        if (flag)  
+            guardarStatus();  
+        else
+            toastr.error('@Mensajes.MensajeDatosObligatorios')
+    })
+
+    function guardarStatus() {
+        debugger
+        var data_form = JSON.stringify({ "factura": $('#form-generarFactura').serializeObject() })
+        _GuardarModalStatusCodigoCotizacion(data_form, urlAccionEditarStatusCodigo);
+    }
+      
+</script>
+
+ 
+<form action="#" id="form-generarFactura" role="form" data-toggle="validator" method="post" accept-charset="utf-8">
+
+    <br />
+
+    <div class="row">
+        <div class="col-md-offset-2 col-md-8">
+            <div class="form-horizontal">
+
+                @Html.Hidden("id_factura_PTOP", Model.id_factura_PTOP)
+                @Html.Hidden("secuencial", Model.secuencial)
+
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="etiqueta-seccion control-label col-md-3"># Factura: <span class="requerido"> *</span></label>
+                        <div class="col-md-9">
+                            @Html.EditorFor(model => model.numero_factura, new { htmlAttributes = new { @class = "form-control campo-requerido", maxlength = 15, required = "", placeholder = "001017000001185" } })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="etiqueta-seccion control-label col-md-3"># Nota Crédito: </label>
+                        <div class="col-md-9">
+                            @Html.EditorFor(model => model.numero_nota_credito, new { htmlAttributes = new { @class = "form-control", maxlength = 15, required = "", placeholder = "001017000001185" } })
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <br />
+
+    <div class="row">
+        <div class="col-md-offset-2 col-md-8">
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <div class="col-md-offset-4 col-md-12">
+                        <input id="guardar-status" type="button" value="Guardar" class="btn btn-default" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form> 
+ 

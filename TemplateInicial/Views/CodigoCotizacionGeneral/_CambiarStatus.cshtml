@@ -1,0 +1,114 @@
+﻿@model GestionPPM.Entidades.Modelo.AprobacionCotizacion
+@using GestionPPM.Entidades.Metodos
+
+@{
+    var codigoCotizacion = (GestionPPM.Entidades.Modelo.CodigoCotizacion)ViewBag.codigoCotizacion;
+}
+
+@* Formato para el template de datos *@
+<link href="~/Content/css/personalizar.css" rel="stylesheet" />
+@if (Model.estatus_codigo == 68)
+{
+    <script>
+        $(document).ready(function () {
+            $('form *').prop('disabled', true);
+        });
+    </script>
+}
+
+@if (Model.estatus_codigo == 67 || Model.estatus_codigo == 70)
+{
+    <script>
+        $(document).ready(function () {
+            $("#lblversion").hide();
+            $("#CotizacionID").hide();
+        });
+    </script>
+}
+
+<script>
+    var urlAccionEditarStatusCodigo = '@Url.Action("EditarStatusCodigoCotizacion", "CodigoCotizacionGeneral")';
+
+    $(document).ready(function () {
+        $("#seccion-titulo-modal").text('@Html.Raw(ViewBag.TituloModal)');
+
+        $("#Observacion").val('N/A');
+        $("#lblmotivo").hide();
+        $("#Observacion").hide();
+
+        $("#estatus_codigo").change(function () {
+            if (($(this).val() == '68' || $(this).val() == '69')) {
+                $("#lblversion").show();
+                $("#CotizacionID").show();
+
+            }
+            else {
+                $("#lblversion").hide();
+                $("#CotizacionID").hide();
+            }
+        });
+    });
+
+      $("#guardar-status").click(function () {
+        debugger
+        var flag = validarCamposRequeridosFormularioCompleto("form-codigoCotizacion");
+        if (flag)
+            guardarStatus(); // continue the submit unbind preventDefault
+        else
+            toastr.error('@Mensajes.MensajeDatosObligatorios')
+    })
+
+    function guardarStatus() {
+        debugger
+        var data_form = JSON.stringify({ "codigoCotizacion": $('#form-codigoCotizacion').serializeObject() })
+        _GuardarModalStatusCodigoCotizacion(data_form, urlAccionEditarStatusCodigo);
+    }
+</script>
+
+<form action="#" id="form-codigoCotizacion" role="form" data-toggle="validator" method="post" accept-charset="utf-8">
+    <div class="row">
+        <div class="col-md-offset-2 col-md-8">
+            <div class="form-horizontal">
+
+
+                @Html.Hidden("IDCotizacionAprobada", Model.IDCotizacionAprobada)
+                @Html.Hidden("CodigoCotizacionID", codigoCotizacion.id_codigo_cotizacion)
+
+                <div class="form-group">
+                    <label class="etiqueta-seccion control-label col-md-3">Estatus Código: <span class="requerido"> *</span></label>
+                    <div class="col-md-7">
+                        @Html.DropDownList("estatus_codigo", CatalogoEntity.ObtenerListadoCatalogosByCodigo("ECT-01", codigoCotizacion.estatus_codigo.ToString()), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido" })
+                    </div>
+                </div>
+
+
+                @if ((CotizacionEntity.ObtenerListadoVersionesByCodigoCotizacion(codigoCotizacion.id_codigo_cotizacion.ToString(), Model.CotizacionID.ToString())).Count() != 0)
+                {
+                    <div class="form-group">
+                        <label class="etiqueta-seccion control-label col-md-3" id="lblversion">Versión: <span class="requerido"> *</span></label>
+                        <div class="col-md-7">
+                            @Html.DropDownList("CotizacionID", CotizacionEntity.ObtenerListadoVersionesByCodigoCotizacion(codigoCotizacion.id_codigo_cotizacion.ToString(), Model.CotizacionID.ToString()), Etiquetas.TituloComboVacio, new { @class = "form-control" })
+                        </div>
+                    </div>
+                }
+
+                <div class="form-group">
+                    <label class="etiqueta-seccion control-label col-md-3" id="lblmotivo">Motivo de Rechazo: <span class="requerido"> *</span></label>
+                    <div class="col-md-7">
+                        @Html.Editor("Observacion", new { htmlAttributes = new { @class = "form-control campo-requerido", maxlength = 500, @Value = Model.Observacion } })
+                        @*  @Html.ValidationMessageFor(model => model.motivo_rechazo, "", new { @class = "text-danger" })*@
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-4 col-md-12">
+                        <input id="guardar-status" type="button" value="Guardar" class="btn btn-default" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+

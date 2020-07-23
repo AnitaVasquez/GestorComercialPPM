@@ -1,0 +1,191 @@
+﻿@model GestionPPM.Entidades.Modelo.Contactos
+@using GestionPPM.Entidades.Modelo
+
+@{
+    var Cliente = (ClientesInfo)ViewBag.Cliente;
+    var prefijoCliente = Cliente != null ? Cliente.Prefijo : "";
+
+}
+
+
+@* Formato para el template de datos *@
+<link href="~/Content/css/personalizar.css" rel="stylesheet" />
+
+
+
+<script>
+    var urlAccionGuardarContacto = '@Url.Action("CreateAjax","ContactoCliente")';
+
+
+    $(document).ready(function () {
+        debugger
+        $('#cargo_contacto').autoComplete({
+            resolver: 'custom',
+            noResultsText: 'No se encontraron resultados.',
+            events: {
+                search: function (qry, callback) {
+                    $.ajax(
+                        '@Url.Action("_GetItemsCargos", "ContactoCliente")',
+                        {
+                            data: { 'busqueda': qry }
+                        }
+                    ).done(function (res) {
+                        callback(res.results)
+                    });
+                }
+            }
+        });
+
+        $('#cargo_contacto').on('autocomplete.select', function (e, item) {
+            debugger
+            var id = item.id;
+            var texto = item.texto;
+            $("#CodigoCatalogoCargoContacto").val(id);
+        });
+
+        //$('.changeAutoSelect').autoComplete('set', { value: e.data('value'), text: e.data('text') });
+
+        $("#seccion-titulo-modal").text('@ViewBag.TituloModal');
+    });
+
+    $("#extension_contacto").keyup(function (e) {
+        debugger
+        var valor = $(e.target).val();
+        var evaluacion = /^\d*$/.test(valor);
+        if (!evaluacion)
+            $(this).val("0");
+
+        if (valor.length > 5)
+            this.value = this.value.slice(0, 5);
+    });
+
+    $("#celular_contacto").keyup(function (e) {
+        debugger
+        var valor = $(e.target).val();
+        var evaluacion = /^\d*$/.test(valor);
+        if (!evaluacion)
+            $(this).val("0");
+
+        if (valor.length > 15)
+            this.value = this.value.slice(0, 15);
+    });
+
+    $("#telefono_contacto").keyup(function (e) {
+        debugger
+        var valor = $(e.target).val();
+        var evaluacion = /^\d*$/.test(valor);
+        if (!evaluacion)
+            $(this).val("0");
+
+        if (valor.length > 15)
+            this.value = this.value.slice(0, 15);
+    });
+
+    $("#guardar-contacto").click(function () {
+        debugger
+        var flag = validarCamposRequeridosFormularioCompleto("form-contacto");
+        if (flag)
+            guardarContacto(); // continue the submit unbind preventDefault
+        else
+            toastr.error('@Mensajes.MensajeDatosObligatorios')
+    })
+
+    function guardarContacto() {
+        debugger
+        var data_form = JSON.stringify({ "contactosClientes": $('#form-contacto').serializeObject(), "idCliente": $('#idCliente').val(), "prefijo": $("#prefijo_pais").val() })
+        _GuardarModal(data_form, urlAccionGuardarContacto);
+    }
+
+</script>
+
+<form action="#" id="form-contacto" role="form" data-toggle="validator" method="post" accept-charset="utf-8">
+    <div class="row">
+        <div class="col-md-offset-2 col-md-8">
+            <div class="form-horizontal">
+
+                @Html.Hidden("idCliente", Cliente != null ? Cliente.id_cliente : 0)
+
+                <div class="tipo_contacto form-group">
+                    <label class="control-label col-md-2">Tipo: <span class="requerido"> *</span></label>
+                    <div class="col-md-10">
+                        @Html.DropDownList("CodigoCatalogoTipoContacto", ViewBag.ListadoTipoContacto as List<SelectListItem>, new { @class = "form-control campo-requerido" })
+                    </div>
+                </div>
+
+                <div class="form-group nombre_contacto">
+                    <label class="control-label col-md-2">Nombre: <span class="requerido"> *</span></label>
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.nombre_contacto, new { htmlAttributes = new { @class = "form-control campo-requerido", maxlength = 150 } })
+                        @Html.ValidationMessageFor(model => model.nombre_contacto, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group apellido_contacto">
+                    <label class="control-label col-md-2">Apellidos: <span class="requerido"> *</span></label>
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.apellido_contacto, new { htmlAttributes = new { @class = "form-control campo-requerido", maxlength = 200 } })
+                        @Html.ValidationMessageFor(model => model.apellido_contacto, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group cargo_contacto">
+                    <label class="control-label col-md-2">Cargo: <span class="requerido"> *</span></label>
+                    <div class="col-md-10">
+                        <input id="cargo_contacto" name="cargo_contacto" class="form-control advancedAutoComplete auto-ajustar campo-requerido" type="text" autocomplete="off" placeholder="Búsqueda">
+                        @Html.Hidden("CodigoCatalogoCargoContacto", "")
+                    </div>
+                </div>
+
+                <div class="form-group mail_contacto">
+                    <label class="control-label col-md-2">Mail: <span class="requerido"> *</span></label>
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.mail_contacto, new { htmlAttributes = new { @class = "form-control campo-requerido", maxlength = 300 } })
+                        @Html.ValidationMessageFor(model => model.mail_contacto, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group telefono_contacto">
+                    <label class="control-label col-md-2">Teléfono: <span class="requerido"> *</span></label>
+                    <div class="col-md-10" onkeypress="if ( isNaN( String.fromCharCode(event.keyCode) )) return false;">
+                        @Html.EditorFor(model => model.telefono_contacto, new { htmlAttributes = new { @class = "form-control campo-requerido", maxlength = 15 } })
+                        @Html.ValidationMessageFor(model => model.telefono_contacto, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group extension_contacto">
+                    <label class="control-label col-md-2">Extensión:</label>
+                    <div class="col-md-10" onkeypress="if ( isNaN( String.fromCharCode(event.keyCode) )) return false;">
+                        @Html.EditorFor(model => model.extension_contacto, new { htmlAttributes = new { @class = "form-control", @min = 0, @max = 99999 } })
+                        @Html.ValidationMessageFor(model => model.extension_contacto, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group prefijo_pais">
+                    <label class="control-label col-md-2">Prefijo: <span class="requerido"> *</span></label>
+                    <div class="col-md-10" onkeypress="if ( isNaN( String.fromCharCode(event.keyCode) )) return false;">
+                        @Html.EditorFor(model => model.prefijo_pais, new { htmlAttributes = new { @class = "form-control campo-requerido", maxlength = 5, disabled = "disabled", @Value = string.IsNullOrEmpty((string)ViewBag.Prefijo) ? prefijoCliente : (string)ViewBag.Prefijo } })
+                        @Html.ValidationMessageFor(model => model.prefijo_pais, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group celular_contacto">
+                    <label class="control-label col-md-2">Celular:</label>
+                    <div class="col-md-10" onkeypress="if ( isNaN( String.fromCharCode(event.keyCode) )) return false;">
+                        @Html.EditorFor(model => model.celular_contacto, new { htmlAttributes = new { @class = "form-control", maxlength = 15, @type = "number", @min = "0" } })
+                        @Html.ValidationMessageFor(model => model.celular_contacto, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-4 col-md-12">
+                        <input id="guardar-contacto" type="button" value="Guardar" class="btn btn-default" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+
+

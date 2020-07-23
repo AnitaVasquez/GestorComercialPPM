@@ -1,0 +1,565 @@
+﻿@model GestionPPM.Entidades.Modelo.TrackingAsignacionProyectoInfo
+
+@{
+    var horasAvance = Model != null ? (Model.numero_horas_programado ?? 0).ToString() : "";
+
+    var FechaFin = Model != null ? Model.fecha_fin_real == null ? Model.fecha_inicio_programado : Model.fecha_fin_real : new DateTime();
+
+    bool mostrarFecha = Model != null ? Model.fecha_fin_real == null ? false : true : false;
+
+    var horasTotal = Model != null ? (Model.numero_horas_real ?? 0).ToString() : "";
+
+    var intervalosHoras = (List<decimal>)ViewBag.IntervalosHoras;
+
+    var porcentajeAvance = Model != null ? (Model.porcentaje_avance ?? 0).ToString() : "";
+}
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://code.jscharting.com/latest/modules/types.js"></script>
+<script src="https://code.jscharting.com/latest/jscharting.js"></script>
+
+
+@if (Model != null)
+{
+    <style>
+        .fila-seccion {
+            margin-bottom: 15px;
+        }
+
+        .etiqueta-seccion {
+            text-align: right;
+        }
+
+        .input-bloqueado {
+            pointer-events: none;
+        }
+
+        .alinear-derecha {
+            text-align: right;
+            min-width: 15em;
+        }
+
+        /* Important part */
+        .modal-dialog {
+            overflow-y: initial !important
+        }
+
+        .modal-body {
+            height: 460px;
+            overflow-y: auto;
+        }
+    </style>
+
+    <script>
+
+    var horas = parseFloat('@horasAvance')
+    var horasTotal = parseFloat('@horasTotal')
+    var intervalos = @Html.Raw(Json.Encode(intervalosHoras));
+
+    var porcentajeAvance = parseFloat('@porcentajeAvance')
+
+
+
+    $(document).ready(function () {
+        debugger
+        $("#seccion-titulo-modal").text('@Html.Raw(ViewBag.TituloModal)');
+
+        setTimeout(function () { renderizarGrafico1(); $("#brandingLogo").hide() }, 650);
+        setTimeout(function () { $("#brandingLogo").hide() }, 1000);
+
+        Highcharts.setOptions({
+        lang: {
+            loading: 'Cargando...',
+                months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                weekdays: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+                shortMonths: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                exportButtonTitle: "Exportar",
+                printButtonTitle: "Importar",
+                rangeSelectorFrom: "Desde",
+                rangeSelectorTo: "Hasta",
+                rangeSelectorZoom: "Período",
+                downloadPNG: 'Descargar imagen PNG',
+                downloadJPEG: 'Descargar imagen JPEG',
+                downloadPDF: 'Descargar imagen PDF',
+                downloadSVG: 'Descargar imagen SVG',
+                printChart: 'Imprimir',
+                resetZoom: 'Reiniciar zoom',
+                resetZoomTitle: 'Reiniciar zoom',
+                thousandsSep: ",",
+                decimalPoint: '.'
+            }
+        });
+
+        $("#brandingLogo").hide()
+
+        $("#chartDiv").mouseover(function () {
+            debugger
+            $("#brandingLogo").hide()
+        });
+
+
+    });
+    // JS
+    // JS
+//    var chart = JSC.chart('chartDiv',{
+//  debug: true,
+//  legend_visible: true,
+//  xAxis: {
+//    defaultTick: {
+//      padding: 10,
+//      gridLine: {  width: 35,  dashStyle: 'solid'},//35
+
+///*Defining label will make it appear.*/
+//      label: {}
+//    },
+//    scale_invert: false,
+//    spacingPercentage: 0.3
+//  },
+//  yAxis: {
+//    scale_interval: 25,
+//      //range: [0,100],
+///*If defined, breaks will be used at tick positions.*/
+//    line_breaks: {}
+//  },
+//  defaultSeries: {
+//    type: 'gauge column',
+//    defaultPoint_tooltip: '<b>%name</b> {%yRange:n1}hr/{%target:n1}hr',
+//    angle: {start: -180,sweep: 180 },
+//    shape_label: {
+//      text: '%name',
+//      style_fontSize: 24,
+//      verticalAlign: 'top'
+//    },
+
+///*Default point marker options. Markers are not visible by default on columns.*/
+//    defaultPoint_marker: {
+//      fill: '#00c45c',
+//      type: {  path: 'M 0 0 L 3 5  0 10 Z'},
+//      rotate: 'auto',
+//      size: 28
+//    }
+//  },
+//  series: [
+//    {
+//      name: 'Activity Targets hr/day',
+//      palette: 'default',
+//      points: [
+//          {
+//              x: 'Sleep',
+//              y: 20,
+//              attributes_target: 100,
+//              //color: ['none', 10],
+//              //fill: '#D3D3D3',
+//              marker: {
+//                  visible: true,
+//                  type_path: 'M 3 0 L 3 10  0 5 Z',
+//                  fill: '#000000'
+//              },
+//          },
+//          {
+//              x: 'Sitting',
+//              y: 100,
+//              attributes_target: 100,
+//              marker: { visible: true, fill: '#000000' },
+//          },
+//      ]
+//    }
+//  ]
+//});
+
+    //var chart = JSC.chart('chartDiv', {
+    //    debug: true,
+    //    title: {
+    //        label_text: 'Circular Sweep Guides',
+    //        position: 'center'
+    //    },
+    //    legend_visible: false,
+    //    yAxis: [
+    //        {
+    //            line_visible: true,
+    //            defaultTick_enabled: false,
+    //            scale_range: [0, 100]
+    //        },
+    //        {
+    //            id: 'y2',
+    //            line_width: 0,
+    //            defaultTick_enabled: false,
+    //            scale_range: [0, 100]
+    //        },
+    //        {
+    //            id: 'y3',
+    //            line_width: 0,
+    //            defaultTick_enabled: false,
+    //            scale_range: [0, 100]
+    //        }
+    //    ],
+    //    xAxis: [
+    //        {
+    //            defaultTick_gridLine_width: 0,
+
+    //            /*Reduces column size to pad against axis line.*/
+    //            spacingPercentage: 0.15
+    //        },
+    //        {
+    //            id: 'x2',
+    //            defaultTick_gridLine: { onTop: true, width: 3, dashStyle: 'dot' },
+    //            spacingPercentage: 0.15
+    //        },
+    //        {
+    //            id: 'x3',
+    //            defaultTick_gridLine_width: 'column',
+    //            spacingPercentage: 0.15
+    //        }
+    //    ],
+    //    defaultSeries: {
+    //        type: 'gauge column roundCaps',
+    //        shape: {
+    //            innerSize: '70%',
+    //            label: [
+    //                { text: '%name' },
+    //                {
+    //                    text: '%sum / 100',
+    //                    verticalAlign: 'middle',
+    //                    style_fontSize: 20
+    //                }
+    //            ]
+    //        }
+    //    },
+    //    series: [
+    //        { name: 'Axis Line', points: [['value', 65]] },
+    //        {
+    //            name: 'Dashed Grid onTop',
+    //            yAxis: 'y2',
+    //            xAxis: 'x2',
+    //            points: [['value', 45]]
+    //        },
+    //        {
+    //            name: 'Column Width Grid',
+    //            yAxis: 'y3',
+    //            xAxis: 'x3',
+    //            points: [['value', 59]]
+    //        }
+    //    ]
+    //})
+    //var chart = JSC.chart('chartDiv', {
+    //    debug: true,
+    //    type: 'gauge',
+    //    animation_duration: 1000,
+    //    legend_visible: false,
+    //    xAxis: { spacingPercentage: 0.25 },
+    //    yAxis: {
+    //        defaultTick: {
+    //            padding: -5,
+    //            label_style_fontSize: '14px'
+    //        },
+    //        line: {
+    //            width: 9,
+    //            color: 'smartPalette',
+    //            breaks_gap: 0.06
+    //        },
+    //        scale_range: [0, 100]
+    //    },
+    //    palette: {
+    //        pointValue: '{%value/100}',
+    //        colors: ['green', 'yellow', 'red']
+    //    },
+    //    defaultAnnotation: {
+    //        position: 'inside bottom'
+    //    },
+    //    annotations: [
+    //        {
+    //            id: 'anVal',
+    //            label: {
+    //                text: '0',
+    //                style: { fontSize: 46 }
+    //            }
+    //        },
+    //        {
+    //            label: {
+    //                text: '%',
+    //                style: { fontSize: 25, color: '#696969' }
+    //            }
+    //        }
+    //    ],
+    //    defaultTooltip_enabled: true,
+    //    defaultSeries: {
+    //        angle: { sweep: 180 },
+    //        shape: { innerSize: '70%'}
+    //    },
+    //    series: [
+    //        {
+    //            type: 'column roundcaps',
+    //            points: [{ id: '1', x: 'speed', y: 0 }]
+    //        }
+    //    ],
+    //});
+    //var INTERVAL_ID;
+
+    //playPause();
+
+    //function setGauge(max, y) {
+    //    chart
+    //        .series(0)
+    //        .options({
+    //            points: [{ id: '1', x: 'speed', y: y }]
+    //        });
+    //    chart
+    //        .annotations('anVal')
+    //        .options(
+    //            { label_text: JSC.formatNumber(y, 'n2') },
+    //            { animation: true }
+    //        );
+    //}
+    //function playPause(val) {
+    //    if (val) {
+    //        clearInterval(INTERVAL_ID);
+    //    } else {
+    //        update();
+    //    }
+    //}
+
+    //function update() {
+    //    INTERVAL_ID = setInterval(function () {
+    //        setGauge(100, 80);
+    //    }, 1000);
+    //}
+    function renderizarGrafico1() {
+        JSC.chart('chartDiv', {
+        debug: false,
+        title: {
+            label_text: '@Html.Raw(ViewBag.TituloModal)',
+            position: 'center'
+        },
+        legend_visible: false,
+        defaultTooltip_enabled: false,
+        xAxis_spacingPercentage: 0.4,
+        yAxis: [
+            {
+            id: 'ax1',
+                //defaultTick_label_placement: "inside",
+                //defaultPoint_label_text: "%name:  %yValue  is %percentOfSeries% of %seriesName",
+                defaultTick: {
+                padding: 10,
+                    placement: 'outside',
+                    //defaultPoint_label_text: "% %xValue % ",
+                    enabled: false
+                },
+                customTicks: [25, 50, 75, 100],
+                line: {
+                width: 10,
+
+                    /*Defining the option will enable it.*/
+                    breaks: {},
+
+                    /*Palette is defined at series level with an ID referenced here.*/
+                    color: 'smartPalette:pal1'
+                },
+                scale_range: [0, 100]
+            },
+            //{
+            //    id: 'ax2',
+            //    scale_range: [0, horasTotal],
+            //    defaultTick: {
+            //        padding: 10,
+            //        enabled: false
+            //    },
+            //    customTicks: intervalos,
+            //    line: {
+            //        width: 10,
+            //        color: 'smartPalette:pal2'
+            //    }
+            //}
+        ],
+        defaultSeries: {
+            type: 'gauge column roundcaps',
+            angle: { start: -180, sweep: 180 },
+            shape: {
+                label: {
+                    text: '%value',
+                    align: 'center',
+                    verticalAlign: 'middle'
+                }
+                }
+            },
+        series: [
+            {
+            type: 'column roundcaps',
+                name: 'Temperatures',
+                yAxis: 'ax1',
+
+                palette: {
+                id: 'pal1',
+                    pointValue: '%yValue',
+                    ranges: [
+                        { value: 0, color: '#FF2D00' },
+                        { value: 25, color: '#FF7400' },
+                        { value: 50, color: '#FFE000' },
+                        { value: 75, color: '#70FF00' },
+                        { value: 100, color: '#70FF00' },
+                    ]
+                },
+                shape_label: { text: '%value %',style: { fontSize: 22 } },
+                points: [['x', [0, porcentajeAvance]]]
+            },
+            //{
+            //    yAxis: 'ax2',
+            //    name: 'Temperatures',
+            //    palette: {
+            //        id: 'pal2',
+            //        pointValue: '{%yValue}',
+            //        colors: [
+            //            '#ffffd9',
+            //            '#edf8b0',
+            //            '#c7e9b4',
+            //            '#7fcdbb',
+            //            '#41b6c3',
+            //            '#1d91c0',
+            //            '#225ea8',
+            //            '#253494',
+            //            '#081d58'
+            //        ]
+            //    },
+            //    shape_label: {
+            //        text: '%value horas',
+            //        style: { fontSize: 22 }
+            //    },
+            //    points: [['x', parseFloat(horas)]]
+            //}
+        ]
+    });
+    }
+    </script>
+}
+else
+{
+    <script>
+        $(document).ready(function () {
+            debugger
+            $("#seccion-titulo-modal").text('@Html.Raw(ViewBag.TituloModal)');
+        });
+    </script>
+}
+
+<div>
+    @if (Model != null)
+    {
+        @*<h1>@Model.ejecutado</h1>*@
+
+        <div class="row fila-seccion">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="etiqueta-seccion control-label col-md-6">Código de Cotización: </label>
+                    <div class="col-md-6">
+                        @Html.Editor("codigo_cotizacion", new { htmlAttributes = new { @class = "form-control", @Value = Model.codigo_cotizacion, disabled = "disabled" } })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="etiqueta-seccion control-label col-md-6">Fecha de Inicio:</label>
+                    <div class="col-md-6">
+                        @Html.Editor("fecha_inicio", new { htmlAttributes = new { @class = "form-control", @Value = Model.fecha_inicio_programado.Value.ToString("dd/MM/yyyy"), disabled = "disabled" } })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row fila-seccion">
+            <div class="col-md-6">
+
+                <div class="form-group">
+                    <label class="etiqueta-seccion control-label col-md-6">Duración:</label>
+                    <div class="col-md-6">
+                        @Html.Editor("duracion", new { htmlAttributes = new { @class = "form-control", @Value = Model.numero_horas_programado, disabled = "disabled" } })
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+
+
+                <div class="form-group" style="display: @(mostrarFecha ? "block" : "none")">
+                    <label class="etiqueta-seccion control-label col-md-6">Fecha de Finalización:</label>
+                    <div class="col-md-6">
+                        @Html.Editor("fecha_fin", new { htmlAttributes = new { @class = "form-control", @Value = Model.fecha_fin_programado.Value.ToString("dd/MM/yyyy"), disabled = "disabled" } })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        @*<div class="row fila-seccion">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="etiqueta-seccion control-label col-md-2">Proyecto:</label>
+                        <div class="col-md-10">
+                            @Html.Editor("nombre_proyecto", new { htmlAttributes = new { @class = "form-control", @Value = (string)ViewBag.nombreProyecto, disabled = "disabled"} })
+                        </div>
+                    </div>
+                </div>
+            </div>*@
+
+        <hr />
+
+        @*@((DotNet.Highcharts.Highcharts)ViewBag.Grafico)*@
+
+        <div id="chartDiv" style="max-width: 740px;height: 330px;margin: 0px auto">
+        </div>
+        <hr />
+
+        <div class="row fila-seccion">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label style="color: green;" class="etiqueta-seccion control-label col-md-2">Ejecutado:</label>
+                    <div class="col-md-10">
+                        @Html.Editor("ejecutado", new { htmlAttributes = new { @class = "form-control", @Value = Model.ejecutado, disabled = "disabled" } })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row fila-seccion">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="etiqueta-seccion control-label col-md-2">En Ejecución:</label>
+                    <div class="col-md-10">
+                        @Html.Editor("en_ejecucion", new { htmlAttributes = new { @class = "form-control", @Value = Model.en_ejecucion, disabled = "disabled" } })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row fila-seccion">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label style="color: red;" class="etiqueta-seccion control-label col-md-2">Bloqueantes:</label>
+                    <div class="col-md-10">
+                        @Html.Editor("bloqueantes", new { htmlAttributes = new { @class = "form-control", @Value = Model.bloqueantes, disabled = "disabled" } })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row fila-seccion">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="etiqueta-seccion control-label col-md-2">Próximos Pasos:</label>
+                    <div class="col-md-10">
+                        @Html.Editor("proximos_pasos", new { htmlAttributes = new { @class = "form-control", @Value = Model.proximos_pasos, disabled = "disabled" } })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-lg-12">
+                <small>
+                    <b>
+                        @Html.Raw(ViewBag.InformacionVacia)
+                    </b>
+                </small>
+            </div>
+        </div>
+    }
+
+</div>

@@ -1,0 +1,172 @@
+﻿@model GestionPPM.Entidades.Modelo.RegisterViewModel
+@{
+    Layout = "~/Views/Shared/_Inicial.cshtml";
+}
+ 
+ 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link href="https://fonts.googleapis.com/css?family=Blinker&display=swap" rel="stylesheet">
+
+    <!--===============================================================================================-->
+    <link rel="icon" type="image/png" href="~/Content/img/favicon.ico" />
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/Content/vendor/bootstrap/css/bootstrap.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/Content/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/Content/fonts//iconic/css/material-design-iconic-font.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/Content/vendor/animate/animate.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/Content/vendor/css-hamburgers/hamburgers.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/Content/vendor/animsition/css/animsition.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/Content/vendor/select2/select2.min.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/Content/vendor/daterangepicker/daterangepicker.css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="~/Content/css/util.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/css/main.css">
+    <!--===============================================================================================-->
+
+</head>
+<body>
+
+    <div class="limiter">
+        <div class="container-login100">
+            <div class="wrap-login100">
+                <div class="login100-pic-registro">
+                    <img src="~/Content/img/logoPPM1.gif" alt="Imagen Empresa" width="30%">
+                    <img src="~/Content/img/LogoPPM2.png" alt="Logo Empresa" width="65%">
+                </div>
+                @using (Html.BeginForm())
+                {
+                <form class="login100-form validate-form">
+
+                    <div class="wrap-input100" onkeypress="return soloLetras(event)">
+                        <label class="login100-form-subtitle">Nombre Usuario *:</label>
+                        @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "input100-register campo-requerido", maxlength = 150, placeholder = "Nombre Usuario" } })
+                        <span class="focus-input100"></span>
+                    </div>
+
+                    <div class="wrap-input100 validate-input" onkeypress="return soloLetras(event)">
+                        <label class="login100-form-subtitle">Apellidos Usuario *:</label>
+                        @Html.EditorFor(model => model.Apellido, new { htmlAttributes = new { @class = "input100-register campo-requerido", maxlength = 200, placeholder = "Apellidos Usuario" } })
+                        <span class="focus-input100"></span>
+                    </div>
+
+                    <div class="wrap-input100 validate-input" onkeypress="if ( isNaN( String.fromCharCode(event.keyCode) )) return false;">
+                        <label class="login100-form-subtitle">Teléfono:</label>
+                        @Html.EditorFor(model => model.telefono_usuario, new { htmlAttributes = new { @class = "input100-register", maxlength = 15 } })
+                        <span class="focus-input100"></span>
+                    </div>
+
+                    <div class="wrap-input100 validate-input" onkeypress="if ( isNaN( String.fromCharCode(event.keyCode) )) return false;">
+                        <label class="login100-form-subtitle">Celular:</label>                         
+                            @Html.EditorFor(model => model.celular_usuario, new { htmlAttributes = new { @class = "input100-register", maxlength = 15 } })
+                    </div>
+
+                    <div class="wrap-input100 validate-input" data-validate="Email incorrecto: ex@abc.xyz">
+                        <label class="login100-form-subtitle">Email Usuario *:</label>
+                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "input100-register campo-requerido", maxlength = 150, placeholder = "Email Empresarial" } })
+                        <span class="focus-input100"></span>
+                    </div>
+
+                    <div class="wrap-input100 validate-input">
+                        <label class="login100-form-subtitle">Contraseña *:</label>
+                        <input class="input100-register" type="password" name="Password" placeholder="Contraseña, mínimo de 8 caracteres">
+                        <span class="focus-input100"></span>
+                    </div>
+
+                    <div class="wrap-input100 validate-input">
+                        <label class="login100-form-subtitle">Confirmar Contraseña *:</label>
+                        <input class="input100-register" type="password" name="ConfirmPassword" placeholder="Confirmar Contraseña">
+                        <span class="focus-input100"></span>
+                    </div>
+
+                    <div class="container-login100-form-btn">
+                        <button class="login100-form-btn">
+                            Registrarse
+                        </button>
+                    </div>
+
+                    <div class="text-center p-t-19">
+                        <a class="txt2" href="@Url.Action("Login", "Ingreso")">
+                            Regresar
+                            <i class="fa fa-long-arrow-left m-l-5" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </form>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!--===============================================================================================-->
+    <script src="~/Content/vendor/jquery/jquery-3.2.1.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="~/Content/vendor/animsition/js/animsition.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="~/Content/vendor/bootstrap/js/popper.js"></script>
+    <script src="~/Content/vendor/bootstrap/js/bootstrap.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="~/Content/vendor/select2/select2.min.js"></script>
+    <!--===============================================================================================-->
+    <script src="~/Content/vendor/daterangepicker/moment.min.js"></script>
+    <script src="~/Content/vendor/daterangepicker/daterangepicker.js"></script>
+    <!--===============================================================================================-->
+    <script src="~/Content/vendor/countdowntime/countdowntime.js"></script>
+    <!--===============================================================================================-->
+    <script src="~/Content/js/main.js"></script>
+
+    <script>
+        debugger
+        var resultado = @Html.Raw(Json.Encode(ViewBag.Resultado));
+        var estado = @Html.Raw(Json.Encode(ViewBag.Estado));
+        console.log(resultado);
+        console.log(estado);
+
+        $(document).ready(function () {
+
+            if (estado != "" && estado != null) {
+                if (estado == "True") {
+                    toastr.success(resultado)
+                } else {
+                    toastr.error(resultado)
+                }
+            }
+        })
+    </script>
+
+</body>
+</html>
+ 
+<script>
+    function soloLetras(e) {
+        key = e.keyCode || e.which;
+    tecla = String.fromCharCode(key).toLowerCase();
+    letras = " áéíóúabcdefghijklmnñopqrstuvwxyz";
+    especiales = "8-37-39-46";
+
+    tecla_especial = false
+    for (var i in especiales) {
+    if (key == especiales[i]) {
+            tecla_especial = true;
+        break;
+    }
+    }
+
+    if (letras.indexOf(tecla) == -1 && !tecla_especial) {
+    return false;
+    }
+    }
+</script>

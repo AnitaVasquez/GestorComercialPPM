@@ -1,0 +1,503 @@
+﻿@model GestionPPM.Entidades.Modelo.DetalleProyectosAsignados
+@using GestionPPM.Entidades.Modelo
+@using GestionPPM.Entidades.Metodos
+
+@{
+    ViewBag.Title = "Registrar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var Usuario = (UsuarioCE)ViewBag.DatosUsuario;
+}
+
+@* Formato para el template de datos *@
+<link href="~/Content/css/personalizar.css" rel="stylesheet" />
+
+<link rel="stylesheet" type="text/css" href="~/Content/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="~/Content/themes/icon.css">
+<link rel="stylesheet" type="text/css" href="~/Content/css/demo.css">
+
+<script type="text/javascript" src="~/Scripts/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.min.js"></script>
+
+<style>
+    .fila-seccion {
+        margin-bottom: 15px;
+    }
+
+    .etiqueta-seccion {
+        text-align: right;
+    }
+
+    .input-bloqueado {
+        pointer-events: none;
+    }
+
+    .alinear-derecha {
+        text-align: right;
+        min-width: 15em;
+    }
+</style>
+
+
+<script>
+
+
+    var usuario = '@ViewBag.usuario';
+
+</script>
+
+<div class="panel">
+
+    <div class="panel-heading-create custom-header-panel">
+        <h4>@Etiquetas.TituloPanelRegistroAvanceProyectos</h4>
+    </div>
+
+    <div class="panel-body">
+        <form action="#" id="form-detalleAvanceProyecto" role="form" data-toggle="validator" method="post" accept-charset="utf-8">
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="box box-default">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Información del Proyecto</h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="row fila-seccion" hidden>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-2">Código Cotización: <span class="requerido"> *</span> </label>
+                                        <div class="col-md-10">
+                                            @Html.Editor("id_proyecto", new { htmlAttributes = new { @class = "form-control", disabled = "disabled", required = "" } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-2">Código de Cotización: <span class="requerido"> *</span> </label> 
+                                        <div class="col-md-10">
+                                            @Html.DropDownList("id_codigo_cotizacion", ProyectosAsigandosEntity.ObtenerListadoProyectos(Usuario.id_usuario), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido", required = "" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-2">Estatus del Código: <span class="requerido"> *</span> </label>
+                                        <div class="col-md-10">
+                                            @Html.Editor("estado_codigo", new { htmlAttributes = new { @class = "form-control", disabled = "disabled", required = "" } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr />
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-2">Nombre Proyecto: <span class="requerido"> *</span> </label>
+                                        <div class="col-md-10">
+                                            @Html.Editor("nombre_proyecto", new { htmlAttributes = new { @class = "form-control", disabled = "disabled", required = "" } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-2">Cliente: <span class="requerido"> *</span> </label>
+                                        <div class="col-md-10">
+                                            @Html.Editor("cliente", new { htmlAttributes = new { @class = "form-control", disabled = "disabled", required = "" } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-2">Ejecutivo:<span class="requerido"> *</span></label>
+                                        <div class="col-md-10">
+                                            @Html.Editor("ejecutivo", new { htmlAttributes = new { @class = "form-control", disabled = "disabled", required = "" } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr />
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Número de Horas Programadas:<span class="requerido"> *</span></label>
+                                        <div class="col-md-8" onkeypress="if ( isNaN( String.fromCharCode(event.keyCode) )) return false;">
+                                            @Html.Editor("numero_horas_programado", new { htmlAttributes = new { @class = "form-control campo-requerido", required = "" } })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Número de Horas Real:</label>
+                                        <div class="col-md-8" onkeypress="if ( isNaN( String.fromCharCode(event.keyCode) )) return false;">
+                                            @Html.Editor("numero_horas_real", new { htmlAttributes = new { @class = "form-control" } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Fecha Inicio Programado: <span class="requerido"> *</span> </label>
+                                        <div class="col-md-8">
+
+                                            @Html.Editor("fecha_inicio_programado", new { htmlAttributes = new { @class = "form-control campo-requerido", @type = "date", id = "fecha_inicio_programado" } })
+                                            @Html.Hidden("fecha_inicio_programado", System.DateTime.Now.ToString("dd/MM/yyyy"))
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Fecha Inicio Real: </label>
+                                        <div class="col-md-8">
+                                            @Html.Editor("fecha_inicio_real", new { htmlAttributes = new { @class = "form-control", @type = "date", @Value = "" } })
+                                            @Html.Hidden("fecha_inicio_real", System.DateTime.Now.ToString("dd/MM/yyyy"))
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Fecha Fin Programado: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.Editor("fecha_fin_programado", new { htmlAttributes = new { @class = "form-control campo-requerido", @type = "date", @Value = "", required = "" } })
+                                            @Html.Hidden("fecha_fin_programado", System.DateTime.Now.ToString("dd/MM/yyyy"))
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Fecha Fin Real: </label>
+                                        <div class="col-md-8">
+                                            @Html.Editor("fecha_fin_real", new { htmlAttributes = new { @class = "form-control", @type = "date", @Value = "" } })
+                                            @Html.Hidden("fecha_fin_real", System.DateTime.Now.ToString("dd/MM/yyyy"))
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr />
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-6">
+
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Fases: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("etapa_cliente", CatalogoEntity.ObtenerListadoCatalogosByCodigoSinOrdenar("ECL-01"), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido", required = "" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Estatus Detallado: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("estatus_detallado", new List<SelectListItem>(), new { @class = "form-control campo-requerido", required = "" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Etapa General: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("etapa_general", new List<SelectListItem>(), new { @class = "form-control campo-requerido", required = "" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Estatus General: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("estatus_general", new List<SelectListItem>(), new { @class = "form-control campo-requerido", required = "" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="box box-default">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Información del Avance del Proyecto</h3>
+                        </div>
+                        <div class="box-body">
+
+                            <br />
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Porcentaje del Avance: <span class="requerido"> *</span></label>
+                                        <div class=" col-md-7 input-group" style="padding-left: 21px;">
+                                            <span class="input-group-addon">%</span>
+                                            <input id="porcentaje_avance" name="porcentaje_avance" class="porcentaje_avance easyui-numberbox campo-requerido" style="height:35px; padding:10px; text-align: right;" required="" value="0,00" data-options="max:100, min:0, precision:2, groupSeparator:'.', decimalSeparator:','">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Fecha del Avance: </label>
+                                        <div class="col-md-8">
+                                            @Html.Editor("fecha_avance", new { htmlAttributes = new { @class = "form-control", @Value = System.DateTime.Now.ToString("dd/MM/yyyy"), disabled = "disabled", required = "" } })
+                                            @Html.Hidden("fecha_avance", System.DateTime.Now.ToString("dd/MM/yyyy"))
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <br />
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-2">Descripción del Avance: <span class="requerido"> *</span></label>
+                                        <div class="col-md-10">
+                                            @Html.TextArea("descripcion_avance", null, new { @class = "form-control campo-requerido", rows = 3, @style = "resize: none;", maxlength = 300, required = "" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr />
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-2">Ejecutado: <span class="requerido"> *</span></label>
+                                        <div class="col-md-10">
+                                            @Html.TextArea("ejecutado", null, new { @class = "form-control campo-requerido", rows = 3, @style = "resize: none;", maxlength = 300, required = "" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-2">En Ejecución: <span class="requerido"> *</span></label>
+                                        <div class="col-md-10">
+                                            @Html.TextArea("en_ejecucion", null, new { @class = "form-control campo-requerido", rows = 3, @style = "resize: none;", maxlength = 300, required = "" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-2">Bloqueantes: <span class="requerido"> *</span></label>
+                                        <div class="col-md-10">
+                                            @Html.TextArea("bloqueantes", null, new { @class = "form-control campo-requerido", rows = 3, @style = "resize: none;", maxlength = 300, required = "" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-2">Próximos Pasos: <span class="requerido"> *</span></label>
+                                        <div class="col-md-10">
+                                            @Html.TextArea("proximos_pasos", null, new { @class = "form-control campo-requerido", rows = 3, @style = "resize: none;", maxlength = 300, required = "" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr />
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-offset-2 col-md-8">
+                    <div class="form-horizontal">
+
+                        <div class="form-group">
+                            <div class="col-md-offset-5 col-md-12">
+                                <input id="guardar" type="button" value="Guardar" class="btn btn-default" />
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <a href="~/ProyectosAsignados/Index/" class="btn btn-default">Regresar</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+
+    //acciones para los botones
+    var urlAccionGuardar = '@Url.Action("Create","ProyectosAsignados")';
+    var urlAccionListado = '@Url.Action("Index","ProyectosAsignados")';
+
+    var etiquetaFI = document.getElementById('fecha_inicio_programado');
+    var etiquetaFF = document.getElementById('fecha_fin_programado');
+    var etiquetaHP = document.getElementById('numero_horas_programado');
+
+    var proyecto;
+    var cumplimientoProyecto;
+
+    var fechainireal;
+    var fechafinreal;
+    var horasreal;
+
+    $(document).ready(function () { 
+
+        $("#id_codigo_cotizacion").change(function () {
+
+            $.getJSON('@Url.Action("ObtenerDatosCodigoCotizacion", "ProyectosAsignados")', { id: $('#id_codigo_cotizacion').val() }, function (data) {
+                $("#id_proyecto").val(data.CodigoProyecto);
+                $("#estado_codigo").val(data.EstadoCodigo);
+                $("#nombre_proyecto").val(data.NombreProyecto);
+                $("#cliente").val(data.Cliente);
+                $("#ejecutivo").val(data.Ejecutivo);
+                desbloquearCampos();
+                $("#fecha_inicio_programado").val(data.FechaInicioProgramado);
+                $("#fecha_fin_programado").val(data.FechaFinProgramado);
+                $("#numero_horas_programado").val(data.NumeroHorasProgramado);
+                $("#etapa_cliente").val(data.Fase);
+                cargarEtapaClienteDependientes();
+                $("#etapa_general").val(data.General);
+                $("#estatus_detallado").val(data.Estado);
+                $("#estatus_general").val(data.EstadoGeneral);
+                cumplimientoProyecto = data.Cumplimiento;
+                bloquearCampos(data.Editar);
+            });
+
+        })
+
+        $('#etapa_cliente').change(function () {
+            cargarEtapaClienteDependientes();
+            return false;
+        });
+
+        $("#guardar").click(function () {
+            var flag = validarCamposRequeridosFormularioCompleto("form-detalleAvanceProyecto");
+
+            if (flag) {
+                if (cumplimientoProyecto > $('#porcentaje_avance').val())
+                    toastr.error("El porcentaje de cumplimiento no puede ser menor que "+cumplimientoProyecto + " %. ");
+                else
+                    guardar();
+            }
+            else
+                toastr.error('@Mensajes.MensajeDatosObligatorios');
+        })
+
+    })
+
+    //funcion para cargar las etapas del cliente
+    function cargarEtapaClienteDependientes() {
+        $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetDependientesEtapaCliente", "Cliente")',
+                dataType: 'json',
+                data: { id: $("#etapa_cliente").val() },
+                success: function (data) {
+
+                $("#etapa_general").empty();
+                $("#estatus_detallado").empty();
+                $("#estatus_general").empty();
+
+                    $.each(data, function (i, catalogo) {
+                        if (catalogo.codigo_catalogo === "ETAPA-GENERAL")
+                            $("#etapa_general").append('<option value="' + catalogo.id_catalogo + '">' + catalogo.nombre_catalgo + '</option>');
+
+                        if (catalogo.codigo_catalogo === "ESTATUS-DETALLADO")
+                            $("#estatus_detallado").append('<option value="' + catalogo.id_catalogo + '">' + catalogo.nombre_catalgo + '</option>');
+
+                        if (catalogo.codigo_catalogo === "ESTATUS-GENERAL")
+                            $("#estatus_general").append('<option value="' + catalogo.id_catalogo + '">'+ catalogo.nombre_catalgo + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    toastr.error(ex)
+                }
+        });
+    }
+
+    //funcion guardar
+    function guardar() {
+        var formulario = $('#form-detalleAvanceProyecto').serializeArray().reduce(function (a, x) { a[x.name] = x.value; return a; }, {});
+
+        if ($("#fecha_inicio_real").val() == "") {
+            fechainireal = '1990-01-01';
+        } else {
+            fechainireal = $("#fecha_inicio_real").val();
+        }
+
+        if ($("#fecha_fin_real").val() == "") {
+            fechafinreal = '1990-01-01';
+        } else {
+            fechafinreal = $("#fecha_fin_real").val();
+        }
+
+        if ($("#numero_horas_real").val() == "") {
+            horasreal = 0;
+        } else {
+            horasreal = $("#numero_horas_real").val();
+        }
+
+        var data_form = JSON.stringify({ "detalleAvanceProyecto": formulario, "id_codigo_cotizacion": $("#id_codigo_cotizacion").val(), "id_proyecto": $("#id_proyecto").val(), "etapa_cliente": $("#etapa_cliente").val(), "etapa_general": $("#etapa_general").val(), "estatus_detallado": $("#estatus_detallado").val(), "estatus_general": $("#estatus_general").val(), "fecha_inicio_programado": $("#fecha_inicio_programado").val(), "fecha_fin_programado": $("#fecha_fin_programado").val(), "fecha_inicio_real": fechainireal, "fecha_fin_real": fechafinreal, "horas_programadas": $("#numero_horas_programado").val(), "horas_reales": horasreal})
+        _Guardar(data_form, urlAccionGuardar, urlAccionListado)
+    }
+
+    function parametrosContactosCliente() {
+        return { id: usuario };
+    }
+
+    function desbloquearCampos() {
+
+        etiquetaFI.readonly = false;
+        etiquetaFF.readonly = false;
+        etiquetaHP.readonly = false;
+
+        etiquetaFI.disabled = false;
+        etiquetaFF.disabled = false;
+        etiquetaHP.disabled = false;
+    }
+
+    function bloquearCampos(bloqueo) {
+
+        if (bloqueo == 1) {
+            etiquetaFI.readonly = true;
+            etiquetaFF.readonly = true;
+            etiquetaHP.readonly = true;
+
+            etiquetaFI.disabled = true;
+            etiquetaFF.disabled = true;
+            etiquetaHP.disabled = true;
+        }
+    }
+
+
+</script>

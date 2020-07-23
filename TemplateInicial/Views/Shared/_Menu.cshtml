@@ -1,0 +1,72 @@
+﻿@using GestionPPM 
+@using GestionPPM.Entidades
+@model IEnumerable<GestionPPM.Entidades.Modelo.usp_b_opci_menu_usua>
+@{
+    var elePadre = Model.Where(t => t.id_menu_padre == null);
+    elePadre = elePadre.OrderBy(t => t.orden_menu).ToList();
+}  
+<br />
+<div role="navigation" style="background-color:#3c4252">
+    <div class="sidebar-nav navbar-collapse">
+        <ul class="sidebar-menu" data-widget="tree">
+            @foreach (var ele in elePadre)
+            {
+                var clase = "padre";
+                var clasePadre = "fa fa-folder fa-fw";
+                var tipo = "treeview";
+                if (ele.hijos == 0)
+                {
+                    clase = "padre";
+                    clasePadre = "fa fa-file-text-o fa-fw";
+                    tipo = "active";
+                    <li>
+                        <a href="@Url.Action(@ele.opcion, @ele.carpeta, new { permisos = ele.permisos })" id="@ele.opcion" class="@clase">
+                            <i class="@clasePadre"></i> @ele.nombre_menu<span class="fa arrow"></span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                    </li>
+                }
+                else
+                {
+
+                    var eleHijos = Model.Where(t => t.id_menu_padre != null && t.id_menu_padre == ele.id_menu);
+                    eleHijos = eleHijos.ToList();
+
+                    <li class="treeview" style="background-color:#3c4252">
+                        <a href="@Url.Action(@ele.opcion, @ele.carpeta)" id="@ele.opcion" class="@clase">
+                            <i class="@clasePadre"></i> @ele.nombre_menu<span class="fa arrow"></span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+
+
+                        @if (eleHijos.Any())
+                        {
+                            <ul class="treeview-menu" style="background-color:#3c4252">
+                                @foreach (var hijo in eleHijos)
+                                {
+                                    clase = "padre";
+                                    var claseHijo = "fa fa-folder fa-fw";
+                                    if (hijo.id_menu_padre != null)
+                                    {
+                                        clase = "hijo";
+                                        claseHijo = "fa fa-file-text-o fa-fw";
+                                    }
+
+                                    var eleNietos = Model.Where(t => t.id_menu_padre != null && t.id_menu_padre == hijo.id_menu).ToList();
+
+                                    @*<a href="~/Usuarios/Index" id="@hijo.opci_nomb_pantalla" class="@clase"><i class="@claseHijo"></i> @hijo.opci_nombre<span class="fa arrow"></span></a>*@
+                                    <li class="active"><a href="@Url.Action(@hijo.opcion, @hijo.carpeta, new { permisos = hijo.permisos })"><i class="@claseHijo"></i> <span>@hijo.nombre_menu  </span></a></li>
+                                }
+                            </ul>
+                        }
+                    </li>
+                }
+            }
+        </ul>
+
+    </div>
+</div> 

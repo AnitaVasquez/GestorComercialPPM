@@ -1,0 +1,81 @@
+﻿@using ReportesOrdenesMediosSGP.Models
+@model LoginViewModel
+@using ReportesOrdenesMediosSGP.Helper
+@{
+    ViewBag.Title = "Reportes Medios SGP - Iniciar sesión";
+    Layout = "~/Views/Shared/_Inicial.cshtml";
+}
+
+
+<script>
+        $(document).ready(function () {
+            //$('#cerrarValidaciones').on("click", function () {
+            //    $("#zonaAlertaValidaciones").hide(500);
+            //})
+            $(".camposInicioSesion").keypress(function (index, value) {
+                $(".mensajeValidacion").hide(200);
+            })
+        })
+    </script>
+
+
+@*<div class="main">*@
+    <!-- Sing in  Form -->
+    @using (Html.BeginForm(new { ReturnUrl = ViewBag.ReturnUrl }))
+    {
+        @Html.AntiForgeryToken()
+        <section class="sign-in">
+            <div class="container">
+                <div class="signin-content">
+                    <div class="signin-image">
+                        <figure><img alt="imagen-qph" src="~/Content/imagenes2/QUITO-PUBLISHING-HOUSE.-005.jpg" /></figure>
+                        @*<a href="#" class="signup-image-link">Cree una cuenta</a>*@
+                        <img alt="imagen-qph" src="~/Content/imagenes2/empresas logo.jpg" />
+                    </div>
+
+                    <div class="signin-form">
+                        <h2 class="form-title">Iniciar Sesión</h2>
+                        <form role="form">
+                            <div class="form-group">
+                                <label for="your_name"><i class="zmdi zmdi-account material-icons-name"></i></label>
+                                <input type="text" class="camposInicioSesion" name="Login" id="Login" placeholder="Usuario" autofocus />
+                                @Html.MyValidationMessageFor2(model => Model.Login)
+
+                            </div>
+
+                            <div class="form-group">
+                                <label for="your_pass"><i class="zmdi zmdi-lock"></i></label>
+                                <input class="camposInicioSesion" type="password" name="Password" id="Password" placeholder="Contraseña" />
+                                @Html.MyValidationMessageFor2(model => Model.Password)
+
+                            </div>
+
+                            <div class="form-group">
+                                <input type="checkbox" name="remember-me" id="remember-me" class="agree-term" />
+                                <label for="remember-me" class="label-agree-term"><span><span></span></span>Recordarme</label>
+                            </div>
+                            <div class="form-group form-button">
+                                <input type="submit" name="signin" id="signin" class="form-submit" value="Ingresar" />
+                            </div>
+                        </form>
+                        <div class="social-login">
+                            @*<span class="social-label">Or login with</span>
+                            <ul class="socials">
+                                <li><a href="#"><i class="display-flex-center zmdi zmdi-facebook"></i></a></li>
+                                <li><a href="#"><i class="display-flex-center zmdi zmdi-twitter"></i></a></li>
+                                <li><a href="#"><i class="display-flex-center zmdi zmdi-google"></i></a></li>
+                            </ul>*@
+                            @*<img alt="imagen-qph" src="https://doc-0s-1s-docs.googleusercontent.com/docs/securesc/ha0ro937gcuc7l7deffksulhg5h7mbp1/8r7j6710iv8n6qutqtd1934c8d71m6ap/1561586400000/10979733687048934501/*/1xHseTVrFBj8BBoCtNcMLSMyUfu2-sHIu" />*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    }
+    @*</div>*@
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -1,0 +1,120 @@
+﻿@model IEnumerable<GestionPPM.Entidades.Modelo.ComentariosSolicitudInfo>
+
+<style>
+    /* Important part */
+    .modal-dialog {
+        overflow-y: initial !important
+    }
+
+    .modal-body {
+        height: 460px;
+        overflow-y: auto;
+    }
+</style>
+<link href="~/Content/component.css" rel="stylesheet" />
+<link href="~/Content/normalize.css" rel="stylesheet" />
+
+@* Formato para el template de datos *@
+<link href="~/Content/css/personalizar.css" rel="stylesheet" />
+
+<script>
+    var urlAccionGuardarComentario = '@Url.Action("GuardarComentario", "SolicitudesClienteExterno", new { id = (int)ViewBag.SolicitudID })';
+     var urlAccionGuardarAccion = '@Url.Action("_Comentario", "SolicitudesClienteExterno")';
+    var codigoCotizacion = '@ViewBag.codigoCotizacion';
+
+    var gridID = "grid-Comentarios-Solicitud";
+
+    var idSolicitud = '@ViewBag.SolicitudID'
+
+    $(document).ready(function () {
+        $("#seccion-titulo-modal").text('@Html.Raw(ViewBag.TituloModal)');
+        $("#" + gridID).find("#Seccion-TituloGrid").html("<h5><i class='fa fa-search' aria-hidden='true'></i> " + 'Comentarios' + "</h5>");
+        $("#" + gridID).find("#seccion-botones-funciones").hide();
+
+        $(document).keydown(callBackBusqueda);
+        $(document).keypress(callBackBusqueda);
+        $(document).keyup(callBackBusqueda);
+
+    });
+
+    $('#guardar-comentario').click(function () {
+        debugger
+        var archivo = $("#formato").get(0);
+        var data_form = { "Comentario": $('#Comentario').val() }
+        let respuesta = AdjuntarArchivo(archivo, urlAccionGuardarComentario, "", "", data_form);
+
+        var flag = false;
+        if (respuesta)
+            debugger
+        _GetCreate({id:  idSolicitud}, urlAccionGuardarAccion, flag)
+        recargarComentarios();
+    });
+
+    function recargarComentarios() {
+        var grid = new MvcGrid(document.querySelector('#' + gridID));
+        grid.query.set('id', idSolicitud);
+        grid.reload();
+    }
+
+
+</script>
+
+<script src="~/Scripts/custom-file-input.js"></script>
+
+
+<form action="#" id="form-comentario" role="form" data-toggle="validator" method="post" accept-charset="utf-8">
+    <div class="row" id="envioIcare">
+        <div class="col-lg-12">
+            <div class="box box-default">
+                <div class="box-header with-border">
+                    <h3 class="box-title" id="textoFormato">Adjuntar Archivo  <span class="requerido"> *</span></h3>
+                </div>
+                <div class="box-body">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-9">
+                                @Html.TextArea("Comentario", string.Empty, new { @class = "form-control campo-requerido", rows = 5, @style = "resize: none;", maxlength = 500 })
+                                <h6 style="color:gray;">* @ViewBag.MaximoComentarios </h6>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <div class="box-archivo">
+                                        <input type="file" class="inputfile inputfile-4" id="formato" name="formato" data-multiple-caption="{count} files selected ">
+                                        <label for="formato">
+                                            <figure>
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 10">
+                                                    <path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z" />
+                                                </svg>
+                                            </figure>
+                                            <span>Seleccionar Archivo &hellip;</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" style="text-align: center;">
+        <div class="col-md-12">
+            <input id="guardar-comentario" type="button" value="Guardar" class="btn btn-default" />
+        </div>
+    </div>
+</form>
+
+
+<br />
+
+<div class="row">
+    <div class="col-sm-12">
+
+           @{Html.RenderPartial("_IndexGridComentarios", Model);}
+
+
+    </div>
+
+</div>
+

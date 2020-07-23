@@ -1,0 +1,65 @@
+﻿@model GestionPPM.Entidades.Modelo.SolicitudesDeNotaDeCredito
+
+<link rel="stylesheet" type="text/css" href="~/Content/themes/default/tree.css">
+<link href="~/Content/themes/default/menu.css" rel="stylesheet" />
+
+<script type="text/javascript" src="~/Scripts/jquery.easyui.min.js"></script>
+
+<script>
+    var urlAccionEditarStatusCodigo = '@Url.Action("ReversarConsolidacion", "Anular")';
+
+    $(document).ready(function () {
+        $("#seccion-titulo-modal").text('@Html.Raw(ViewBag.TituloModal)');
+    });
+       
+     
+    $("#guardar-status").click(function () {
+        debugger
+
+        var a = prefacturar.checked
+         
+        var flag = validarCamposRequeridosFormularioCompleto("form-codigoCotizacion");
+        if (flag)
+            guardarStatus(); // continue the submit unbind preventDefault
+        else
+            toastr.error('@Mensajes.MensajeDatosObligatorios')
+    })
+
+    function guardarStatus() {
+        debugger
+        var data_form = JSON.stringify({ "notaCredito": $('#form-codigoCotizacion').serializeObject() })
+        alert(data_form)
+        _GuardarModalStatusCodigoCotizacion(data_form, urlAccionEditarStatusCodigo);
+    }
+
+</script> 
+
+<form action="#" id="form-codigoCotizacion" role="form" data-toggle="validator" method="post" accept-charset="utf-8">
+    @Html.Hidden("id_facturacion_safi", Model.id_facturacion_safi)
+
+    <br />
+
+    <div class="row">
+        <div class="col-md-12">
+            <label for="prefacturar" class="etiqueta-seccion control-label col-md-2">Prefacturar:</label>
+            <div class="col-md-8">
+                <input type="checkbox" id="prefacturar" value='@Model.prefacturar'>
+            </div>
+        </div>
+    </div>
+
+    <br />
+    <br />
+
+    <div class="row">
+        <div class="col-md-12">
+            <div style="text-align: center;" class="center">
+                <input title="Solicitar Nota de Crédito" style="background-color:#00AD8E;border-color: #00AD8E;" class="btn btn-primary" type="submit" id="guardar-status" value="GENERAR SOLICITUD DE NOTA DE CRÉDITO" />
+            </div>
+        </div>
+    </div>
+
+    <br />
+
+</form>
+

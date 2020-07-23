@@ -1,0 +1,145 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .alinear-derecha {
+        text-align: right;
+    }
+</style>
+<div id="cargando-grid"></div>
+
+@Html.AjaxGrid(Url.Action("IndexGrid2"))
+
+@*Para que funcione el progress bar*@
+@section drag {
+    <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
+}
+
+@section ViewSpecificJavascript {
+    <script>
+        debugger
+        var idGrid = "grid-CodigoCotizacion";
+
+        var idGridCargaMasiva = "grid-CargaMasiva";
+        var idFileUpload = "file-upload";
+        var classLabelFileUpload = "custom-file-upload";
+
+    var urlAccionReporteExcel = '@Url.Action("DescargarReporteDetalladoFormatoExcel", "CodigoCotizacion")';
+    var urlAccionReportePDF = '@Url.Action("DescargarReporteFormatoPDF", "CodigoCotizacion")';
+    var urlAccionReporteCSV = '@Url.Action("DescargarReporteDetalladoFormatoCSV", "CodigoCotizacion")';
+        var urlAccionCargarData = '@Url.Action("CargarData", "CodigoCotizacion")';
+
+    var resultado = @Html.Raw(Json.Encode(ViewBag.Resultado));
+        var estado = @Html.Raw(Json.Encode(ViewBag.Estado));
+
+                   var perfiles = @Html.Raw(Json.Encode(ViewBag.PerfilesUsuario));
+
+    $(document).ready(function () {
+            debugger
+        if (estado != "" && estado != null) {
+            if (estado == "True") {
+                toastr.success(resultado)
+            } else {
+                toastr.error(resultado)
+            }
+        }
+    })
+
+        $(document).click(function (e) {
+            debugger
+            var elemento = $(e.currentTarget.activeElement)[0];
+            if (elemento.id === 'recargar') {
+                debugger
+                const cargaMasiva = perfiles.find(s => s.Nombre === 'CARGA MASIVA DE CODIGO DE COTIZACION');
+                debugger
+                recargarGridByID(idGrid);
+                //if (cargaMasiva != null){
+                //    // your code here.
+                //    habilitarBotonCargaMasiva(1000);
+                //}
+            }
+
+            if (elemento.id === 'nuevo') {
+                debugger
+                location.href = '@Url.Action("Create", "CodigoCotizacion")';
+            }
+
+            //if (elemento.id === '') {
+            //    debugger
+            //    const cargaMasiva = perfiles.find(s => s.Nombre === 'CARGA MASIVA DE CODIGO DE COTIZACION');
+            //    if (cargaMasiva != null){
+            //        // your code here.
+            //        habilitarBotonCargaMasiva(1000);
+            //    }
+            //}
+
+            if (elemento.id === 'ExportarGridExcel') {
+                debugger
+                location.href = urlAccionReporteExcel;
+
+            }
+            if (elemento.id === 'ExportarGridPDF') {
+                debugger
+                reporteGridPDF(urlAccionReportePDF);
+            }
+            if (elemento.id === 'ExportarGridCSV') {
+                debugger
+                location.href = urlAccionReporteCSV;
+            }
+            if (elemento.id === 'cargar-data') {
+                debugger
+                $("#grid-CargaMasiva").find("#seccion-botones-funciones").hide();
+                $("#grid-CargaMasiva").hide();
+            }
+            if (elemento.id === 'Ayuda') {
+
+                $('#help-modal').modal({
+                    'show': 'true',
+                    'backdrop': 'static',
+                    'keyboard': false
+                })
+            }
+
+        });
+
+        $(document).keydown(callBackBusqueda);
+        $(document).keypress(callBackBusqueda);
+        $(document).keyup(callBackBusqueda);
+
+        function callBackBusqueda(e) {
+            debugger
+            var elemento = $(e.currentTarget.activeElement)[0];
+            //Validar que los Grids tengan filtros de búsqueda
+            var filtrosBusqueda = document.getElementById('GridSearch');
+            busquedaGrid(idGrid);
+        }
+
+
+        $('#procesar-carga').click(function () {
+            debugger
+            var archivo = $("#file-upload").get(0);
+
+            if (archivo.files.length === 0) {
+                console.log("No se seleccionaron archivos.");
+                LimpiarFormularioCargasMasivas(idGridCargaMasiva,idFileUpload, classLabelFileUpload);
+                return;
+            }
+
+            ControlesCargaEnEspera("seccion-cargas-masivas-contenido", "procesar-carga", "file-upload");
+
+            setTimeout(function () {
+                CargaMasivaData(archivo, urlAccionCargarData, "grid-CargaMasiva");
+            }, 500);
+
+        });
+
+        $('#cargas-masivas-modal').on('hidden.bs.modal', function () {
+            LimpiarFormularioCargasMasivas(idGridCargaMasiva,idFileUpload, classLabelFileUpload);
+            recargarGridByID(idGrid);
+            habilitarBotonCargaMasiva(1000);
+        })
+
+
+    </script>
+} 

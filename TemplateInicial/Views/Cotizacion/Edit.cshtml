@@ -1,0 +1,1265 @@
+﻿@model GestionPPM.Entidades.Modelo.Cotizador
+@using GestionPPM.Entidades.Modelo
+@using GestionPPM.Entidades.Metodos
+
+@using GestionPPM.Repositorios
+
+@{
+    ViewBag.Title = "Editar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var CodigoCotizacion = (CodigoCotizacionInfo)ViewBag.CabeceraCotizacion;
+
+    var listadoDetalleCotizador = (List<DetalleCotizador>)ViewBag.listadoDetalleCotizador;
+    var contador = (int)ViewBag.MaximoIDlistadoDetalleCotizador;
+}
+
+@* Formato para el template de datos *@
+<link href="~/Content/css/personalizar.css" rel="stylesheet" /> 
+
+<script type="text/javascript" src="~/Scripts/jquery-3.3.1.js"></script>
+
+<link rel="stylesheet" type="text/css" href="~/Content/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="~/Content/themes/icon.css">
+<link rel="stylesheet" type="text/css" href="~/Content/css/demo.css">
+
+<script type="text/javascript" src="~/Scripts/jquery.min.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.easyui.min.js"></script>
+
+<style>
+    .fila-seccion {
+        margin-bottom: 15px;
+    }
+
+    .etiqueta-seccion {
+        text-align: right;
+    }
+
+    .awe-txt-field.awe-field {
+        min-width: 100% !important;
+    }
+
+    .input-bloqueado {
+        pointer-events: none;
+    }
+
+    .valores-alineacion {
+        text-align: right;
+    }
+
+    .alinear-derecha {
+        text-align: right;
+        min-width: 15em;
+    }
+</style>
+
+<div class="panel">
+
+    <div class="panel-heading-create custom-header-panel">
+        <h4>@Etiquetas.TituloPanelCreacionCotizacion <div class="pull-right">N° @CodigoCotizacion.codigo_cotizacion</div></h4>
+    </div>
+
+    <div class="panel-body">
+        <form action="#" id="form-cotizacion" role="form" data-toggle="validator" method="post" accept-charset="utf-8">
+
+            @Html.Hidden("cotizadorID", null)
+            @Html.HiddenFor(model => model.id_cotizador)
+            @Html.Hidden("estado_cotizador", Model.estado_cotizador)
+            @Html.Hidden("id_codigo_cotizacion", CodigoCotizacion.id_codigo_cotizacion)
+            @Html.Hidden("version", Model.version)
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="box box-default">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Información Principal</h3>
+                            <div class="pull-right">Versión <b>@Model.version</b></div>
+                        </div>
+
+                        <div class="box-body">
+                            <div class="row fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Fecha de Cotización: </label>
+                                        <div class="col-md-8">
+                                            @Html.Editor("fecha_cotizacion", new { htmlAttributes = new { @class = "form-control", @Value = System.DateTime.Now.ToString("yyyy/MM/dd"), disabled = "disabled" } })
+                                            @Html.Hidden("fecha_cotizacion", System.DateTime.Now.ToString("yyyy/MM/dd"))
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Tipo de Cliente:</label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("tipo_cliente", CatalogoEntity.ObtenerListadoCatalogosByCodigo("TCL-01", CodigoCotizacion.CodigoCatalogoTipoCliente.ToString()), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido", disabled = "disabled" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-6"> 
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Días: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            <input type="number" id="numero_dias" name="numero_dias" class="numero_dias form-control campo-requerido" min="30" max="180" value= @Model.numero_dias.Value>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Tipo de Proyecto:</label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("tipo_proyecto", CatalogoEntity.ObtenerListadoCatalogosByCodigo("TPY-01", CodigoCotizacion.CodigoCatalogoTipoProyecto.ToString()), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido", disabled = "disabled" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Fecha de Vencimiento:</label>
+                                        <div class="col-md-8">
+                                            @Html.Editor("fecha_vencimiento", new { htmlAttributes = new { @class = "form-control", @Value = @Model.fecha_vencimiento, disabled = "disabled" } })
+                                            @Html.Hidden("fecha_vencimiento", System.DateTime.Now.ToString("yyyy/MM/dd"))
+                                        </div> 
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Dimensión del Proyecto:</label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("dimension_proyecto", CatalogoEntity.ObtenerListadoCatalogosByCodigo("DPY-01", CodigoCotizacion.CodigoCatalogoDimensionProyecto.ToString()), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido", disabled = "disabled" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-6">
+
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Aplica Contrato: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("aplica_contrato", new SelectList(new List<SelectListItem> { new SelectListItem { Text = "SI", Value = "True" },
+                                                new SelectListItem { Text = "NO", Value = "False" },}, "Value", "Text", CodigoCotizacion.AplicaContratoCodigo), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Ejecutivo/a:</label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("ejecutivo", ClienteEntity.ObtenerListadoEjecutivos(CodigoCotizacion.id_cliente, CodigoCotizacion.Ejecutivo.ToString()), new { @class = "form-control campo-requerido", disabled = "disabled" })
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div> 
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-2">Cliente:</label>
+                                        <div class="col-md-10">
+                                            @Html.DropDownList("id_cliente", ClienteEntity.ObtenerListadoClientes(CodigoCotizacion.id_cliente), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido", disabled = "disabled" })
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-2">Nombre del Proyecto:</label>
+                                        <div class="col-md-10">
+                                            @Html.Editor("nombre_proyecto", new { htmlAttributes = new { @class = "form-control", @Value = CodigoCotizacion.nombre_proyecto, disabled = "disabled" } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="box box-default">
+                        <div class="box-body">
+
+                            <a class="btn btn-sm  btn-default" style="font-size: 15px; cursor: pointer; background-color: #008D4C; color:white" title="Agregar Entregable" id="get-creacion-detalle-cotizacion" data-backdrop="static" data-toggle="modal" data-target="#contenido-modal" onclick="abrirDetalleCotizador();"> Agregar Entregable</a>
+
+                            <div class="row fila-seccion">
+                                <div class="table-responsive col-md-12">
+
+                                    <table id="tarifario-tabla" class=" table order-list">
+                                        <thead>
+                                            <tr id="cabeceraEntregables">
+                                                <td>Contador</td>
+                                                <td style="text-align:center;">
+                                                    Entregable <span class="requerido"> *</span>
+                                                </td>
+                                                @*Con Gestion*@
+                                                <td style="text-align:center;">Gestión</td>
+                                                <td>Tipo de Producto y/o Servicio  <span class="requerido"> *</span></td>
+                                                <td>ID Tarifario (Tipo de Producto y/o Servicio)</td>
+                                                <td>Cantidad</td>
+                                                <td>Valor Unitario</td>
+                                                <td>Costo</td>
+                                                @*Sin gestión*@
+                                                <td>Gestión</td>
+                                                <td>ID Tarifario (Gestión)</td>
+                                                <td>Cantidad</td>
+                                                <td>Valor Unitario</td>
+                                                <td>Costo</td>
+                                                <td style="text-align:center;">
+                                                    TOTAL
+                                                </td>
+                                                <td style="color: white">Acciones</td>
+                                            </tr>
+                                            <tr hidden="">
+                                                <td>
+                                                    <input type="text" id="contador" class="form-control" />
+                                                </td>
+
+                                                <td class="col-sm-7">
+                                                    <input type="text" id="entregable" class="form-control" />
+                                                </td>
+                                                <td class="col-sm-1">
+                                                    <div id="tiene-gestion-info" style="text-align: center; display: none;">
+                                                        <span><i style="margin-top: 10px;" title="Tiene gestión." class="fa fa-check-square-o" aria-hidden="true"></i></span>
+                                                    </div>
+                                                    <div id="sin-gestion-info" style="text-align: center;">
+                                                        <span><i style="margin-top: 10px;" class="fa fa-square-o" title="No tiene gestión." aria-hidden="true"></i></span>
+                                                    </div>
+                                                </td>
+
+                                                <td>
+                                                    @Html.DropDownList("tarifarioConGestion", TarifarioEntity.ObtenerListadoTarifario(true), Etiquetas.TituloComboVacio, new { @class = "form-control" })
+                                                </td>
+                                                <td><input type="text" id="idTarifarioConGestion" class="form-control" /></td>
+                                                <td>
+                                                    @(Html.Awe().TextBox("cantidadTarifarioConGestion").Numeric().Value(1).Numeric(o => o.Min(1)).HtmlAttributes(null, new { @class = "campo-cantidad" }))
+                                                </td>
+                                                <td>
+                                                    @(Html.Awe().TextBox("valorUnitarioTarifarioConGestion")                                                                        .Numeric(o => o.Decimals(6).Step(0.01).Max(999999999)))
+                                                </td> 
+                                                <td>
+                                                    @(Html.Awe().TextBox("costoUnitarioTarifarioConGestion")                                                                                                                   .Numeric(o => o.Decimals(6).Step(0.01).Max(999999999)))
+
+                                                </td>
+
+                                                <td>
+                                                    @Html.DropDownList("tarifarioSinGestion", TarifarioEntity.ObtenerListadoTarifario(false), Etiquetas.TituloComboVacio, new { @class = "form-control" })
+                                                </td> 
+                                                <td><input type="text" id="idTarifarioSinGestion" class="form-control" /></td>
+                                                <td>
+                                                    @*<input type="number" id="cantidadTarifarioSinGestion" class="form-control" />*@
+                                                    @(Html.Awe().TextBox("cantidadTarifarioSinGestion").Numeric().Value(1).Numeric(o => o.Min(1)).HtmlAttributes(null, new { @class = "campo-cantidad" }))
+                                                </td>
+                                                <td>
+                                                    @*<input type="number" id="valorUnitarioTarifarioSinGestion" class="form-control" />*@
+                                                    @(Html.Awe().TextBox("valorUnitarioTarifarioSinGestion")                                                                      //.FormatFunc("utils.prefix('US$')")
+                                                                                                                                                                                    .Numeric(o => o.Decimals(6).Step(0.01).Max(999999999)))
+                                                </td>
+                                                <td>
+                                                    @*<input type="number" id="costoUnitarioTarifarioSinGestion" class="form-control" disabled />*@
+
+                                                    @(Html.Awe().TextBox("costoUnitarioTarifarioSinGestion")                                                                                                                             //.FormatFunc("utils.prefix('US$')")
+                                                                                                                                                                                    .Numeric(o => o.Decimals(6).Step(0.01).Max(999999999)))
+                                                </td>
+
+                                                <td class="col-md-2">
+
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">US$</span>
+                                                        <input type="text" class="form-control" id="totalFinal" value="0,000000" style="text-align: right;" disabled />
+                                                         
+                                                    </div>
+                                                </td>
+                                                <td class="col-md-1" style="text-align: center">
+                                                    <a class="btn btn-sm btn-default" style="cursor: pointer; " title="Agregar costos" id="get-creacion-detalle-cotizacion" data-backdrop="static" data-toggle="modal" data-target="#contenido-modal" onclick="abrirDetalleCotizador();"> <i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                                    <button id="addrow" title="Agregar Detalle" type="button" class="btn btn-sm btn-success"><i class="fa fa-plus" aria-hidden="true"></i></button>
+
+                                                </td>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            @foreach (var item in listadoDetalleCotizador)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        <input type="text" class="form-control" name="contador-@item.id_detalle_cotizador" id="contador-@item.id_detalle_cotizador" value="@item.id_detalle_cotizador" disabled />
+                                                    </td>
+
+                                                    <td class="col-sm-7">
+                                                        <input type="text" class="form-control" name="entregable-@item.id_detalle_cotizador" id="entregable-@item.id_detalle_cotizador" value="@item.entregable" disabled />
+                                                    </td>
+
+                                                    <td class="col-sm-1">
+                                                        <div id="tiene-gestion-info-@item.id_detalle_cotizador" style="text-align: center; display: @(!item.tipo_gestion.HasValue ? "none" : "block");">
+                                                            <span><i style="margin-top: 10px;" title="Tiene gestión." class="fa fa-check-square-o" aria-hidden="true"></i></span>
+                                                        </div>
+                                                        <div id="sin-gestion-info-@item.id_detalle_cotizador" style="text-align: center;  display: @(item.tipo_gestion.HasValue ? "none" : "block");">
+                                                            <span><i style="margin-top: 10px;" class="fa fa-square-o" title="No tiene gestión." aria-hidden="true"></i></span>
+                                                        </div>
+                                                    </td>
+
+                                                    <td>
+                                                        <input type="text" class="form-control" name="tarifarioConGestion-@item.id_detalle_cotizador" id="tarifarioConGestion-@item.id_detalle_cotizador" value="@(TarifarioEntity.ObtenerListadoTarifario(true).FirstOrDefault(s=> s.Value == (item.tipo_servicio.HasValue ? item.tipo_servicio.Value.ToString(): "" )) == null ? "" :  TarifarioEntity.ObtenerListadoTarifario(true).FirstOrDefault(s=> s.Value == (item.tipo_servicio.HasValue ? item.tipo_servicio.Value.ToString(): "" )).Text)" disabled />
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control" name="idTarifarioConGestion-@item.id_detalle_cotizador" id="idTarifarioConGestion-@item.id_detalle_cotizador" value="@item.tipo_servicio" disabled />
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control" name="cantidadTarifarioConGestion-@item.id_detalle_cotizador" id="cantidadTarifarioConGestion-@item.id_detalle_cotizador" value="@item.cantidad_servicio" disabled />
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control" name="valorUnitarioTarifarioConGestion-@item.id_detalle_cotizador" id="valorUnitarioTarifarioConGestion-@item.id_detalle_cotizador" value="@item.valor_unitario_servicio" disabled />
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control sumatoria-total-costos" name="costoUnitarioTarifarioConGestion-@item.id_detalle_cotizador" id="costoUnitarioTarifarioConGestion-@item.id_detalle_cotizador" value="@item.costo_total_servicio" disabled />
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control" name="tarifarioSinGestion-@item.id_detalle_cotizador" id="tarifarioSinGestion-@item.id_detalle_cotizador" value="@TarifarioEntity.ObtenerTarifario(item.tipo_gestion)" disabled />
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control" name="idTarifarioSinGestion-@item.id_detalle_cotizador" id="idTarifarioSinGestion-@item.id_detalle_cotizador" value="@item.tipo_gestion" disabled />
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control" name="cantidadTarifarioSinGestion-@item.id_detalle_cotizador" id="cantidadTarifarioSinGestion-@item.id_detalle_cotizador" value="@item.cantidad_gestion" disabled />
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control" name="valorUnitarioTarifarioSinGestion-@item.id_detalle_cotizador" id="valorUnitarioTarifarioSinGestion-@item.id_detalle_cotizador" value="@item.valor_unitario_gestion" disabled />
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control sumatoria-total-costos" name="costoUnitarioTarifarioSinGestion-@item.id_detalle_cotizador" id="costoUnitarioTarifarioSinGestion-@item.id_detalle_cotizador" value="@item.costo_total_gestion" disabled />
+                                                    </td>
+                                                    <td  class="col-sm-2">
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon">US$</span>
+                                                            <input style="text-align: right;" type="text" class="form-control" name="totalFinal-@item.id_detalle_cotizador" id="totalFinal-@item.id_detalle_cotizador" value="@(Auxiliares.FormatearValorMilesDecimales(item.costo_total_entregable))" disabled />
+                                                        </div>
+                                                    </td>
+                                                    <td class="col-md-1" style="text-align: center">
+                                                        <button type="button" title="Eliminar fila" class="ibtnDel btn btn-sm btn-danger"><i class="fa fa-trash-o" aria-hidden="true"></i> </button>
+                                                        <button type="button" title="Ver Detalles" class="ibtnDetalle btn btn-sm btn-info" data-backdrop="static" data-toggle="modal" data-target="#contenido-modal"> <i class="fa fa-list-alt" aria-hidden="true"></i></button>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="box box-default">
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="col-lg-7">
+                                    <div class="row fila-seccion">
+                                        <div class="col-md-12">
+                                            <label class="control-label col-md-2">Observaciones: @*<span class="requerido"> *</span>*@</label>
+                                            <div class="form-group">
+                                                <div class="col-md-12">
+                                                    @Html.TextArea("observacion", Model.observacion, new { @class = "form-control campo-requerido", rows = 12, @style = "resize: none;", maxlength = 500 })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="row fila-seccion">
+                                        <div class="col-md-12">
+                                            <div class="form-group col-md-4 valores-alineacion">
+                                                <label title="Subtotal sin Descuento" style="padding-top:8px;" class="etiqueta-seccion control-label">Subtotal:</label>
+                                            </div>
+                                            <div class="calculos col-md-8 alinear-padding">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">US$</span>
+                                                    @Html.Editor("subtotal_sin_descuento", new { htmlAttributes = new { @class = "form-control input-bloqueado valores-alineacion" } })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row fila-seccion">
+                                        <div class="col-md-12">
+                                            <div class="form-group col-md-4 valores-alineacion">
+                                                <label style="padding-top:8px;" class="etiqueta-seccion control-label">Descuento:</label>
+                                            </div>
+                                            <div class="calculos col-md-8 alinear-padding">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">( % )</span>
+                                                    <input onKeyPress="return acceptNum(this)" id="porc_descuento" name="porc_descuento" class="porc_descuento form-control campo-requerido valores-alineacion" value="0,000000">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row fila-seccion">
+                                        <div class="col-md-12">
+                                            <div class="form-group col-md-4 valores-alineacion">
+                                                <label style="padding-top:8px;padding-left: 0px; padding-right: 0px;" class="etiqueta-seccion control-label">Valor Desc.:</label>
+                                            </div>
+                                            <div class="calculos col-md-8 alinear-padding">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">US$</span>
+                                                    @Html.EditorFor(model => model.valor_descuento, new
+                                                    {
+                                                        htmlAttributes = new
+                                                        {
+                                                            @class = "form-control input-bloqueado valores-alineacion", /*@Value = Model.valor_descuento*/
+                                                        }
+                                                    })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row fila-seccion">
+                                        <div class="col-md-12">
+                                            <div class="form-group col-md-4 valores-alineacion">
+                                                <label title="Subtotal con Descuento" style="padding-top:8px;" class="etiqueta-seccion control-label">Subtotal:</label>
+                                            </div>
+                                            <div class="calculos col-md-8 alinear-padding">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">US$</span>
+                                                    @Html.EditorFor(model => model.subtotal, new { htmlAttributes = new { @class = "form-control input-bloqueado valores-alineacion" } })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row fila-seccion">
+                                        <div class="col-md-12">
+                                            <div class="form-group col-md-4 valores-alineacion">
+                                                @Html.DropDownList("id_impuesto", ImpuestoEntity.ObtenerListadoImpuestosTotales(Model.id_impuesto.ToString()), new { @class = "form-control campo-requerido" })
+                                            </div>
+                                            <div class="calculos col-md-8 alinear-padding">
+                                                <div class="input-group col-md-12">
+                                                    <span class="input-group-addon">US$</span>
+                                                    @Html.EditorFor(model => model.valor_iva, new
+                                                    {
+                                                        htmlAttributes = new
+                                                        {
+                                                            @class = "form-control input-bloqueado valores-alineacion",@*disabled = "disabled",*@
+                                                        }
+                                                    })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row fila-seccion">
+                                        <div class="col-md-12">
+                                            <div class="form-group col-md-4 valores-alineacion">
+                                                <label style="padding-top:8px;" class="etiqueta-seccion control-label">Total:</label>
+                                            </div>
+                                            <div class="calculos col-md-8 alinear-padding">
+                                                <div class="input-group col-md-12">
+                                                    <span class="input-group-addon">US$</span>
+                                                    @Html.EditorFor(model => model.total, new
+                                                    {
+                                                        htmlAttributes = new
+                                                        {
+                                                            @class = "form-control input-bloqueado valores-alineacion",@*disabled = "disabled",*@
+                                                        }
+                                                    })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row fila-seccion" hidden>
+                                        <div class="col-md-12">
+                                            <div class="form-group col-md-4 valores-alineacion">
+                                                <label style="padding-top:8px;" class="etiqueta-seccion control-label">IVA:</label>
+                                            </div>
+                                            <div class="calculos col-md-8 alinear-padding">
+                                                <div class="input-group col-md-12">
+                                                    <span class="input-group-addon">US$</span>
+                                                    @Html.EditorFor(model => model.porcentaje_iva, new
+                                                    {
+                                                        htmlAttributes = new
+                                                        {
+                                                            @class = "form-control input-bloqueado valores-alineacion",@*disabled = "disabled",*@
+                                                        }
+                                                    })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-offset-2 col-md-8">
+                    <div class="form-horizontal">
+
+                        <div class="form-group">
+                            <div class="col-md-offset-3 col-md-12">
+                                <input id="guardar" type="button" value="Guardar" class="btn btn-default" />
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                @*@Html.ActionLink("Generar Cotización", "GeneraCotizadorPDF", "Cotizacion", new { id = Model.id_cotizador }, new { @class = "btn btn-default" })*@
+
+                                <a style="display: @(!Model.estado_cotizador.Value? "none": "");" href="#" class="btn btn-default" id="generarCotizacion">Generar Cotización</a>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                @Html.ActionLink("Regresar", "Index", null, new { @class = "btn btn-default" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+ 
+<script>
+    debugger
+
+    //Variable para la cabecera de la tabla de entregables
+    var cabeceraEntregables = document.getElementById('cabeceraEntregables');
+
+    //Acciones para los botones
+    var urlAccionEditar = '@Url.Action("Edit","Cotizacion")';
+    var urlAccionListado = '@Url.Action("Index","Cotizacion")';
+    var urlAccionCotizadorEdit = unescape('@Url.Action("Edit", "Cotizacion", new { id = "{0}" })');
+
+    //Arreglo de objeto para enviar al controlador
+    var listadoDetalleCotizador = @Html.Raw(Json.Encode(ViewBag.listadoDetalleCotizador));
+    var fechaCotizacionFinal = '@System.DateTime.Now.ToString("yyyy/MM/dd/")'; 
+    var listadoTipoServicio = @Html.Raw(Json.Encode(TarifarioEntity.ObtenerListaTarifarioTablaDinamica(false)));
+    var listadoTipoGestion = @Html.Raw(Json.Encode(TarifarioEntity.ObtenerListaTarifarioTablaDinamica(true)));
+
+    //Obtener % iva
+    var iva = '@ViewBag.porcentajeIva';
+    var porcentajeIVA = parseFloat(iva);
+
+    //Valores iniciales
+    var valorInicialInputs = "0,000000";
+    var valorInicialCantidadInputs = "0";
+
+    //Variable dela fecha
+    var fechaVencimiento = document.getElementById('fecha_vencimiento');
+
+    //funcion para el ingreso solo de decimales con coma
+    function acceptNum(input) {
+        if (/[^0-9,]/.test(input.value)) input.value = input.value.replace(/[^0-9,]/g, '');
+    }
+
+    //funcion que abre un modal para registrar entregables
+    function abrirDetalleCotizador()
+    {
+
+        var valorUnitarioTarifarioConGestion_modal = formatearNumeroFormatoComun($("#valorUnitarioTarifarioConGestion").val()) //$("#valorUnitarioTarifarioConGestion_modal").val();
+        valorUnitarioTarifarioConGestion_modal = valorUnitarioTarifarioConGestion_modal.replace(",", ".");
+
+        var costoUnitarioTarifarioConGestion_modal = formatearNumeroFormatoComun($("#costoUnitarioTarifarioConGestion").val())//$("#costoUnitarioTarifarioConGestion_modal").val();
+        costoUnitarioTarifarioConGestion_modal = costoUnitarioTarifarioConGestion_modal.replace(",", ".");
+
+        var valorUnitarioTarifarioSinGestion_modal = formatearNumeroFormatoComun($("#valorUnitarioTarifarioSinGestion").val())//$("#valorUnitarioTarifarioSinGestion_modal").val();
+        valorUnitarioTarifarioSinGestion_modal = valorUnitarioTarifarioSinGestion_modal.replace(",", ".");
+
+        var costoUnitarioTarifarioSinGestion_modal = formatearNumeroFormatoComun($("#costoUnitarioTarifarioSinGestion").val())//$("#costoUnitarioTarifarioSinGestion_modal").val();
+        costoUnitarioTarifarioSinGestion_modal = costoUnitarioTarifarioSinGestion_modal.replace(",", ".");
+
+        _GetCreate({
+            "codigoEntregable": 0,
+            "entregable": $("#entregable").val(),
+            "idTarifarioConGestion_modal": $("#idTarifarioConGestion").val(),
+            "cantidadTarifarioConGestion_modal": $("#cantidadTarifarioConGestion").val(),
+            "valorUnitarioTarifarioConGestion_modal":  valorUnitarioTarifarioConGestion_modal,//$("#valorUnitarioTarifarioConGestion").val(),
+            "costoUnitarioTarifarioConGestion_modal": costoUnitarioTarifarioConGestion_modal,//$("#costoUnitarioTarifarioConGestion").val(),
+
+            "idTarifarioSinGestion_modal": $("#idTarifarioSinGestion").val(),
+            "cantidadTarifarioSinGestion_modal": $("#cantidadTarifarioSinGestion").val(),
+            "valorUnitarioTarifarioSinGestion_modal": valorUnitarioTarifarioSinGestion_modal,//$("#valorUnitarioTarifarioSinGestion").val(),
+            "costoUnitarioTarifarioSinGestion_modal": costoUnitarioTarifarioSinGestion_modal,//$("#costoUnitarioTarifarioSinGestion").val(),
+            "soloVisualizacion" : false
+        }, '@Url.Action("_DetalleCotizacion", "Cotizacion")');
+    }
+
+    //Ajuste de campos totales cuando se cambia el tamaño de la pantalla
+    $(window).resize(function () {
+        var width = $(window).width();
+        var height = $(window).height();
+
+        if (width > 1500) {
+            $(".calculos").removeClass("alinear-padding")
+            $(".calculos").addClass("alinear-padding-responsive")
+        }
+        else {
+             $(".calculos").removeClass("alinear-padding-responsive")
+             $(".calculos").addClass("alinear-padding")
+        }
+        //console.log(width)
+    });
+
+    $(document).ready(function () {
+
+        //solo lectura la fecha
+        fechaVencimiento.readonly = true;
+        fechaVencimiento.disabled = true;
+
+        //cargar el valor del impuesto
+        $("#id_impuesto").change(function () {
+            debugger
+            $.getJSON('@Url.Action("ObtenerIVA", "Cotizacion")', { id: $('#id_impuesto').val() }, function (data) {
+                porcentajeIVA = data;
+                $("#porcentaje_iva").val(parseFloat(data));
+                calculoCotizacion();
+            });
+        });
+
+        //Formato para decimales
+        $('.formato-dinero').mask("#.##0,00", { reverse: true });
+
+        //Generar PDF
+        $("#generarCotizacion").click(function (event) {
+            debugger;
+            event.preventDefault();
+            window.location.href = "@Url.Action("GeneraCotizadorPDF", "Cotizacion")" + "?id=" + $("#id_cotizador").val();
+            setTimeout(function(){
+                window.location.href = urlAccionListado;
+            }, 2000);
+        });
+
+        //funcion para ver los detalles y editar los entregables
+        $("#tarifario-tabla").on('click', '.ibtnDetalle', function () {
+            debugger
+            // get the current row
+            //$("#contenido-modal").modal()
+            var currentRow = $(this).closest("tr");
+
+            var td = currentRow.find("td:eq(0)");
+            var input = $(td).find("input")
+            var valor = $(input).val();
+
+            // Servicio
+            var valorUnitarioTarifarioConGestion_modal = ($($(currentRow.find("td:eq(6)")).find("input")).val())  
+            var costoUnitarioTarifarioConGestion_modal = ($($(currentRow.find("td:eq(7)")).find("input")).val()) 
+
+            //Gestión
+            var valorUnitarioTarifarioSinGestion_modal = ($($(currentRow.find("td:eq(11)")).find("input")).val()) 
+            var costoUnitarioTarifarioSinGestion_modal = ($($(currentRow.find("td:eq(12)")).find("input")).val())
+
+
+            _GetCreate({
+                "codigoEntregable": $($(currentRow.find("td:eq(0)")).find("input")).val(),
+                "entregable": $($(currentRow.find("td:eq(1)")).find("input")).val(),
+                "idTarifarioConGestion_modal": $($(currentRow.find("td:eq(4)")).find("input")).val(),
+                "cantidadTarifarioConGestion_modal": $($(currentRow.find("td:eq(5)")).find("input")).val(),
+                "valorUnitarioTarifarioConGestion_modal": valorUnitarioTarifarioConGestion_modal,//$($(currentRow.find("td:eq(6)")).find("input")).val(),
+                "costoUnitarioTarifarioConGestion_modal": costoUnitarioTarifarioConGestion_modal,//$($(currentRow.find("td:eq(7)")).find("input")).val(),
+
+                "idTarifarioSinGestion_modal":$($(currentRow.find("td:eq(9)")).find("input")).val(),
+                "cantidadTarifarioSinGestion_modal": $($(currentRow.find("td:eq(10)")).find("input")).val(),
+                "valorUnitarioTarifarioSinGestion_modal": valorUnitarioTarifarioSinGestion_modal,//$($(currentRow.find("td:eq(11)")).find("input")).val(),
+                "costoUnitarioTarifarioSinGestion_modal": costoUnitarioTarifarioSinGestion_modal,//$($(currentRow.find("td:eq(12)")).find("input")).val(),
+                "soloVisualizacion" : true
+            }, '@Url.Action("_DetalleCotizacion", "Cotizacion")');
+        });
+
+        //cuando se cierra el modal de los entregables
+        $('#contenido-modal').on('hidden.bs.modal', function () {
+
+            debugger
+
+            //codigo del entregable
+            var codigoEntregable_modal = $("#codigoEntregable_modal").val();
+
+            //nombre del entregable
+            var nombreEntregable_modal = $("#nombreEntregable_modal").val();
+
+            //datos de la seccion productos
+            var idTarifarioConGestion_modal = $("#idTarifarioConGestion_modal").val();
+            var cantidadTarifarioConGestion_modal = $("#cantidadTarifarioConGestion_modal").val();
+            
+            var valorUnitarioTarifarioConGestion_modal = $("#valorUnitarioTarifarioConGestion_modal").val();
+            var costoUnitarioTarifarioConGestion_modal = $("#costoUnitarioTarifarioConGestion_modal").val();
+
+            //datos de la seccion gestion
+            var idTarifarioSinGestion_modal = $("#idTarifarioSinGestion_modal").val();
+            var cantidadTarifarioSinGestion_modal = $("#cantidadTarifarioSinGestion_modal").val();
+            var valorUnitarioTarifarioSinGestion_modal = $("#valorUnitarioTarifarioSinGestion_modal").val();
+            var costoUnitarioTarifarioSinGestion_modal = $("#costoUnitarioTarifarioSinGestion_modal").val();
+
+            //campo para saber si es nuevo o editar
+            if (soloVisualizacion != "True") {
+
+                if ($("#idTarifarioSinGestion_modal").val()) {
+                    $("#tiene-gestion-info").show();
+                    $("#sin-gestion-info").hide();
+                }
+                else {
+                    $("#tiene-gestion-info").hide();
+                    $("#sin-gestion-info").show();
+                }
+
+                //calculo de los totales
+                var totalTarifarioServicio = costoUnitarioTarifarioConGestion_modal 
+                var totalTarifarioGestion = costoUnitarioTarifarioSinGestion_modal
+                var total = parseFloat(totalTarifarioServicio) + parseFloat(totalTarifarioGestion);
+
+                var total = formatearNumeroMilesDecimales(total)
+
+                //cambiar el formato a decimales con ,
+                valorUnitarioTarifarioConGestion_modal = valorUnitarioTarifarioConGestion_modal.replace(".", ",");
+                costoUnitarioTarifarioConGestion_modal = costoUnitarioTarifarioConGestion_modal.replace(".", ",");
+                valorUnitarioTarifarioSinGestion_modal = valorUnitarioTarifarioSinGestion_modal.replace(".", ",");
+                costoUnitarioTarifarioSinGestion_modal = costoUnitarioTarifarioSinGestion_modal.replace(".", ",");
+
+                //nombre entregable
+                $("#entregable").val(nombreEntregable_modal);
+
+                //asignar valores para guardar productos o servicios
+                $("#idTarifarioConGestion").val(idTarifarioConGestion_modal);
+                $("#tarifarioConGestion").val(idTarifarioConGestion_modal);
+                $("#cantidadTarifarioConGestion").val(cantidadTarifarioConGestion_modal);
+                $("#valorUnitarioTarifarioConGestion").val(valorUnitarioTarifarioConGestion_modal);
+                $("#costoUnitarioTarifarioConGestion").val(costoUnitarioTarifarioConGestion_modal);
+
+                //asignar valores para guardar gestion
+                $("#idTarifarioSinGestion").val(idTarifarioSinGestion_modal);
+                $("#tarifarioSinGestion").val(idTarifarioSinGestion_modal);
+                $("#cantidadTarifarioSinGestion").val(cantidadTarifarioSinGestion_modal);
+                $("#valorUnitarioTarifarioSinGestion").val(valorUnitarioTarifarioSinGestion_modal);
+                $("#costoUnitarioTarifarioSinGestion").val(costoUnitarioTarifarioSinGestion_modal);
+
+                //asignar el total
+                $("#totalFinal").val(total);
+                $("#totalFinal-awed").val(total);
+
+                //validar que los datos obligatorios esten llenos
+                var tarifarioConGestion = idTarifarioConGestion_modal;
+                var entregable = nombreEntregable_modal;
+
+                if (tarifarioConGestion === null || tarifarioConGestion === "" || entregable.length === 0) {
+                    toastr.error('@Mensajes.MensajeDatosObligatorios')
+                    return;
+                } else {
+                    //Mostrar cabecera tabla entregables
+                    cabeceraEntregables.hidden = false;
+                }
+
+                var newRow = $("<tr>");
+                var cols = "";
+
+                // Tarifario Con Gestión
+                tarifarioConGestion = $("#tarifarioConGestion option:selected").text();
+                var idTarifarioConGestion = idTarifarioConGestion_modal;
+                var cantidadTarifarioConGestion = cantidadTarifarioConGestion_modal
+
+                var valorUnitarioTarifarioConGestion = valorUnitarioTarifarioConGestion_modal
+                valorUnitarioTarifarioConGestion = formatearNumeroFormatoComun(valorUnitarioTarifarioConGestion);
+                valorUnitarioTarifarioConGestion = valorUnitarioTarifarioConGestion.replace(",", ".");
+
+                var costoUnitarioTarifarioConGestion = costoUnitarioTarifarioConGestion_modal
+                costoUnitarioTarifarioConGestion = formatearNumeroFormatoComun(costoUnitarioTarifarioConGestion);
+                costoUnitarioTarifarioConGestion = costoUnitarioTarifarioConGestion.replace(",", ".");
+
+
+                //Tarifario Sin Gestión
+                var tarifarioSinGestion = $("#tarifarioSinGestion").val() === "" ? "" : $("#tarifarioSinGestion option:selected").text();
+                var idTarifarioSinGestion = $("#idTarifarioSinGestion").val();
+                var cantidadTarifarioSinGestion = cantidadTarifarioSinGestion_modal
+
+                var valorUnitarioTarifarioSinGestion = valorUnitarioTarifarioSinGestion_modal
+                valorUnitarioTarifarioSinGestion = formatearNumeroFormatoComun(valorUnitarioTarifarioSinGestion);
+                valorUnitarioTarifarioSinGestion = valorUnitarioTarifarioSinGestion.replace(",", ".");
+
+                var costoUnitarioTarifarioSinGestion = costoUnitarioTarifarioSinGestion_modal
+                costoUnitarioTarifarioSinGestion = formatearNumeroFormatoComun(costoUnitarioTarifarioSinGestion);
+                costoUnitarioTarifarioSinGestion = costoUnitarioTarifarioSinGestion.replace(",", ".");
+
+                var totalFinal = total
+
+                if (totalFinal === null || totalFinal === "0.000000" || totalFinal === "" || parseFloat(totalFinal) === 0) {
+                    toastr.error('@Mensajes.MensajeDatosObligatorios')
+                    return;
+                }
+
+                var checkGestion = $("#idTarifarioSinGestion").val() > 0 ? "block" : "none";
+
+                var iconSinGestion = '<i title="No tiene gestión." id="checkGestion-' + contadorAux + '" class="fa fa-square-o" aria-hidden="true"></i>';
+                var iconoConGestion = '<i style="margin-top: 10px;" title="Tiene gestión." id="checkGestion-' + contadorAux + '" class="fa fa-check-square-o" aria-hidden="true"></i>';
+
+                var icono = $("#idTarifarioSinGestion").val() > 0 ? iconoConGestion : iconSinGestion;
+
+                cols += '<td style="display: none;" class="fila-detalle"><input type="text" class="form-control" name="contador-' + contadorAux + '" id="contador-' + contadorAux + '" value ="' + contadorAux + '" disabled/>  </td>';
+                cols += '<td class="fila-detalle col-sm-7"><input type="text" class="form-control" name="entregable-' + contadorAux + '" id="entregable-' + contadorAux + '" value ="' + entregable + '" disabled/>  </td>';
+
+                cols += '<td class="fila-detalle col-sm-1">  <div  style="text-align: center;"><span>' + icono + '</span></div>  </td>';
+
+                cols += '<td style="display: none;" class="fila-detalle"><input type="text" class="form-control" name="tarifarioConGestion-' + contadorAux + '" id="tarifarioConGestion-' + contadorAux + '" value ="' + tarifarioConGestion + '" disabled/>  </td>'; 
+                cols += '<td style="display: none;" class="fila-detalle"><input type="text" class="form-control" name="idTarifarioConGestion-' + contadorAux + '" id="idTarifarioConGestion-' + contadorAux + '" value ="' + idTarifarioConGestion + '" disabled/>  </td>';
+                cols += '<td style="display: none;" class="fila-detalle"><input type="text"  class="form-control" name="cantidadTarifarioConGestion-' + contadorAux + '" id="cantidadTarifarioConGestion-' + contadorAux + '" value ="' + cantidadTarifarioConGestion + '" disabled/>  </td>';
+                cols += '<td style="display: none;" class="fila-detalle"><input type="text" class="form-control" name="valorUnitarioTarifarioConGestion-' + contadorAux + '" id="valorUnitarioTarifarioConGestion-' + contadorAux + '" value ="' + valorUnitarioTarifarioConGestion + '" disabled/>  </td>';
+                cols += '<td style="display: none;" class="fila-detalle"><input type="text" class="form-control sumatoria-total-costos" name="costoUnitarioTarifarioConGestion-' + contadorAux + '" id="costoUnitarioTarifarioConGestion-' + contadorAux + '" value ="' + costoUnitarioTarifarioConGestion + '" disabled/>  </td>';
+
+                cols += '<td style="display: none;" class="fila-detalle"><input type="text" class="form-control" name="tarifarioSinGestion-' + contadorAux + '" id="tarifarioSinGestion-' + contadorAux + '" value ="' + tarifarioSinGestion + '" disabled/>  </td>';
+                cols += '<td style="display: none;" class="fila-detalle"><input type="text" class="form-control" name="idTarifarioSinGestion-' + contadorAux + '" id="idTarifarioSinGestion-' + contadorAux + '" value ="' + idTarifarioSinGestion + '" disabled/>  </td>';
+                cols += '<td style="display: none;" class="fila-detalle"><input type="text" class="form-control" name="cantidadTarifarioSinGestion-' + contadorAux + '" id="cantidadTarifarioSinGestion-' + contadorAux + '" value ="' + cantidadTarifarioSinGestion + '" disabled/>  </td>';
+                cols += '<td style="display: none;" class="fila-detalle"><input type="text" class="form-control" name="valorUnitarioTarifarioSinGestion-' + contadorAux + '" id="valorUnitarioTarifarioSinGestion-' + contadorAux + '" value ="' + valorUnitarioTarifarioSinGestion + '" disabled/>  </td>';
+                cols += '<td style="display: none;" class="fila-detalle"><input type="text"  class="form-control sumatoria-total-costos" name="costoUnitarioTarifarioSinGestion-' + contadorAux + '" id="costoUnitarioTarifarioSinGestion-' + contadorAux + '" value ="' + costoUnitarioTarifarioSinGestion + '" disabled/>  </td>';
+
+                //TOTAL
+                cols += '<td class="col-sm-2"> <div class="input-group"><span class="input-group-addon">US$</span>  <input type="text" style="text-align: right;" class="form-control" name="totalFinal-' + contadorAux + '" id="totalFinal-' + contadorAux + '" value ="' + totalFinal + '" disabled/>  </div> </td>';
+
+                // ACCIONES
+                cols += '<td class="col-md-1" style="text-align: center"><button type="button" class="ibtnDel btn btn-sm btn-danger"><i class="fa fa-trash-o" aria-hidden="true"></i></button> <button type="button" title="Ver Detalles"  class="ibtnDetalle btn btn-sm btn-info" data-backdrop="static" data-toggle="modal" data-target="#contenido-modal"><i class="fa fa-list-alt" aria-hidden="true"></i></button></td>';//'<td><input type="button" class="ibtnDel btn btn-md btn-danger "  value="Eliminar"></td>';
+
+                newRow.append(cols);
+                $("table.order-list").append(newRow);
+                counter++;
+
+                //listado de entregables
+                listadoDetalleCotizador.push({
+                    "contador" : contadorAux,
+                    "id_detalle_cotizador": contadorAux,
+                    "id_cotizador": 0,
+                    "entregable": entregable,
+                    "costo_total_entregable": parseFloat((totalFinal.replace(".", "")).replace(",",".")),
+
+                    "tipo_servicio": idTarifarioConGestion,
+                    "cantidad_servicio": parseInt(cantidadTarifarioConGestion),
+                    "valor_unitario_servicio": parseFloat(valorUnitarioTarifarioConGestion),
+                    "costo_total_servicio": parseFloat(costoUnitarioTarifarioConGestion),
+
+                    "tipo_gestion": idTarifarioSinGestion,
+                    "cantidad_gestion": parseInt(cantidadTarifarioSinGestion),
+                    "valor_unitario_gestion": parseFloat(valorUnitarioTarifarioSinGestion),
+                    "costo_total_gestion": parseFloat(costoUnitarioTarifarioSinGestion),
+                })
+                contadorAux++;
+                 
+                calculoCotizacion()
+                $("#tiene-gestion-info").hide();
+                $("#sin-gestion-info").show(); 
+            }
+            else { 
+                console.log(listadoDetalleCotizador) 
+
+                //cuando ingresa por editar o visualizar se carga los nuevos datos
+                var nombreCheck = "#checkGestion-" + codigoEntregable_modal;
+                var nombreEntregable = "#entregable-" + codigoEntregable_modal;
+                var idTipoServicio = "#idTarifarioConGestion-" + codigoEntregable_modal;
+                var cantidadServicio = "#cantidadTarifarioConGestion-" + codigoEntregable_modal;
+                var valorUnitarioServicio = "#valorUnitarioTarifarioConGestion-" + codigoEntregable_modal;
+                var valorTotalServicio = "#costoUnitarioTarifarioConGestion-" + codigoEntregable_modal;
+                var idTipoGestion = "#idTarifarioSinGestion-" + codigoEntregable_modal;
+                var cantidadGestion = "#cantidadTarifarioSinGestion-" + codigoEntregable_modal;
+                var valorUnitarioGestion = "#valorUnitarioTarifarioSinGestion-" + codigoEntregable_modal;
+                var valorTotalGestion = "#costoUnitarioTarifarioSinGestion-" + codigoEntregable_modal;
+                var totalEntregable = "#totalFinal-" + codigoEntregable_modal;
+                var tieneGestion = "#tiene-gestion-info-" + codigoEntregable_modal;
+                var noTieneGestion = "#sin-gestion-info-" + codigoEntregable_modal;
+
+                //validat si tiene o no gestion
+                if ($("#idTarifarioSinGestion_modal").val()) {
+                    $(nombreCheck).removeClass("fa fa-square-o")
+                    $(nombreCheck).addClass("fa fa-check-square-o")
+                }
+                else {
+
+                    $(nombreCheck).removeClass("fa fa-check-square-o")
+                    $(nombreCheck).addClass("fa fa-square-o")
+                } 
+
+                //validat si tiene o no gestion
+                if ($("#idTarifarioSinGestion_modal").val()) {
+                    $(nombreCheck).removeClass("fa fa-square-o")
+                    $(nombreCheck).addClass("fa fa-check-square-o")
+                }
+                else {
+
+                    $(nombreCheck).removeClass("fa fa-check-square-o")
+                    $(nombreCheck).addClass("fa fa-square-o")
+                } 
+
+                if ($("#idTarifarioSinGestion_modal").val()) {
+                    $(tieneGestion).show();
+                    $(noTieneGestion).hide();
+                }
+                else {
+                    $(tieneGestion).hide();
+                    $(noTieneGestion).show();
+                }
+
+                //Calculo del valor total del entregable
+                var totalTarifarioServicio = costoUnitarioTarifarioConGestion_modal
+                totalTarifarioServicio = parseFloat(totalTarifarioServicio.replace(",", "."));
+
+                var totalTarifarioGestion = costoUnitarioTarifarioSinGestion_modal
+                totalTarifarioGestion = parseFloat(totalTarifarioGestion.replace(",", "."));
+
+                var total = totalTarifarioServicio + totalTarifarioGestion;
+
+                var total = formatearNumeroMilesDecimales(total);
+
+                debugger
+
+                //Cambiar los datos en el arreglo de entregables
+                listadoDetalleCotizador.map(function (dato) {
+                    if (dato.id_detalle_cotizador == codigoEntregable_modal) {
+
+                        dato.entregable = nombreEntregable_modal;
+
+                        dato.tipo_servicio = idTarifarioConGestion_modal;
+                        dato.cantidad_servicio = cantidadTarifarioConGestion_modal;
+                        dato.valor_unitario_servicio = valorUnitarioTarifarioConGestion_modal;
+                        dato.costo_total_servicio = costoUnitarioTarifarioConGestion_modal;
+
+                        dato.tipo_gestion = idTarifarioSinGestion_modal;
+                        dato.cantidad_gestion = cantidadTarifarioSinGestion_modal;
+                        dato.valor_unitario_gestion = valorUnitarioTarifarioSinGestion_modal;
+                        dato.costo_total_gestion = costoUnitarioTarifarioSinGestion_modal;
+
+                        dato.costo_total_entregable = totalTarifarioServicio + totalTarifarioGestion;
+                    }
+                });
+
+                //nombre del entregable
+                $(nombreEntregable).val(nombreEntregable_modal);
+
+                //datos de la gestion
+                $(idTipoServicio).val(idTarifarioConGestion_modal);
+                $(cantidadServicio).val(cantidadTarifarioConGestion_modal);
+                $(valorUnitarioServicio).val(valorUnitarioTarifarioConGestion_modal);
+                $(valorTotalServicio).val(costoUnitarioTarifarioConGestion_modal);
+
+                //datos del servicio
+                $(idTipoGestion).val(idTarifarioSinGestion_modal);
+                $(cantidadGestion).val(cantidadTarifarioSinGestion_modal);
+                $(valorUnitarioGestion).val(valorUnitarioTarifarioSinGestion_modal);
+                $(valorTotalGestion).val(costoUnitarioTarifarioSinGestion_modal);
+
+                //total del entregable
+                $(totalEntregable).val(total);
+
+                //limpiarDatosTarifario()
+            }
+
+            calculoCotizacion()
+        });
+
+        calcularTotalSinDescuento();
+        calcularTotalConDescuento();
+
+        var counter = 0;
+        var contadorAux = parseInt('@contador');
+        contadorAux = contadorAux + 1;
+
+        debugger
+
+        ocultarColumnas();
+        calcularFechaVencimiento();
+
+
+        //calculo cuando cambia el numero de dias
+        $('#numero_dias').change(function (value) {
+            debugger
+            if ($('#numero_dias').val() < 30) {
+                $('#numero_dias').val(30);
+            }
+
+            if ($('#numero_dias').val() > 180) {
+                $('#numero_dias').val(180);
+            }
+
+            calcularFechaVencimiento()
+        }); 
+
+        //calculo del descuento para los totales
+        $('#porc_descuento').change(function (value) {
+            debugger
+            //formatear el valor inicial a . para decimales
+            var valorPorcentaje = ($(value.currentTarget).val().replace(".", "")).replace(",", ".")
+
+            var elemento = formatearNumeroMilesDecimales(valorPorcentaje);
+            var descuento = parseInt(valorPorcentaje);
+
+            if (descuento > 100 || isNaN(descuento)) {
+                $(this).val("0,000000");
+            } else {
+                $(this).val(elemento);
+            }
+
+            calculoCotizacion();
+        });
+         
+
+        //eliminar los datos de la lista de entregables
+        $("table.order-list").on("click", ".ibtnDel", function (event) {
+            debugger
+            var item = $(this).closest("tr");
+
+            var td = $(item).find("td:first");
+            var input = $(td).find("input")
+            var codigo = $(input).val();
+
+            $(this).closest("tr").remove();
+            counter -= 1
+
+            listadoDetalleCotizador = listadoDetalleCotizador.filter(function (el) { return el.id_detalle_cotizador != codigo; });
+            calculoCotizacion();
+
+            //Ocultar cabecera tabla entregables
+            if (listadoDetalleCotizador.length == 0) {
+
+                cabeceraEntregables.hidden = true;
+            } else {
+                cabeceraEntregables.hidden = false;
+            }
+        });
+
+        setearValoresCalculos();
+    })
+
+    $("#guardar").click(function () {
+        var flag = validarCamposRequeridosFormularioCompleto("form-cotizacion");
+
+        if (flag && validaTarifarioRequerida())
+            guardar(); // continue the submit unbind preventDefault
+        else
+        {
+            if (validaTarifarioRequerida())
+                toastr.error('@Mensajes.MensajeDatosObligatorios')
+            else
+                toastr.error('@Mensajes.MensajeValidacionEntregables')
+        }
+    })
+  
+    function guardar() {
+
+        debugger
+        var formulario = $('#form-cotizacion').serializeArray().reduce(function (a, x) { a[x.name] = x.value; return a; }, {}); 
+
+        debugger
+
+        // Formateando a valores Comunes
+        formulario.porc_descuento = formulario.porc_descuento.replace(",", ".");
+
+        formulario.subtotal = formatearNumeroFormatoComun(formulario.subtotal)
+        formulario.subtotal = formulario.subtotal.replace(",", ".");
+
+        formulario.subtotal_sin_descuento = formatearNumeroFormatoComun(formulario.subtotal_sin_descuento)
+        formulario.subtotal_sin_descuento = formulario.subtotal_sin_descuento.replace(",", ".");
+
+        formulario.total = formatearNumeroFormatoComun(formulario.total)
+        formulario.total = formulario.total.replace(",", ".");
+
+        formulario.valor_descuento = formatearNumeroFormatoComun(formulario.valor_descuento)
+        formulario.valor_descuento = formulario.valor_descuento.replace(",", ".");
+
+        formulario.valor_iva = formatearNumeroFormatoComun(formulario.valor_iva)
+        formulario.valor_iva = formulario.valor_iva.replace(",", ".");
+
+        formulario.subtotal = formatearNumeroFormatoComun(formulario.subtotal)
+        formulario.subtotal = formulario.subtotal.replace(",", ".");
+
+        formulario.porcentaje_iva = porcentajeIVA
+
+        formulario.fecha_vencimiento = $("#fecha_vencimiento").val();
+
+        var entregable = $("#entregable").val();
+
+        var subtotal = ($("#subtotal_sin_descuento").val())
+        subtotal = subtotal.replace(",", ".");
+         
+        var data_form = JSON.stringify({ "cotizadorCabecera": formulario, "cotizadorDetalles": listadoDetalleCotizador, "aplicaContratoCodigoCotizacion": $("#aplica_contrato").val(), "subtotal": ($("#subtotal_sin_descuento").val().replace(".","")).replace(",",".")   })
+        _GuardarCotizador(data_form, urlAccionEditar, null, false, urlAccionCotizadorEdit)
+        //$("#guardar").hide();
+    }
+
+
+    function validaTarifarioRequerida() {
+        if (listadoDetalleCotizador.length > 0)
+            return true;
+        else
+            return false;
+    }
+
+    //calculo de fechas
+    function calcularFechaVencimiento() {
+        debugger
+        var fechaCotizacion = fechaCotizacionFinal;
+        var dias = parseInt($("#numero_dias").val());
+
+        if ($("#numero_dias").val() === "" || $("#numero_dias").val() === null || $("#numero_dias").val() === undefined)
+            dias = 30;
+
+        var fechaVencimiento = addDays(fechaCotizacion, dias);
+
+        var fechaFinal = fechaVencimiento.toISOString().slice(0, 10);
+        $("#fecha_vencimiento").val(fechaFinal.replace(/-/g, "/"));
+    }
+
+    //metodo para sumar dias a la fecha actual
+    function addDays(date, days) {
+      var result = new Date(date);
+
+      result.setDate(result.getDate() + days);
+      return result;
+    }
+
+    function limpiarDatosTarifario() {
+        debugger
+
+        $('#tarifarioConGestion').prop('selectedIndex', 0);
+        $('#tarifarioSinGestion').prop('selectedIndex', 0);
+
+        $("#entregable").val("");
+
+        $("#valorUnitarioTarifarioConGestion").val(valorInicialInputs);
+        $("#valorUnitarioTarifarioConGestion-awed").val(valorInicialInputs);
+
+        $("#valorUnitarioTarifarioSinGestion").val(valorInicialInputs);
+        $("#valorUnitarioTarifarioSinGestion-awed").val(valorInicialInputs);
+
+        $("#idTarifarioConGestion").val("")
+        $("#cantidadTarifarioConGestion").val(valorInicialCantidadInputs);
+        $("#cantidadTarifarioConGestion-awed").val(valorInicialCantidadInputs);
+        $("#cantidadTarifarioSinGestion").val(valorInicialCantidadInputs);
+        $("#cantidadTarifarioSinGestion-awed").val(valorInicialCantidadInputs);
+
+        $("#idTarifarioSinGestion").val("")
+        $("#costoUnitarioTarifarioConGestion").val(valorInicialInputs);
+        $("#costoUnitarioTarifarioConGestion-awed").val(valorInicialInputs);
+        $("#costoUnitarioTarifarioSinGestion").val(valorInicialInputs);
+        $("#costoUnitarioTarifarioSinGestion-awed").val(valorInicialInputs);
+
+        $("#totalFinal").val(valorInicialInputs);
+        $("#totalFinal-awed").val(valorInicialInputs);
+
+        $("#tiene-gestion-info").hide();
+    }
+
+    function ocultarColumnas() {
+        $('td:nth-child(1)').hide();
+        $('td:nth-child(4)').hide();
+        $('td:nth-child(5)').hide();
+        $('td:nth-child(6)').hide();
+        $('td:nth-child(7)').hide(); //valor unitario tipo servicio
+        $('td:nth-child(8)').hide();
+        $('td:nth-child(9)').hide();
+        $('td:nth-child(10)').hide();
+        $('td:nth-child(11)').hide();
+        $('td:nth-child(12)').hide(); // valor unitario tarifario sin gestión
+        $('td:nth-child(13)').hide();
+    }
+
+
+    function calculoCotizacion() {
+        debugger
+        var sumaTotal = 0;
+        for (var i = 0; i < listadoDetalleCotizador.length; i++) {
+            let total = listadoDetalleCotizador[i].costo_total_entregable;
+            sumaTotal += parseFloat(total)
+        }
+
+        if (sumaTotal > 0)
+            $("#subtotal_sin_descuento").val(formatearNumeroMilesDecimales(sumaTotal));
+        else
+            $("#subtotal_sin_descuento").val(valorInicialInputs);
+
+        //Realizar el calculo del descuento
+        var descuento = ($("#porc_descuento").val()).replace(",", ".")
+        descuento = parseFloat(descuento) / 100;
+
+        var valorDescuento = sumaTotal * descuento;
+        valorDescuento = parseFloat(valorDescuento.toFixed(6))
+
+        if (valorDescuento > 0)
+            $("#valor_descuento").val(formatearNumeroMilesDecimales(valorDescuento));
+        else
+            $("#valor_descuento").val(valorInicialInputs);
+
+        sumaTotal = sumaTotal - valorDescuento;
+
+        var iva = parseFloat(sumaTotal * (porcentajeIVA/100));
+
+        if (sumaTotal > 0)
+            $("#subtotal").val(formatearNumeroMilesDecimales(sumaTotal));
+        else
+            $("#subtotal").val(valorInicialInputs);
+
+
+        if (iva > 0)
+            $("#valor_iva").val(formatearNumeroMilesDecimales(iva));
+        else
+            $("#valor_iva").val(valorInicialInputs);
+
+        var total = sumaTotal + iva;
+        total = parseFloat(total.toFixed(6));
+
+        if (total > 0)
+            $("#total").val(formatearNumeroMilesDecimales(total));
+        else
+            $("#total").val(valorInicialInputs);
+    }
+
+    function calcularTotalSinDescuento() {
+        debugger
+        var sumaTotal = 0;
+        for (var i = 0; i < listadoDetalleCotizador.length; i++) {
+            let total = listadoDetalleCotizador[i].costo_total_entregable;
+            sumaTotal += parseFloat(total)
+        }
+
+        if (sumaTotal > 0)
+            $("#subtotal_sin_descuento").val(formatearNumeroMilesDecimales(sumaTotal));
+        else
+            $("#subtotal_sin_descuento").val(valorInicialInputs);
+    }
+
+    function calcularTotalConDescuento() {
+        debugger
+
+        var sumaTotal = 0;
+        for (var i = 0; i < listadoDetalleCotizador.length; i++) {
+            let total = listadoDetalleCotizador[i].costo_total_entregable;
+            sumaTotal += parseFloat(total)
+        }
+
+        var valorDescuento = parseFloat('@Model.valor_descuento');
+
+        sumaTotal = sumaTotal - valorDescuento;
+
+        if (sumaTotal > 0)
+            $("#subtotal").val(formatearNumeroMilesDecimales(sumaTotal));
+        else
+            $("#subtotal").val(valorInicialInputs);
+    } 
+
+    function setearValoresCalculos() {
+        debugger
+
+        var descuento = '@Model.porc_descuento';
+        var valorDescuento = '@Model.valor_descuento';
+        var iva = '@Model.valor_iva';
+        var Total = '@Model.total';
+
+        $("#porc_descuento").val(descuento.replace(".",","))
+        $("#valor_descuento").val(formatearNumeroMilesDecimales(valorDescuento))
+        $("#valor_iva").val(formatearNumeroMilesDecimales(iva))
+        $("#total").val(formatearNumeroMilesDecimales(Total))
+    }
+
+</script>

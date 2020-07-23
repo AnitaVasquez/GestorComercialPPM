@@ -1,0 +1,86 @@
+﻿@model GestionPPM.Entidades.Modelo.CodigoProducto
+@using GestionPPM.Entidades.Modelo
+@using GestionPPM.Entidades.Metodos
+
+
+@* Formato para el template de datos *@
+<link href="~/Content/css/personalizar.css" rel="stylesheet" />
+
+<script src="~/Scripts/easyloader.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.easyui.min.js"></script>
+<script src="~/Scripts/locale/easyui-lang-es.js"></script>
+
+<script>
+    var urlAccionGuardar = '@Url.Action("CreateOrUpdate", "Producto")';
+
+    $(document).ready(function () {
+        debugger
+        easyloader.locale = 'es';
+        $("#seccion-titulo-modal").text('@Html.Raw(ViewBag.TituloModal)'); 
+    });
+
+    $("#guardar-producto").click(function () {
+        debugger
+        var flag = validarCamposRequeridosFormularioCompleto("form-producto");
+        if (flag )
+            guardarProducto();
+        else
+            toastr.error('@Mensajes.MensajeDatosObligatorios')
+    })
+     
+
+    function guardarProducto() {
+        debugger
+        var data_form = JSON.stringify({ "producto": $('#form-producto').serializeObject()})
+        _GuardarModal(data_form, urlAccionGuardar);
+    } 
+</script>
+
+<form action="#" id="form-producto" role="form" data-toggle="validator" method="post" accept-charset="utf-8">
+    <div class="row">
+        <div class="col-md-offset-2 col-md-8">
+            <div class="form-horizontal">
+                @Html.HiddenFor(model => model.id_codigo_producto)
+                @Html.HiddenFor(model => model.estado)
+
+                <div class="form-group">
+                    <label class="control-label col-md-4">Bodega: <span class="requerido"> *</span></label>
+                    <div class="col-md-8">
+                        @Html.DropDownList("id_bodega", BodegaEntity.ObtenerListadoBodega(Model.id_bodega.ToString()), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-4">Sublínea de Negocio: <span class="requerido"> *</span></label>
+                    <div class="col-md-8">
+                        @Html.DropDownList("id_catalogo", CatalogoEntity.ObtenerListadoCatalogosSublineaNegocioPadre(Model.id_catalogo.ToString()), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-4">Nombre Producto: <span class="requerido"> *</span></label>
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.nombre_producto, new { htmlAttributes = new { @class = "form-control campo-requerido", maxlength = 50, required = "" } })
+                        @Html.ValidationMessageFor(model => model.nombre_producto, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-4">Código Producto: <span class="requerido"> *</span></label>
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.codigo_producto, new { htmlAttributes = new { @class = "form-control campo-requerido", maxlength = 50, required = "" } })
+                        @Html.ValidationMessageFor(model => model.codigo_producto, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-5 col-md-12">
+                        <input id="guardar-producto" type="button" value="Guardar" class="btn btn-default" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+

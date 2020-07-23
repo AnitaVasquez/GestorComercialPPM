@@ -1,0 +1,994 @@
+﻿@model GestionPPM.Entidades.Modelo.SolicitudCliente
+@using GestionPPM.Entidades.Modelo
+@using GestionPPM.Entidades.Metodos
+
+@{
+    ViewBag.Title = "Editar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var Usuario = (UsuarioCE)ViewBag.DatosUsuario;
+    var SublineaNegocioCodigoCotizacion = (List<SublineaNegocioCodigoCotizacionInfo>)ViewBag.SublineaNegocioCodigoCotizacion;
+}
+
+@* Formato para el template de datos *@
+<link href="~/Content/css/personalizar.css" rel="stylesheet" />
+
+<link rel="stylesheet" type="text/css" href="~/Content/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="~/Content/themes/icon.css">
+<link rel="stylesheet" type="text/css" href="~/Content/css/demo.css">
+<link href="~/Content/demo.css" rel="stylesheet" />
+<link href="~/Content/component.css" rel="stylesheet" />
+<link href="~/Content/normalize.css" rel="stylesheet" />
+ 
+<style>
+    .fila-seccion {
+        margin-bottom: 15px;
+    }
+
+    .etiqueta-seccion {
+        text-align: right;
+    }
+
+    .input-bloqueado {
+        pointer-events: none;
+    }
+
+    .alinear-derecha {
+        text-align: right;
+        min-width: 15em;
+    }
+</style>
+ 
+<div class="panel">
+
+    <div class="panel-heading-create custom-header-panel">
+        <h4>@Etiquetas.TituloPanelEdicionSolicitud <div class="pull-right">N° @Model.id_solicitud</div></h4>
+
+    </div>
+
+    <div class="panel-body">
+        <form action="#" id="form-codigoCotizacion" role="form" data-toggle="validator" method="post" accept-charset="utf-8">
+            @Html.HiddenFor(model => model.id_codigo_cotizacion)
+
+            <div class="row" style="display: none;">
+                <div class="col-lg-12">
+                    <div class="box box-default">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Información Principal</h3>
+
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-remove"></i></button>
+                            </div>
+                        </div>
+                        <div class="box-body">
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Nombres: </label>
+                                        <div class="col-md-8">
+                                            @Html.Editor("nombre_usuario", new { htmlAttributes = new { @class = "form-control", @Value = Usuario.nombre_usuario, disabled = "disabled" } })
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Apellidos: </label>
+                                        <div class="col-md-8">
+                                            @Html.Editor("apellido_usuario", new { htmlAttributes = new { @class = "form-control", @Value = Usuario.apellido_usuario, disabled = "disabled" } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row  fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Dirección: </label>
+                                        <div class="col-md-8">
+                                            @Html.Editor("direccion", new { htmlAttributes = new { @class = "form-control", @Value = Usuario.direccion_usuario, disabled = "disabled" } })
+                                            @Html.Hidden("direccion", Usuario.direccion_usuario)
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Email: </label>
+                                        <div class="col-md-8">
+                                            @Html.Editor("email_usuario", new { htmlAttributes = new { @class = "form-control", @Value = Usuario.mail_usuario, disabled = "disabled" } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row  fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Teléfono: </label>
+                                        <div class="col-md-8">
+                                            @Html.Editor("telefono_usuario", new { htmlAttributes = new { @class = "form-control", @Value = Usuario.telefono_usuario, disabled = "disabled" } })
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Celular: </label>
+                                        <div class="col-md-8">
+                                            @Html.Editor("celular_usuario", new { htmlAttributes = new { @class = "form-control", @Value = Usuario.celular_usuario, disabled = "disabled" } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row  fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">País: </label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("pais", CatalogoEntity.ObtenerListadoCatalogosByCodigo("PAI-01", Usuario.pais.Value.ToString()), new { @class = "form-control", disabled = "disabled" })
+                                            @Html.Hidden("pais", Usuario.pais.Value.ToString())
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Ciudad: </label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("ciudad", CatalogoEntity.ObtenerListadoCatalogosByCodigoSeleccion("CIUDAD", Usuario.ciudad.Value.ToString()), new { @class = "form-control", disabled = "disabled" })
+                                            @Html.Hidden("ciudad", Usuario.ciudad.Value.ToString())
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row  fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Área o Departamento: </label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("area_departamento_usuario", CatalogoEntity.ObtenerListadoCatalogosByCodigo("DTO-01", Usuario.area_departamento_texto), new { @class = "form-control", disabled = "disabled" })
+                                            @Html.Hidden("area_departamento_usuario", Usuario.area_departamento)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Código de Usuario: </label>
+                                        <div class="col-md-8">
+                                            @Html.Editor("codigo_usuario", new { htmlAttributes = new { @class = "form-control", @Value = Usuario.secu_usua, disabled = "disabled" } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="box box-default">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Información General</h3>
+                        </div>
+                        <div class="box-body">
+
+                            <br />
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Fecha: </label>
+                                        <div class="col-md-8">
+                                            @Html.Editor("fecha_cotizacion", new { htmlAttributes = new { @class = "form-control", @Value = System.DateTime.Now.ToString("dd/MM/yyyy"), disabled = "disabled", required = "" } })
+                                            @Html.Hidden("fecha_cotizacion", System.DateTime.Now.ToString("dd/MM/yyyy"))
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Solicitante:</label>
+                                        <div class="col-md-8">
+                                            @Html.Hidden("responsable", Usuario.id_usuario)
+                                            @Html.Editor("nombres_responsable", new { htmlAttributes = new { @class = "form-control", @Value = Usuario.nombre_usuario + " " + Usuario.apellido_usuario, disabled = "disabled", required = "" } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr />
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Tipo: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("id_tipo", ViewBag.ListadoTipo as List<SelectListItem>, new { @class = "form-control campo-requerido", required = "" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Cantidad: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            <input id="cantidad" name="cantidad" class="cantidad easyui-numberbox" style="height:35px; padding:10px;" required="" value="1" data-options="max:100, min:1, precision:0">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Subtipo: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("id_subtipo", ViewBag.ListadoSubtipo as List<SelectListItem>, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Marca: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("id_marca", ViewBag.ListadoMarca as List<SelectListItem>, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr />
+
+                            <div class="row fila-seccion" id="area" hidden>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Área 1:</label>
+                                        <div class="col-md-8">
+                                            @Html.EditorFor(model => model.area_1, new { htmlAttributes = new { @class = "form-control", maxlength = 50 } })
+                                            @Html.ValidationMessageFor(model => model.area_1, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Área 2:</label>
+                                        <div class="col-md-8">
+                                            @Html.EditorFor(model => model.area_2, new { htmlAttributes = new { @class = "form-control", maxlength = 50, } })
+                                            @Html.ValidationMessageFor(model => model.area_2, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row fila-seccion" id="op-mkt" hidden>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">OP:</label>
+                                        <div class="col-md-8">
+                                            @Html.EditorFor(model => model.op, new { htmlAttributes = new { @class = "form-control", maxlength = 50 } })
+                                            @Html.ValidationMessageFor(model => model.op, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">MKT:</label>
+                                        <div class="col-md-8">
+                                            @Html.EditorFor(model => model.mkt, new { htmlAttributes = new { @class = "form-control", maxlength = 50, } })
+                                            @Html.ValidationMessageFor(model => model.mkt, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row fila-seccion" id="implementacion" hidden>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-2">Implementación:</label>
+                                        <div class="col-md-10">
+                                            @Html.EditorFor(model => model.implementacion, new { htmlAttributes = new { @class = "form-control", maxlength = 500 } })
+                                            @Html.ValidationMessageFor(model => model.implementacion, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row fila-seccion" id="CampoEmpresa">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-2">Empresa: <span class="requerido"> *</span></label>
+                                        <div class="col-md-10">
+                                            @Html.EditorFor(model => model.empresa, new { htmlAttributes = new { @class = "empresa form-control campo-requerido", maxlength = 500, required = "" } })
+                                            @Html.ValidationMessageFor(model => model.empresa, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row fila-seccion" id="nombre" hidden>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-2">Nombre Campaña: <span class="requerido"> *</span></label>
+                                        <div class="col-md-10">
+                                            @Html.EditorFor(model => model.nombre_proyecto, new { htmlAttributes = new { @class = "form-control campo-requerido", maxlength = 250, required = "" } })
+                                            @Html.ValidationMessageFor(model => model.nombre_proyecto, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row fila-seccion" id="descripcion">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-2">Descripción del Requermiento: <span class="requerido"> *</span></label>
+                                        <div class="col-md-10">
+                                            @Html.TextArea("descripcion_proyecto", null, new { @class = "form-control", rows = 6, @style = "resize: none;", maxlength = 1200 })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" id="camposPersonalizables" hidden>
+                <div class="col-lg-12">
+                    <div class="box box-default">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Campos Personalizables</h3>
+                        </div>
+                        <div class="box-body">
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-12">
+
+                                    <table id="campos-personalizados-tabla" class=" table order-list-campos">
+                                        <thead>
+                                            <tr>
+                                                <td hidden>Campo</td>
+                                                <td align="center">Nombre</td>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            <tr>
+                                                <td hidden>
+                                                    <input type="text" id="codigoPers" class="form-control" />
+                                                </td>
+
+                                                <td class="col-sm-10">
+                                                    <input type="text" id="nombrePerso" class="form-control" placeholder="Nombre, Fecha de vigencia, Términos y condiciones, otros." />
+                                                </td>
+
+                                                <td class="col-sm-1">
+                                                    <a class="deleteRow"></a>
+                                                    <button id="addrow-Campos" type="button" class="btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" id="urlExterno" hidden>
+                <div class="col-lg-12">
+                    <div class="box box-default">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">URL's Externos</h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="row fila-seccion">
+                                <div class="col-md-12">
+
+                                    <table id="url-externos-tabla" class=" table order-list-url">
+                                        <thead>
+                                            <tr>
+                                                <td hidden>Campo</td>
+                                                <td align="center">Tipo</td>
+                                                <td align="center">Detalle</td>
+                                                <td align="center">URL</td>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            <tr>
+                                                <td hidden>
+                                                    <input type="text" id="codigoUrl" class="form-control" />
+                                                </td>
+
+                                                <td class="col-sm-2">
+                                                    <input type="text" id="tipoUrl" class="form-control" placeholder="Toda la Imagen ó Botón" />
+                                                </td>
+
+                                                <td class="col-sm-4">
+                                                    <input type="text" id="detalleUrl" class="form-control" />
+                                                </td>
+
+                                                <td class="col-sm-4">
+                                                    <input type="text" id="url" class="form-control" placeholder="https://www.ppm.com.ec/develop" />
+                                                </td>
+
+                                                <td class="col-sm-1">
+                                                    <a class="deleteRow"></a>
+                                                    <button id="addrow-Url" type="button" class="btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" id="urlSoporte" hidden>
+                <div class="col-lg-12">
+                    <div class="box box-default">
+                        <div class="box-header with-border">
+                            <h3 class="box-title" id="urlSoporteTitle">URL's Soporte</h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="row fila-seccion">
+                                <div class="col-md-12">
+
+                                    <table id="url-soporte-tabla" class="table order-list-urlSolicitud">
+                                        <thead>
+                                            <tr>
+                                                <td hidden>Campo</td>
+                                                <td hidden>Tipo</td>
+                                                <td hidden>Detalle</td>
+                                                <td align="left">URL</td>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            <tr>
+                                                <td hidden>
+                                                    <input type="text" id="codigoUrlSoporte" class="form-control" />
+                                                </td>
+
+                                                <td hidden>
+                                                    <input type="text" id="tipoUrlSoporte" class="form-control" placeholder="Toda la Imagen ó Botón" />
+                                                </td>
+
+                                                <td hidden>
+                                                    <input type="text" id="detalleUrlSoporte" class="form-control" />
+                                                </td>
+
+                                                <td class="col-sm-11">
+                                                    <input type="text" id="urlDeSoporte" class="form-control" placeholder="https://www.ppm.com.ec/develop" />
+                                                </td>
+
+                                                <td class="col-sm-1">
+                                                    <a class="deleteRow"></a>
+                                                    <button id="addrow-UrlSoporte" type="button" class="btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" id="piezaReferencia" hidden>
+                <div class="col-lg-12">
+                    <div class="box box-default">
+                        <div class="box-header with-border">
+                            <h3 class="box-title" id="pieza">Pieza de Referencia</h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="col-md-12">
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <strong></strong>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <div class="box-archivo">
+                                            <input type="file" multiple="multiple" class="inputfile inputfile-4" id="referencia" name="referencia" data-multiple-caption="{count} files selected " accept=".jpg, .jpeg">
+                                            <label for="referencia">
+                                                <figure>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 10">
+                                                        <path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z" />
+                                                    </svg>
+                                                </figure>
+                                                <span>Seleccionar Archivos &hellip;</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <strong></strong>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <strong></strong>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <p>- Adjuntar archivos con extensión jpg ó jpeg</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <p>- Cada archivo debe tener un tamaño máximo de 550 KB</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8" id="pixeles" hidden>
+                                            <div class="form-group">
+                                                <p>- La imagen dene tener máximo 700 pixeles de ancho</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" id="envioIcare" hidden>
+                <div class="col-lg-12">
+                    <div class="box box-default">
+                        <div class="box-header with-border">
+                            <h3 class="box-title" id="textoFormato">Formato de Carga</h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="col-md-12">
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <strong></strong>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <div class="box-archivo">
+                                            <input type="file" class="inputfile inputfile-4" id="formato" name="formato" data-multiple-caption="{count} files selected " accept=".xls, .xlsm">
+                                            <label for="formato">
+                                                <figure>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 10">
+                                                        <path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z" />
+                                                    </svg>
+                                                </figure>
+                                                <span>Seleccionar Archivo &hellip;</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <strong></strong>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <strong></strong>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <strong></strong>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <strong></strong>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <p>- Adjuntar archivos con extensión xls ó xlsx</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" id="html" hidden>
+                <div class="col-lg-12">
+                    <div class="box box-default">
+                        <div class="box-header with-border">
+                            <h3 class="box-title" id="textoFormato">Materiales</h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="col-md-12">
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <strong></strong>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <div class="box-archivo">
+                                            <input type="file" class="inputfile inputfile-4" id="materialHtml" name="materialHtml" data-multiple-caption="{count} files selected " accept=".zip, .rar">
+                                            <label for="materialHtml">
+                                                <figure>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 10">
+                                                        <path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z" />
+                                                    </svg>
+                                                </figure>
+                                                <span>Seleccionar Archivo &hellip;</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <strong></strong>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <strong></strong>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <strong></strong>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <p>- Adjuntar archivos con extensión .zip, .rar</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <p>- Debe incluir el .spd, .jpg y .mp4</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" id="archivosSoporte" hidden>
+                <div class="col-lg-12">
+                    <div class="box box-default">
+                        <div class="box-header with-border">
+                            <h3 class="box-title" id="pieza">Archivos Soporte</h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="col-md-12">
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <strong></strong>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <div class="box-archivo">
+                                            <input type="file" multiple="multiple" class="inputfile inputfile-4" id="soporte" name="soporte" data-multiple-caption="{count} files selected ">
+                                            <label for="soporte">
+                                                <figure>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 10">
+                                                        <path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z" />
+                                                    </svg>
+                                                </figure>
+                                                <span>Seleccionar Archivos &hellip;</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <strong></strong>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <strong></strong>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <strong></strong>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <p>- Adjuntar archivos cualquier extensión</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <p>- Es opcional adjuntar archivos</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-offset-2 col-md-8">
+                    <div class="form-horizontal">
+
+                        <div class="form-group">
+                            <div class="col-md-offset-4 col-md-12">
+                                <input id="editar" type="button" value="Guardar" class="btn btn-default" />
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <a href="~/SolicitudesClienteInterno/Index/" class="btn btn-default">Cancelar</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section SeccionScriptMultiSelect {
+    <script src="~/Scripts/easyloader.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery.easyui.min.js"></script>
+    <script src="~/Scripts/locale/easyui-lang-es.js"></script>
+}
+
+@section ViewSpecificJavascript {
+
+    <script>
+        var urlAccionGuardar = '@Url.Action("Edit","Solicitud")';
+        var urlAccionListado = '@Url.Action("Index", "SolicitudesClienteInterno")';
+
+        //atributos del formulario
+        var empresa = document.getElementById('CampoEmpresa');
+        var descripcion = document.getElementById('descripcion');
+        var nombre = document.getElementById('nombre');
+        var opmkt = document.getElementById('op-mkt');
+        var area = document.getElementById('area');
+        var implementacion = document.getElementById('implementacion');
+        var personalizado = document.getElementById('camposPersonalizables');
+        var externo = document.getElementById('urlExterno');
+        var referencia = document.getElementById('piezaReferencia');
+        var envioIcare = document.getElementById('envioIcare');
+        var pieza = document.getElementById('pieza');
+        var pixeles = document.getElementById('pixeles');
+        var datosUrlSoporte = document.getElementById('urlSoporte');
+        var archivosSoporte = document.getElementById('archivosSoporte');
+        var textoFormato = document.getElementById('textoFormato');
+        var html = document.getElementById('html');
+
+        //Arreglo de objeto para campos personalizados
+        var listadoCamposPersonalizados = [];
+        var counterPersonalizado = 0;
+
+        //Arreglo de objeto para urls externo
+        var listadoUrlExternos = [];
+        var counterUrl = 0;
+
+        //Arreglo de objeto para urls soporte
+        var listadoUrlSoporte = [];
+        var counterUrlSoporte = 0;
+
+        $(document).ready(function () {
+            easyloader.locale = 'es';
+            debugger
+
+            cargarDatos(); 
+        });
+
+        //campos Iniciales
+        function cargarDatos() { 
+            var slt = document.getElementById('id_tipo');
+            var valor = slt.options[slt.selectedIndex].text;
+
+            if (valor == 758) {
+                camposGeneral();
+            }
+
+            if (valor == 734 || valor == 735) {
+                camposEclubIcare();
+            }
+
+            if (valor == 736) {
+                camposEnviosIcare();
+            }
+
+            if (valor == 737) {
+                camposMantenimiento();
+            }
+
+            if (valor == 739) {
+                camposHtml5();
+            }
+
+            if (valor == 738) {
+                camposTag();
+            }
+
+            if (valor == 740) {
+                camposHtml5Tag();
+            } 
+        }
+
+        //campos General
+        function camposGeneral() {
+            empresa.hidden = false;
+            descripcion.hidden = false;
+            nombre.hidden = true;
+            opmkt.hidden = true;
+            area.hidden = true;
+            implementacion.hidden = true
+            personalizado.hidden = true;
+            externo.hidden = true;
+            referencia.hidden = true;
+            envioIcare.hidden = true;
+            pixeles.hidden = true;
+            datosUrlSoporte.hidden = true;
+            archivosSoporte.hidden = true;
+            html.hidden = true;
+        }
+
+        //campos para Eclub Icare
+        function camposEclubIcare() {
+            empresa.hidden = true;
+            descripcion.hidden = true;
+            nombre.hidden = false;
+            opmkt.hidden = false;
+            area.hidden = false;
+            implementacion.hidden = false
+            personalizado.hidden = false;
+            externo.hidden = false;
+            referencia.hidden = false;
+            envioIcare.hidden = true;
+            pieza.innerText = "Pieza de Referencia";
+            pixeles.hidden = false;
+            datosUrlSoporte.hidden = true;
+            archivosSoporte.hidden = true;
+            html.hidden = true;
+        }
+
+        //campos para Envios Icare
+        function camposEnviosIcare() {
+            //cambiar la marca 
+            empresa.hidden = true;
+            descripcion.hidden = true;
+            nombre.hidden = false;
+            opmkt.hidden = false;
+            area.hidden = true;
+            implementacion.hidden = true
+            personalizado.hidden = true;
+            externo.hidden = true;
+            referencia.hidden = false;
+            envioIcare.hidden = false;
+            pieza.innerText = "SFTP";
+            pixeles.hidden = true;
+            datosUrlSoporte.hidden = true;
+            archivosSoporte.hidden = true;
+            textoFormato.innerText = "Formato Carga";
+            html.hidden = true;
+        }
+
+        //campos para mantenimiento 
+        function camposMantenimiento() {
+            empresa.hidden = true;
+            descripcion.hidden = false;
+            nombre.hidden = true;
+            opmkt.hidden = true;
+            area.hidden = true;
+            implementacion.hidden = true
+            personalizado.hidden = true;
+            externo.hidden = true;
+            referencia.hidden = true;
+            envioIcare.hidden = true;
+            pixeles.hidden = true;
+            datosUrlSoporte.hidden = false;
+            archivosSoporte.hidden = false;
+            html.hidden = true;
+            urlSoporteTitle.innerText = "URL's Soporte";
+        }
+
+        //campos para Html
+        function camposHtml5() {
+            empresa.hidden = true;
+            descripcion.hidden = true;
+            nombre.hidden = false;
+            opmkt.hidden = false;
+            area.hidden = true;
+            implementacion.hidden = true
+            personalizado.hidden = true;
+            externo.hidden = true;
+            referencia.hidden = false;
+            envioIcare.hidden = false;
+            pixeles.hidden = true;
+            datosUrlSoporte.hidden = true;
+            archivosSoporte.hidden = true;
+            referencia.hidden = true;
+            textoFormato.innerText = "Matriz";
+            html.hidden = false;
+        }
+
+        //campos para Tag
+        function camposTag() {
+            empresa.hidden = true;
+            descripcion.hidden = true;
+            nombre.hidden = false;
+            opmkt.hidden = false;
+            area.hidden = true;
+            implementacion.hidden = true
+            personalizado.hidden = true;
+            externo.hidden = true;
+            referencia.hidden = false;
+            envioIcare.hidden = true;
+            pixeles.hidden = true;
+            datosUrlSoporte.hidden = false;
+            archivosSoporte.hidden = true;
+            referencia.hidden = true;
+            html.hidden = true;
+            urlSoporteTitle.innerText = "Url de Tipificación";
+        }
+
+        //campos para Html y Tag
+        function camposHtml5Tag() {
+            empresa.hidden = true;
+            descripcion.hidden = true;
+            nombre.hidden = false;
+            opmkt.hidden = false;
+            area.hidden = true;
+            implementacion.hidden = true
+            personalizado.hidden = true;
+            externo.hidden = true;
+            referencia.hidden = false;
+            envioIcare.hidden = false;
+            pixeles.hidden = true;
+            datosUrlSoporte.hidden = false;
+            archivosSoporte.hidden = true;
+            referencia.hidden = true;
+            textoFormato.innerText = "Matriz";
+            html.hidden = false;
+            urlSoporteTitle.innerText = "Url de Tipificación";
+        }
+         
+    </script>
+
+    <script src="~/Scripts/custom-file-input.js"></script>
+}
+

@@ -1,0 +1,145 @@
+﻿@model GestionPPM.Entidades.Modelo.Perfil
+
+@{
+    ViewBag.Title = "Crear Perfil";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@* Formato para el template de datos *@
+<link href="~/Content/css/personalizar.css" rel="stylesheet" />
+
+<link rel="stylesheet" type="text/css" href="~/Content/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="~/Content/themes/icon.css">
+<link rel="stylesheet" type="text/css" href="~/Content/css/demo.css">
+
+<form action="#" id="form-perfiles" role="form" data-toggle="validator" method="post" accept-charset="utf-8">
+
+    <div class="row">
+        <div class="col-md-offset-2 col-md-8">
+            <div class="panel">
+
+                <div class="panel-heading-create custom-header-panel">
+                    <h4>@Etiquetas.TituloPanelCreacionPerfil</h4>
+                </div>
+
+                <div class="panel-body">
+                    <div class="form-horizontal">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <div class="form-group">
+                            @*@Html.LabelFor(model => model.nombre_perfil, htmlAttributes: new { @class = "control-label col-md-2" })*@
+                            <label class="control-label col-md-3">Nombre: <span class="requerido"> *</span></label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.nombre_perfil, new { htmlAttributes = new { @class = "form-control campo-requerido", maxlength = 150 } })
+                                @Html.ValidationMessageFor(model => model.nombre_perfil, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @*@Html.LabelFor(model => model.descripcion_perfil, htmlAttributes: new { @class = "control-label col-md-2" })*@
+                            <label class="control-label col-md-3">Descripción: <span class="requerido"> *</span></label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.descripcion_perfil, new { htmlAttributes = new { @class = "form-control campo-requerido", maxlength = 200 } })
+                                @Html.ValidationMessageFor(model => model.descripcion_perfil, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Opciones Menú:</label>
+                            <div class="col-md-8"> 
+                                <input class="easyui-tagbox auto-ajustar" id="idsOpcionesMenu_guardar" name="idsOpcionesMenu_guardar" style="width:100%" data-options="
+                                url: '@Url.Action("_GetOpcionesMenu", "Perfiles")',
+                                method: 'get',
+                                value: '',
+                                valueField: 'id',
+                                textField: 'text',
+                                limitToList: true,
+                                hasDownArrow: true,
+                                ">
+                            </div>
+                        </div>
+
+
+                        <div style="display: none;" class="form-group">
+                            @*@Html.LabelFor(model => model.estado_perfil, htmlAttributes: new { @class = "control-label col-md-2" })*@
+                            <label class="control-label col-md-2">Estado: <span class="requerido"> *</span></label>
+                            <div class="col-md-10">
+                                <div class="checkbox">
+                                    @*@Html.EditorFor(model => model.estado_perfil)
+                                        @Html.ValidationMessageFor(model => model.estado_perfil, "", new { @class = "text-danger" })*@
+                                    @Html.DropDownList("estado_perfil", new SelectList(new List<SelectListItem> { new SelectListItem { Text = "Activo", Value = "True" },
+new SelectListItem { Text = "Inactivo", Value = "False" },}, "Value", "Text", null), new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.estado_perfil, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <br />
+
+                        <div class="form-group">
+                            <div class="col-md-offset-4 col-md-12">
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <input id="guardar" type="button" value="Guardar" class="btn btn-default" />
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                @Html.ActionLink("Regresar", "Index", null, new { @class = "btn btn-default" })
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>
+
+
+@section SeccionScriptMultiSelect {
+    <script src="~/Scripts/easyloader.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery.easyui.min.js"></script>
+    <script src="~/Scripts/locale/easyui-lang-es.js"></script>
+}
+
+@section ViewSpecificJavascript {
+    <script>
+        var urlAccionGuardar = '@Url.Action("Create","Perfiles")';
+        var urlAccionListado = '@Url.Action("Index","Perfiles")';
+
+        $("#guardar").click(function () {
+            debugger
+            var flag = true;
+            $('#form-perfiles .campo-requerido').each(function (index, value) {
+                if ($(this).val() == "" && $(this).is(":visible")) {
+                    flag = false;
+                }
+            });
+            if (flag) {
+                guardar();
+            } else {
+                toastr.error('@Mensajes.MensajeDatosObligatorios')
+            }
+        })
+
+        function guardar() {
+            debugger
+            var opcionesMenu = getOpcionesMenu();
+            var data_form = JSON.stringify({ "perfil": $('#form-perfiles').serializeObject(), "opcionesMenu": opcionesMenu })
+            _Guardar(data_form, urlAccionGuardar, urlAccionListado)
+        }
+
+        function getOpcionesMenu() {
+            debugger
+            var idsOpcionesMenu = [];
+            var opciones = $("#idsOpcionesMenu_guardar").val();
+            opciones = opciones.split(',');
+
+            for (var i = 0; i < opciones.length; i++) {
+                let id = parseInt(opciones[i]);
+                idsOpcionesMenu.push(id);
+            }
+            return idsOpcionesMenu;
+        }
+
+    </script>
+}

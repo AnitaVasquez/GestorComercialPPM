@@ -1,0 +1,57 @@
+﻿@model GestionPPM.Entidades.Modelo.PrefacturaSAFIInfo
+
+@* Formato para el template de datos *@
+<link href="~/Content/css/personalizar.css" rel="stylesheet" />
+
+<script>
+    $(document).ready(function () {
+
+        $("#seccion-titulo-modal").text('@Html.Raw(ViewBag.TituloModal)');
+    });
+
+</script>
+
+@if (Model != null)
+{
+
+    <div class="table-responsive">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <th>Código de Cotización</th>
+                    <td>@Model.codigo_cotizacion</td>
+                </tr>
+                <tr>
+                    <th>Cliente</th>
+                    <td>@Model.nombre_comercial_cliente</td>
+                </tr>
+                <tr>
+                    <th>Intermediario</th>
+                    <td>@Model.TipoIntermediario</td>
+                </tr>
+                <tr>
+                    <th>Detalle</th>
+                    <td>@Model.detalle_cotizacion</td>
+                </tr>
+                <tr>
+                    <th>Valor Cotización</th>
+                    <td>@Model.TotalCotizacion</td>
+                </tr>
+                <tr>
+                    <th>N. Pago</th>
+                    <td>@Model.numero_pago</td>
+                </tr>
+                <tr>
+                    <th>Ejecutivo</th>
+                    <td>@Model.Ejecutivo</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <small><b>No existe información.</b></small>
+}
+
+

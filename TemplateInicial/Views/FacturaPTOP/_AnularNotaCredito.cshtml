@@ -1,0 +1,186 @@
+﻿@model GestionPPM.Entidades.Modelo.FacturaPTOPSAFI
+
+@* Formato para el template de datos *@
+<link href="~/Content/css/personalizar.css" rel="stylesheet" />
+
+<style>
+    .fila-seccion {
+        margin-bottom: 15px;
+    }
+
+    .etiqueta-seccion {
+        text-align: right;
+    }
+</style>
+
+<script>
+
+    //Variables para cambios
+    var metodo = document.getElementById('metodo_check');
+    var motivo = document.getElementById('motivo_nc');
+    var accion = document.getElementById('accion_check');
+
+    //Dropdownlist Selectedchange event
+    $("#tipo_documento").change(function () {
+        debugger
+
+        var slt = document.getElementById('tipo_documento');
+        var valor = slt.options[slt.selectedIndex].value;
+
+        if (valor == '2') {
+            motivo.hidden = false;
+            metodo.hidden = true;
+            accion.hidden = true;
+        } else {
+            motivo.hidden = true;
+            metodo.hidden = false;
+            accion.hidden = false;
+        }
+    })
+
+    $("#metodo").change(function () {
+        debugger
+
+        var slt = document.getElementById('metodo');
+        var valor = slt.options[slt.selectedIndex].value;
+
+        if (valor == '2') {
+            motivo.hidden = false;
+        } else {
+            motivo.hidden = true;
+        }
+    })
+
+
+    var urlAccionEditarStatusCodigo = '@Url.Action("AnularDocumento", "FacturaPTOP")';
+
+    $(document).ready(function () {
+        $("#seccion-titulo-modal").text('@Html.Raw(ViewBag.TituloModal)');
+    });
+
+    $("#guardar-status").click(function () {
+        debugger
+        var flag = validarCamposRequeridosFormularioCompleto("form-anularDocumento");
+        if (flag) {
+            //nota de credito
+            var cmbTD = document.getElementById('tipo_documento');
+            var tipoDocumento = cmbTD.options[cmbTD.selectedIndex].value;
+
+            //Si es factura
+            if (tipoDocumento == '1') {
+
+                var cmbMetodo = document.getElementById('metodo');
+                var MetodoSeleccionado = cmbMetodo.options[cmbMetodo.selectedIndex].value;
+
+                if (MetodoSeleccionado == '2' && $("#motivo").val() != "") {
+                    guardarStatus();
+                } else {
+                    if (MetodoSeleccionado == '1') {
+                        guardarStatus();
+                    } else {
+                        toastr.error('@Mensajes.MensajeDatosObligatorios')
+                    }
+                }
+            }
+
+            //si es nota de credito
+            if (tipoDocumento == '2') {
+                //validar que exista nota de credito
+                if ($("#numero_nota_credito").val() == "") {
+                    toastr.error("No se puede anular una nota de crédito que no existe")
+                }
+                else {
+                    if ($("#motivo").val() != "")
+                    {
+                        guardarStatus();
+                    } else
+                    {
+                        toastr.error('@Mensajes.MensajeDatosObligatorios')
+                    }
+                }
+            } 
+        }
+        else
+        {
+            toastr.error('@Mensajes.MensajeDatosObligatorios')
+        }
+    })
+
+    function guardarStatus() {
+        debugger
+        var data_form = JSON.stringify({
+            "factura": $('#form-anularDocumento').serializeObject(), "tipo_documento": $("#tipo_documento").val(), "metodo": $("#metodo").val(), "accion": $("#accion").val(), "motivo": $("#motivo").val()  })
+        _GuardarModalStatusCodigoCotizacion(data_form, urlAccionEditarStatusCodigo);
+    }
+
+</script>
+
+
+<form action="#" id="form-anularDocumento" role="form" data-toggle="validator" method="post" accept-charset="utf-8">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-horizontal">
+
+                @Html.Hidden("id_factura_PTOP", Model.id_factura_PTOP) 
+
+                <br />
+
+                <div class="col-md-12">
+
+                    <div class="form-group" hidden="">
+                        <label class="etiqueta-seccion control-label col-md-3">Nota Crédito: <span class="requerido"> *</span></label>
+                        <div class="col-md-7">
+                            @Html.EditorFor(model => model.numero_nota_credito, new { htmlAttributes = new { @class = "form-control"} })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="etiqueta-seccion control-label col-md-3">Tipo Documento: <span class="requerido"> *</span></label>
+                        <div class="col-md-7">
+                            @Html.DropDownList("tipo_documento", new SelectList(new List<SelectListItem> { new SelectListItem { Text = "Factura", Value = "1" },
+                            new SelectListItem { Text = "Nota de Crédito", Value = "2" },}, "Value", "Text", 1), new { @class = "form-control campo-requerido", required = "" })
+                        </div>
+                    </div>
+
+
+                    <div class="form-group" id="metodo_check">
+                        <label class="etiqueta-seccion control-label col-md-3">Método <span class="requerido"> *</span></label>
+                        <div class="col-md-7">
+                            @Html.DropDownList("metodo", new SelectList(new List<SelectListItem> { new SelectListItem { Text = "Normal", Value = "1" },
+                            new SelectListItem { Text = "Nota de Crédito", Value = "2" },}, "Value", "Text", 1), new { @class = "form-control", required = "" })
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="accion_check">
+                        <label class="etiqueta-seccion control-label col-md-3"> Acción: <span class="requerido"> *</span></label>
+                        <div class="col-md-7">
+                            @Html.DropDownList("accion", new SelectList(new List<SelectListItem> { new SelectListItem { Text = "Refacturar", Value = "1" },
+                            new SelectListItem { Text = "Pendiente", Value = "2" },new SelectListItem { Text = "N/A", Value = "3" },}, "Value", "Text", 1), new { @class = "form-control campo-requerido", required = "" })
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="motivo_nc" hidden="">
+                        <label class="etiqueta-seccion control-label col-md-3">Motivo: <span class="requerido"> *</span></label>
+                        <div class="col-md-7">
+                            @Html.TextArea("motivo", null, new { @class = "form-control", rows = 3, @style = "resize: none;", maxlength = 500, required = "" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br />
+
+    <div class="row">
+        <div class="col-md-offset-2 col-md-8">
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <div class="col-md-offset-5 col-md-12">
+                        <input id="guardar-status" type="button" value="Guardar" class="btn btn-default" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

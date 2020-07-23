@@ -1,0 +1,55 @@
+﻿<div class="col-lg-12">
+    <div class="box box-default">
+        <div class="box-header with-border">
+            <h3 id="texto-informacion-principal" class="box-title">Acuerdos <span class="requerido"> *</span></h3>
+
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button> 
+            </div>
+        </div>
+        <div class="box-body">
+            <div class="row fila-seccion">
+                <div class="col-md-12">
+                    <table class="table" id="tbl-Acuerdos">
+                        <thead>
+                            <tr>
+                                <th data-override="IDDetalleActaAcuerdos">ID</th>
+                                <th data-override="Acuerdo">Acuerdo</th>
+                                <th data-override="Responsable">Responsables</th>
+                                <th data-override="Fecha">Fecha</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr id="templateAcuerdos">
+                                <td><input type="text" class="form-control idObjeto" value="0" name="IDDetalleActaAcuerdos[]" /></td>
+                                <td style="width:53.33%"><input type="text" class="form-control" placeholder="Acuerdo" name="Acuerdo[]" maxlength="250" /></td>
+                                <td style="width:33.33%"><input type="text" class="form-control" placeholder="Responsable" name="Responsable[]" maxlength="250" /></td>
+                                <td style="width:13.33%">
+                                    @*<input name="Fecha[]" class="easyui-datebox fecha-acuerdos" labelPosition="top" data-options="formatter:myformatter,parser:myparser" style="width:100%;">*@
+                                    @Html.Editor("Fecha[]", new { htmlAttributes = new { @class = "form-control tipoFecha", @type = "date", id = "Fecha[]" } })
+                                    @*@Html.Hidden("FechaEntrega", System.DateTime.Now.ToString("dd/MM/yyyy"))*@
+                                </td>
+                                <td id="accion"><button type="button" class="agregarFila btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i></button></td>
+                            </tr>
+                            @foreach (var item in ViewBag.ListadoDetalleAcuerdos)
+                            {
+                                <tr id="templateAcuerdos-@item.IDDetalleActaAcuerdos">
+                                    <td><input type="text" class="form-control" value="@item.IDDetalleActaAcuerdos" name="IDDetalleActaAcuerdos[]"/></td>
+                                    <td style="width:53.33%"><input type="text" class="form-control" value="@item.Acuerdo" placeholder="Acuerdo" name="Acuerdo[]" maxlength="250" /></td>
+                                    <td style="width:33.33%"><input type="text" class="form-control" value="@item.Responsable" placeholder="Responsable" name="Responsable[]" maxlength="250" /></td>
+                                    <td style="width:13.33%">
+                                        @*<input name="Fecha[]" class="easyui-datebox fecha-acuerdos" labelPosition="top" value="@item.Fecha.ToString("yyyy/MM/dd")" data-options="formatter:myformatter,parser:myparser" style="width:100%;">*@ 
+                                        @Html.Editor("Fecha[]", new { htmlAttributes = new { @class = "form-control tipoFecha", @type = "date", id = "Fecha[]", @Value = item.Fecha.ToString("yyyy-MM-dd") } })
+                                    </td>
+                                    <td id="accion"><button type="button" onclick="eliminarFila(this.id)" id="eliminar-@item.IDDetalleActaAcuerdos" class="eliminarFila btn btn-danger"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

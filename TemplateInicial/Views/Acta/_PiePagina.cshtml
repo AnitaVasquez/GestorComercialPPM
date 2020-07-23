@@ -1,0 +1,120 @@
+﻿<div class="col-lg-12">
+    <div class="box box-default">
+        <div class="box-header with-border">
+            <h3 id="texto-informacion-principal" class="box-title">Acuerdo de conformidad <span class="requerido"> *</span></h3>
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button> 
+            </div>
+        </div>
+        <div class="box-body">
+            @if (ViewBag.CodigoActa != "AECE" && ViewBag.CodigoActa != "AECF")
+            {
+                <div class="row fila-firma">
+                    <div style="text-align: center;" class="col-md-12">
+                        <b><span><a href="#" id="texto-acuerdoConformidad" data-type="text" data-pk="1">@ViewBag.TextoAcuerdoConformidad</a></span></b>
+                    </div>
+                </div>
+                <hr />
+                <br />
+            }
+
+            <div class="row fila-firma">
+                <div class="col-md-6 alinear-firma">
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <a href="#" class="firma firma-persona-general" id="nombre" data-type="text" data-pk="1">Nombre</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 alinear-firma">
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <a href="#" class="firma firma-usuario" id="usuarioNombre" data-type="text" data-pk="1">Nombre</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            @if (ViewBag.CodigoActa != "AECE" && ViewBag.CodigoActa != "AECF")
+            {
+                <div class="row fila-firma">
+                    <div class="col-md-6 alinear-firma">
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <a href="#" class="firma  firma-persona-general" id="cargo" data-type="text" data-pk="1">Cargo</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 alinear-firma">
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <a href="#" class="firma firma-usuario" id="usuarioCargo" data-type="text" data-pk="1">Cargo</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row fila-firma">
+                    <div class="col-md-6 alinear-firma">
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <b> <a href="#" class="firma firma-persona-general" id="empresa" data-type="text" data-pk="1">Empresa</a></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 alinear-firma">
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <b>  <a href="#" class="firma firma-usuario" id="usuarioEmpresa" data-type="text" data-pk="1">Empresa</a></b>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="row fila-firma">
+                    <div class="col-md-6 alinear-firma">
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <b> <a href="#" class="firma firma-persona-general" id="empresa" data-type="text" data-pk="1">Empresa</a></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 alinear-firma">
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <b>  <a href="#" class="firma firma-usuario" id="usuarioEmpresa" data-type="text" data-pk="1">Empresa</a></b>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row fila-firma">
+                    <div class="col-md-6 alinear-firma">
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <a href="#" class="firma  firma-persona-general" id="fecha" data-type="text" data-pk="1">@System.DateTime.Now.ToString("yyyy-MM-dd")</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 alinear-firma">
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <a href="#" class="firma firma-usuario" id="usuarioFecha" data-type="text" data-pk="1">@System.DateTime.Now.ToString("yyyy-MM-dd")</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+
+
+        </div>
+    </div>
+</div>
+
+
+
+

@@ -1,0 +1,310 @@
+﻿@model GestionPPM.Entidades.Modelo.Comercio
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@* Formato para el template de datos *@
+<link href="~/Content/css/personalizar.css" rel="stylesheet" />
+
+<link rel="stylesheet" type="text/css" href="~/Content/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="~/Content/themes/icon.css">
+<link rel="stylesheet" type="text/css" href="~/Content/css/demo.css">
+
+<script type="text/javascript" src="~/Scripts/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.min.js"></script>
+
+<style>
+    .fila-seccion {
+        margin-bottom: 15px;
+    }
+
+    .etiqueta-seccion {
+        text-align: right;
+    }
+</style>
+
+
+<script>
+    $(document).ready(function () {
+
+        var slt = document.getElementById('cobro_porcentaje');
+        var valor = slt.options[slt.selectedIndex].value;
+
+        debugger;
+
+        if (valor == 'False') {
+            $('#tipo_descuento').text('US$');
+        }
+
+    });
+</script>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel">
+
+            <div class="panel-heading-create custom-header-panel">
+                <h4>@Etiquetas.TituloPanelComercio</h4>
+            </div>
+
+            <div class="panel-body">
+
+                <form action="#" id="form-comercio" role="form" data-toggle="validator" method="post" accept-charset="utf-8">
+
+                    @Html.HiddenFor(model => model.id_comercio)
+
+                    <div class="row">
+                        <div class="col-lg-12">
+
+                            <div class="box-body">
+
+                                <div class="row fila-seccion">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="etiqueta-seccion control-label col-md-2">ID Comercio: <span class="requerido"> *</span></label>
+                                            <div class="col-md-10">
+                                                @Html.EditorFor(model => model.id_comercio_predictive, new { htmlAttributes = new { @class = "form-control campo-requerido", maxlength = 50, required = "" } })
+                                                @Html.ValidationMessageFor(model => model.id_comercio_predictive, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row fila-seccion">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="etiqueta-seccion control-label col-md-2">Comercio: <span class="requerido"> *</span></label>
+                                            <div class="col-md-10">
+                                                @Html.EditorFor(model => model.nombre_comercio, new { htmlAttributes = new { @class = "form-control campo-requerido", maxlength = 500, required = "" } })
+                                                @Html.ValidationMessageFor(model => model.nombre_comercio, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row fila-seccion">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class=" etiqueta-seccion control-label col-md-2">Cliente: <span class="requerido"> *</span></label>
+                                            <div class="col-md-10">
+                                                @Html.DropDownList("id_cliente", ViewBag.ListadoCliente as List<SelectListItem>, Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido", required = "" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row fila-seccion">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="etiqueta-seccion control-label col-md-4">Fecha Salida Producción: <span class="requerido"> *</span> </label>
+                                            <div class="col-md-8" style="padding-left: 20px;">
+                                                @Html.Editor("fecha_salida_produccion", new { htmlAttributes = new { @class = "form-control campo-requerido", @type = "date", id = "fecha_salida_produccion", @value = "" } })
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="etiqueta-seccion control-label col-md-4">Fecha Inactivo: </label>
+                                            <div class="col-md-8">
+                                                @Html.Editor("fecha_inactivo", new { htmlAttributes = new { @class = "form-control", @type = "date", id = "fecha_inactivo", @value = "" } })
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row fila-seccion">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class=" etiqueta-seccion control-label col-md-4">Estatus Contrato: <span class="requerido"> *</span></label>
+                                            <div class="col-md-8" style="padding-left: 20px;">
+                                                @Html.DropDownList("id_estatus_contrato", ViewBag.ListadoEstatusContrato as List<SelectListItem>, Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido", required = "" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+
+                                        <div class="form-group">
+                                            <label class="etiqueta-seccion control-label col-md-4">Tipo Subsidio: <span class="requerido"> *</span></label>
+                                            <div class="col-md-8">
+                                                @Html.DropDownList("id_tipo_subsidio", ViewBag.ListadoTipoSubsidio as List<SelectListItem>, Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido", required = "" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row fila-seccion">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class=" etiqueta-seccion control-label col-md-4">Agrupación: <span class="requerido"> *</span></label>
+                                            <div class="col-md-8" style="padding-left: 20px;">
+                                                @Html.DropDownList("id_agrupacion", ViewBag.ListadoTipoAgrupacion as List<SelectListItem>, Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido", required = "" })
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="etiqueta-seccion control-label col-md-4">Compartido PTOP: <span class="requerido"> *</span></label>
+                                            <div class="col-md-8">
+                                                @Html.DropDownList("compartido_ptop", new SelectList(new List<SelectListItem> { new SelectListItem { Text = "Si", Value = "True"},
+                                                new SelectListItem { Text = "No", Value = "False" },}, "Value", "Text", null), new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.compartido_ptop, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row fila-seccion">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="etiqueta-seccion control-label col-md-4">Tipo Descuento:<span class="requerido">*</span></label>
+                                            <div class="col-md-8">
+                                                @Html.DropDownList("cobro_porcentaje", new SelectList(new List<SelectListItem> { new SelectListItem { Text = "Porcentaje", Value = "True"},
+                                                new SelectListItem { Text = "Valor", Value = "False" },}, "Value", "Text", null), new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.cobro_porcentaje, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="etiqueta-seccion control-label col-md-4">Valor Descuento:<span class="requerido">*</span></label>
+                                            <div class="col-md-8">
+                                                <div class="input-group">
+                                                    <span id="tipo_descuento" class="input-group-addon">%</span>
+                                                    <input id="descuento" name="descuento" class="descuento easyui-numberbox campo-requerido" style="height:35px; padding:10px;" required="" value="@ViewBag.Descuento" data-options="max:9999999999.99, precision:2, groupSeparator:'.', decimalSeparator:','">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row fila-seccion">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="etiqueta-seccion control-label col-md-4">Iva:<span class="requerido">*</span></label>
+                                            <div class="col-md-8">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">%</span>
+                                                    <input id="porcentaje_iva" name="porcentaje_iva" class="porcentaje_iva easyui-numberbox campo-requerido" style="height:35px; padding:10px;" required="" value="@ViewBag.Iva" data-options="max:9999999999.99, precision:2, groupSeparator:'.', decimalSeparator:','">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> 
+                            </div>
+                        </div>
+                    </div>
+
+                    <br />
+
+                    <div class="row">
+                        <div class="col-md-offset-2 col-md-8">
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <div class="col-md-offset-4 col-md-12">
+                                        <input id="editar-comercio" value="Guardar" type="button" class="btn btn-default" />
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        @Html.ActionLink("Regresar", "Index", null, new { @class = "btn btn-default" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section ViewSpecificJavascript {
+    <script>
+        var urlAccionEditar = '@Url.Action("Edit","Comercio")';
+        var urlAccionListado = '@Url.Action("Index", "Comercio")';
+
+        var etiquetaFI = document.getElementById('fecha_salida_produccion');
+        var etiquetaFF = document.getElementById('fecha_inactivo');
+
+        var fechainireal;
+        var fechafinreal;
+
+        var fechaProduccion = '@ViewBag.fechaProduccion';
+        var fechaInactivo = '@ViewBag.fechainactiva';
+
+        //Dropdownlist Selectedchange event
+        $("#cobro_porcentaje").change(function () {
+            debugger
+
+            var slt = document.getElementById('cobro_porcentaje');
+            var valor = slt.options[slt.selectedIndex].value; 
+
+            if (valor == 'True') {
+                $('#tipo_descuento').text('%');
+            } else {
+                $('#tipo_descuento').text('US$');
+            }
+        })
+
+        if ($("#fecha_salida_produccion").val() == "") {
+            fechainireal = '1990-01-01';
+        } else {
+            fechainireal = $("#fecha_salida_produccion").val();
+        }
+
+        if ($("#fecha_inactivo").val() == "") {
+            fechafinreal = '1990-01-01';
+        } else {
+            fechafinreal = $("#fecha_inactivo").val();
+        }
+
+        $(document).ready(function () {
+            debugger
+            $("#fecha_salida_produccion").val(fechaProduccion)
+            $("#fecha_inactivo").val(fechaInactivo)
+
+        })
+
+        $("#editar-comercio").click(function () {
+            debugger
+            var flag = validarCamposRequeridosFormularioCompleto("form-comercio");
+
+            if (flag)
+            {
+                guardar();
+            }
+            else
+            {
+                toastr.error('@Mensajes.MensajeDatosObligatorios')
+            }
+        })
+
+
+        function guardar() {
+            var formulario = $('#form-comercio').serializeArray().reduce(function (a, x) { a[x.name] = x.value; return a; }, {});
+
+            debugger
+
+            if ($("#fecha_salida_produccion").val() == "") {
+                fechainireal = '1990-01-01';
+            } else {
+                fechainireal = $("#fecha_salida_produccion").val();
+            }
+
+            if ($("#fecha_inactivo").val() == "") {
+                fechafinreal = '1990-01-01';
+            } else {
+                fechafinreal = $("#fecha_inactivo").val();
+            }
+
+            var data_form = JSON.stringify({ "comercio": formulario })
+            _Guardar(data_form, urlAccionEditar, urlAccionListado)
+        }
+    </script>
+}

@@ -1,0 +1,81 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .alinear-derecha {
+        text-align: right;
+    }
+</style>
+<div id="cargando-grid"></div>
+
+@Html.AjaxGrid(Url.Action("IndexGrid", new { search = ViewBag.CodigoCotizacion }))
+
+@section ViewSpecificJavascript {
+    <script>
+        debugger
+        var idGrid = "grid-Cotizador";
+        var urlAccionReporteExcel = '@Url.Action("DescargarReporteFormatoExcel", "Cotizacion")';
+        var urlAccionReportePDF = '@Url.Action("DescargarReporteFormatoPDF", "Cotizacion")';
+        var urlAccionReporteCSV = '@Url.Action("DescargarReporteFormatoCSV", "Cotizacion")';
+
+        var resultado = '@Html.Raw(ViewBag.Resultado)';
+        var estado = @Html.Raw(Json.Encode(ViewBag.Estado));
+
+        $(document).ready(function () {
+            if (resultado.length > 0)
+                toastr.info(resultado)
+        })
+
+
+        $(document).click(function (e) {
+            debugger
+            var elemento = $(e.currentTarget.activeElement)[0];
+            if (elemento.id === 'recargar') {
+                debugger
+                recargarGridByID(idGrid);
+            }
+
+            if (elemento.id === 'nuevo') {
+                debugger
+                toastr.warning("La cotización se genera a partir de una versión o un código previamente creado");
+                return;
+            }
+
+            if (elemento.id === 'ExportarGridExcel') {
+                debugger
+                location.href = urlAccionReporteExcel;
+
+            }
+            if (elemento.id === 'ExportarGridPDF') {
+                debugger
+                reporteGridPDF(urlAccionReportePDF);
+            }
+            if (elemento.id === 'ExportarGridCSV') {
+                debugger
+                location.href = urlAccionReporteCSV;
+            }
+            if (elemento.id === 'Ayuda') {
+
+                $('#help-modal').modal({
+                    'show': 'true',
+                    'backdrop': 'static',
+                    'keyboard': false
+                }) 
+            }
+        });
+
+        $(document).keydown(callBackBusqueda);
+        $(document).keypress(callBackBusqueda);
+        $(document).keyup(callBackBusqueda);
+
+        function callBackBusqueda(e) {
+            debugger
+            var elemento = $(e.currentTarget.activeElement)[0];
+            //Validar que los Grids tengan filtros de búsqueda
+            var filtrosBusqueda = document.getElementById('GridSearch');
+            busquedaGrid(idGrid);
+        }
+
+    </script>
+} 

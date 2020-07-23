@@ -1,0 +1,48 @@
+﻿@using GestionPPM.Entidades.Metodos
+
+@* Formato para el template de datos *@
+<link href="~/Content/css/personalizar.css" rel="stylesheet" />
+
+<script>
+    $(document).ready(function () {
+        $("#seccion-titulo-modal").text('@Html.Raw(ViewBag.TituloModal)');
+    });
+
+    $("#seleccion-organigrama").click(function () {
+        debugger
+        var flag = validarCamposRequeridosFormularioCompleto("form-seleccionOrganigrama");
+        if (flag)
+            seleccion();
+        else
+            toastr.error('@Mensajes.MensajeDatosObligatorios')
+    })
+
+    function seleccion() {
+        debugger
+        var tipoOrganigrama = $("#tipo_organigrama").val();
+        location.href = '@Url.Action("Organigrama", "Organigrama")?id=' + tipoOrganigrama;
+    }
+
+</script>
+
+<form action="#" id="form-seleccionOrganigrama" role="form" data-toggle="validator" method="post" accept-charset="utf-8">
+    <div class="row">
+        <div class="col-md-offset-2 col-md-8">
+            <div class="form-horizontal">
+
+                <div class="form-group">
+                    <label class="etiqueta-seccion control-label col-md-4">Tipo de Organigrama: <span class="requerido"> *</span></label>
+                    <div class="col-md-8">
+                        @Html.DropDownList("tipo_organigrama", OrganigramaEntity.ObtenerListadoTiposOrganigrama(), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-4 col-md-12">
+                        <input id="seleccion-organigrama" type="button" value="Seleccionar" class="btn btn-default" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

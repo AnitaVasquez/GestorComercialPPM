@@ -1,0 +1,479 @@
+﻿@model GestionPPM.Entidades.Modelo.SolicitudCliente
+@using GestionPPM.Entidades.Modelo
+@using GestionPPM.Entidades.Metodos
+
+@{
+    var Usuarios = (string)ViewBag.Modelo;
+    var UrlExternosSolicitud = (List<UrlExternosSolicitud>)ViewBag.UrlExternosSolicitud;
+}
+@* Formato para el template de datos *@
+<link href="~/Content/css/personalizar.css" rel="stylesheet" />
+
+<link href="~/Content/themes/default/combobox.css" rel="stylesheet" />
+<link href="~/Content/themes/default/combo.css" rel="stylesheet" />
+<link href="~/Content/themes/default/tagbox.css" rel="stylesheet" />
+<link href="~/Content/themes/default/searchbox.css" rel="stylesheet" />
+<link href="~/Content/themes/default/textbox.css" rel="stylesheet" />
+
+<script src="~/Scripts/easyloader.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.easyui.min.js"></script>
+<script src="~/Scripts/locale/easyui-lang-es.js"></script>
+
+<style>
+    .fila-seccion {
+        margin-bottom: 15px;
+    }
+
+    .etiqueta-seccion {
+        text-align: right;
+    }
+
+    .input-bloqueado {
+        pointer-events: none;
+    }
+
+    .alinear-derecha {
+        text-align: right;
+        min-width: 15em;
+    }
+</style>
+
+<script>
+    var urlAccionGuardar = '@Url.Action("EditarSolicitud", "SolicitudesClienteInterno")';
+
+    var subtipo = document.getElementById('subtipo');
+    var op = document.getElementById('op');
+    var mkt = document.getElementById('mkt');
+    var marca = document.getElementById('marca');
+    var cantidad = document.getElementById('cantidad');
+    var tipo = document.getElementById('tipo');
+    var datosUrlSoporte = document.getElementById('urlSoporte');
+
+    var listadoUrlSoporte = @Html.Raw(Json.Encode(ViewBag.UrlExternosSolicitud));
+    var counterUrlSoporte = listadoUrlSoporte.length;  
+
+    $(document).ready(function () {
+        debugger
+        easyloader.locale = 'es';
+        $("#seccion-titulo-modal").text('@Html.Raw(ViewBag.TituloModal)');
+
+        //mostrar campos de eclub
+        var slt = document.getElementById('id_tipo');
+        var valor = slt.options[slt.selectedIndex].text;
+
+        if (valor == 'GENERAL') {
+            camposGeneral();
+        }
+
+        if (valor == 'ECLUB' || valor == 'ICARE') {
+            camposEclubIcare();
+        }
+
+        if (valor == 'ENVÍOS ICARE' || valor == 'ENVIOS ICARE') {
+            camposEnviosIcare();
+        }
+
+        if (valor == 'MANTENIMIENTO') {
+            camposMantenimiento();
+        }
+
+        if (valor == 'HTML5') {
+            camposHtml5();
+        }
+
+        if (valor == 'TAGS') {
+            camposTag();
+        }
+
+        if (valor == 'HTML5 Y TAGS') {
+            camposHtml5Tag();
+        }
+
+        //Cambio el tipo de solicitud
+        $("#id_tipo").change(function () {
+            debugger
+            //cargar el subtipo
+            $("#id_subtipo").empty();
+            cargarSubtipoDependiente();
+
+            //mostrar campos de eclub
+            var slt = document.getElementById('id_tipo');
+            var valor = slt.options[slt.selectedIndex].text;
+
+            if (valor == 'GENERAL') {
+                camposGeneral();
+            }
+
+            if (valor == 'ECLUB' || valor == 'ICARE') {
+                camposEclubIcare();
+            }
+
+            if (valor == 'ENVÍOS ICARE' || valor == 'ENVIOS ICARE') {
+                camposEnviosIcare();
+            }
+
+            if (valor == 'MANTENIMIENTO') {
+                camposMantenimiento();
+            }
+
+            if (valor == 'HTML5') {
+                camposHtml5();
+            }
+
+            if (valor == 'TAGS') {
+                camposTag();
+            }
+
+            if (valor == 'HTML5 Y TAGS') {
+                camposHtml5Tag();
+            }
+        })
+
+
+    });
+
+    //Cargar dependencias para tipo
+    function cargarSubtipoDependiente() {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetSubtipoDependiente")',
+            dataType: 'json',
+            data: { id: $("#id_tipo").val() },
+            success: function (data) {
+                debugger
+
+                $.each(data, function (i, catalogo) {
+                    $("#id_subtipo").append('<option value="' + catalogo.Value + '">' + catalogo.Text + '</option>');
+                });
+            },
+            error: function (ex) {
+                debugger
+            }
+        });
+    }
+
+    //campos General
+    function camposGeneral() {
+        subtipo.hidden = true;
+        op.hidden = true;
+        mkt.hidden = true;
+        marca.hidden = true;
+        cantidad.hidden = true;
+        datosUrlSoporte.hidden = true;
+    }
+
+    //campos para Eclub Icare
+    function camposEclubIcare() {
+        subtipo.hidden = false;
+        op.hidden = false;
+        mkt.hidden = false;
+        marca.hidden = false;
+        cantidad.hidden = false;
+        datosUrlSoporte.hidden = true;
+    }
+
+    //campos para Envios Icare
+    function camposEnviosIcare() {
+        subtipo.hidden = false;
+        op.hidden = false;
+        mkt.hidden = false;
+        marca.hidden = false;
+        cantidad.hidden = true;
+        datosUrlSoporte.hidden = true;
+    }
+
+    //campos para mantenimiento
+    function camposMantenimiento() {
+        subtipo.hidden = false;
+        op.hidden = true;
+        mkt.hidden = true;
+        marca.hidden = true;
+        cantidad.hidden = true;
+        datosUrlSoporte.hidden = false;
+    }
+
+    //campos para Html
+    function camposHtml5() {
+        subtipo.hidden = false;
+        op.hidden = false;
+        mkt.hidden = false;
+        marca.hidden = true;
+        cantidad.hidden = true;
+        datosUrlSoporte.hidden = true;
+    }
+
+    //campos para Tag
+    function camposTag() {
+        subtipo.hidden = false;
+        op.hidden = false;
+        mkt.hidden = false;
+        marca.hidden = true;
+        cantidad.hidden = true;
+        datosUrlSoporte.hidden = true;
+    }
+
+    //campos para Html y Tag
+    function camposHtml5Tag() {
+        subtipo.hidden = false;
+        op.hidden = false;
+        mkt.hidden = false;
+        marca.hidden = true;
+        cantidad.hidden = true;
+        datosUrlSoporte.hidden = true;
+    }
+
+    //Agregar url soporte
+    $("#addrow-UrlSoporte").on("click", function () {
+        debugger
+        var nombreDetalleSoporte = $("#detalleUrlSoporte").val();
+        var tipoUrlSoporte = $("#tipoUrlSoporte").val();
+        var urlLinkSoporte = $("#urlDeSoporte").val();
+
+        if (urlLinkSoporte.length === 0) {
+            toastr.error('Ingrese url para poder agregar')
+            return;
+        }
+
+
+        if ((/^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/|www\.)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/.test(urlLinkSoporte)) == false) {
+            toastr.error('La url ingresada es incorrecta');
+            return;
+        }
+
+        var busqueda = listadoUrlSoporte.filter(function (el) { return el.detalleUrl === urlLinkSoporte; });
+        if (busqueda.length > 0) {
+            toastr.error('El url ya existe')
+            return;
+        }
+
+        counterUrlSoporte++;
+
+        debugger
+
+        var newRow = $("<tr>");
+        var cols = "";
+
+        cols += '<td style="display: none;"><input type="text" class="form-control" name="objetoLineaNegocio' + counterUrlSoporte + '" value ="' + counterUrlSoporte + '" disabled/>  </td>';
+        cols += '<td style="display: none;"><input type="text" class="form-control" name="objetoLineaNegocio' + counterUrlSoporte + '" value ="' + tipoUrlSoporte + '" disabled/>  </td>';
+        cols += '<td style="display: none;"><input type="text" class="form-control" name="objetoLineaNegocio' + counterUrlSoporte + '" value ="' + nombreDetalleSoporte + '" disabled/>  </td>';
+        cols += '<td ><input type="text" class="form-control" name="objetoLineaNegocio' + counterUrlSoporte + '" value ="' + urlLinkSoporte + '" disabled/>  </td>';
+        cols += '<td><button type="button" class="ibtnDel btn btn-danger"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>';//'<td><input type="button" class="ibtnDel btn btn-md btn-danger "  value="Eliminar"></td>';
+
+        newRow.append(cols);
+        $("table.order-list-urlSolicitud").append(newRow);
+
+        listadoUrlSoporte.push({
+            "id_url_externo": counterUrlSoporte,
+            "tipoUrl": "SOPORTE",
+            "detalleUrl": urlLinkSoporte,
+            "Url": urlLinkSoporte
+        })
+
+        $('#codigoUrlSoporte').val("");
+        $('#tipoUrlSoporte').val("");
+        $('#detalleUrlSoporte').val("");
+        $('#urlDeSoporte').val("");
+
+    });
+
+    //Eliminar registros que no sean necesarios
+    $("table.order-list-urlSolicitud").on("click", ".ibtnDel", function (event) {
+        debugger
+        var item = $(this).closest("tr");
+        var td = $(item).find("td:first");
+        var input = $(td).find("input")
+        var codigo = $(input).val();
+
+        $(this).closest("tr").remove();
+        counterUrlSoporte -= 1
+
+        listadoUrlSoporte = listadoUrlSoporte.filter(function (el) { return el.id_url_externo !== parseInt(codigo); });
+    });
+     
+    $("#guardar-EditarSolicitud").click(function () {
+        debugger
+        var flag = validarCamposRequeridosFormularioCompleto("form-EditarSolicitud");
+        if (flag) { 
+            var slt = document.getElementById('id_tipo');
+            var valor = slt.options[slt.selectedIndex].text;
+              
+            if (valor == 'MANTENIMIENTO') {
+                if (listadoUrlSoporte.length > 0) {
+                    guardarUsuariosAginados();
+                } else {
+                    toastr.error('@Mensajes.MensajeDatosObligatorios')
+                }
+            }
+            else {
+                guardarUsuariosAginados();
+            }
+        }
+        else
+            toastr.error('@Mensajes.MensajeDatosObligatorios')
+    })
+
+    function guardarUsuariosAginados() {
+        debugger
+        var data_form = JSON.stringify({ "solicitud": $('#form-EditarSolicitud').serializeObject(), "listadoUrlSoporte": listadoUrlSoporte }) 
+        _GuardarModal(data_form, urlAccionGuardar);
+    }
+
+</script>
+
+<form action="#" id="form-EditarSolicitud" role="form" data-toggle="validator" method="post" accept-charset="utf-8">
+    <div class="row">
+        @Html.Hidden("id_solicitud", (int)Model.id_solicitud)
+
+        <br />
+
+        <div class="row fila-seccion">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="etiqueta-seccion control-label col-md-3">Tipo: <span class="requerido"> *</span></label>
+                    <div class="col-md-6">
+                        @Html.DropDownList("id_tipo", ViewBag.ListadoTipo as List<SelectListItem>, new { @class = "form-control campo-requerido", required = "" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row fila-seccion" id="subtipo" hidden>
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="etiqueta-seccion control-label col-md-3">Subtipo: <span class="requerido"> *</span></label>
+                    <div class="col-md-6">
+                        @Html.DropDownList("id_subtipo", ViewBag.ListadoSubtipo as List<SelectListItem>, new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row fila-seccion" id="marca" hidden>
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="etiqueta-seccion control-label col-md-3">Marca: <span class="requerido"> *</span></label>
+                    <div class="col-md-6">
+                        @Html.DropDownList("id_marca", ViewBag.ListadoMarca as List<SelectListItem>, new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row fila-seccion" id="op" hidden>
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="etiqueta-seccion control-label col-md-3">OP:</label>
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.op, new { htmlAttributes = new { @class = "form-control", maxlength = 50 } })
+                        @Html.ValidationMessageFor(model => model.op, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row fila-seccion" id="mkt" hidden>
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="etiqueta-seccion control-label col-md-3">MKT:</label>
+                    <div class="col-md-6">
+                        @Html.EditorFor(model => model.mkt, new { htmlAttributes = new { @class = "form-control", maxlength = 50, } })
+                        @Html.ValidationMessageFor(model => model.mkt, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row fila-seccion" id="cantidad" hidden>
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label class="etiqueta-seccion control-label col-md-3">Cantidad: <span class="requerido"> *</span></label>
+                    <div class="col-md-6">
+                        <input id="cantidad" name="cantidad" class="cantidad easyui-numberbox" style="height:35px; padding:10px;" required="" value="@Model.cantidad" data-options="max:100, min:1, precision:0">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row fila-seccion" id="urlSoporte" hidden>
+            <div class=" col-lg-11">
+                <div>
+                    <div class="box-header with-border">
+                        <h3 class="box-title" id="urlSoporteTitle">URL's Soporte </h3> <span class="requerido"> *</span>
+                    </div>
+                    <div class="box-body">
+                        <div class="row fila-seccion alinear-derecha">
+                            <table id="url-soporte-tabla" class="table order-list-urlSolicitud" style="margin-left: 40px;">
+                                <thead>
+                                    <tr>
+                                        <td hidden>Campo</td>
+                                        <td hidden>Tipo</td>
+                                        <td hidden>Detalle</td>
+                                        <td align="left">&nbsp;URL</td>
+                                    </tr>
+                                    <tr>
+                                        <td hidden>
+                                            <input type="text" id="codigoUrlSoporte" class="form-control" />
+                                        </td>
+
+                                        <td hidden>
+                                            <input type="text" id="tipoUrlSoporte" class="form-control" placeholder="Toda la Imagen ó por Botón" />
+                                        </td>
+
+                                        <td hidden>
+                                            <input type="text" id="detalleUrlSoporte" class="form-control" />
+                                        </td>
+
+                                        <td class="col-sm-11">
+                                            <input type="text" id="urlDeSoporte" class="form-control" placeholder="https://www.ppm.com.ec/develop" />
+                                        </td>
+
+                                        <td class="col-sm-2">
+                                            <a class="deleteRow"></a>
+                                            <button id="addrow-UrlSoporte" type="button" class="btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                                        </td>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    @foreach (var item in UrlExternosSolicitud)
+                                    {
+                                        <tr>
+                                            <td hidden>
+                                                <input type="text" id="codigoUrlSoporte-@item.id_url_externo" value="@item.id_url_externo" class="form-control" />
+                                            </td>
+
+                                            <td hidden>
+                                                <input type="text" id="tipoUrlSoporte-@item.id_url_externo" value="@item.tipo" class="form-control" />
+                                            </td>
+
+                                            <td hidden>
+                                                <input type="text" id="detalleUrlSoporte-@item.id_url_externo" value="@item.detalle" class="form-control" />
+                                            </td>
+
+                                            <td class="col-sm-11">
+                                                <input type="text" id="urlDeSoporte-@item.id_url_externo" value="@item.url" class="form-control" disabled />
+                                            </td>
+
+                                            <td class="col-sm-2">
+                                                <button type="button" class="ibtnDel btn btn-danger"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 10px;">
+            <div class="form-group">
+                <div class="col-md-offset-5 col-md-12">
+                    <input id="guardar-EditarSolicitud" type="button" value="Guardar" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+  

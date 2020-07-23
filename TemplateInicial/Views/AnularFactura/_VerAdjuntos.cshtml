@@ -1,0 +1,20 @@
+﻿@model GestionPPM.Entidades.Modelo.PrefacturaSAFIInfo
+
+<link rel="stylesheet" type="text/css" href="~/Content/themes/default/tree.css">
+<link href="~/Content/themes/default/menu.css" rel="stylesheet" />
+
+<script type="text/javascript" src="~/Scripts/jquery.easyui.min.js"></script>
+
+<script>
+    var urlAccionCargarData = '@Url.Action("AdjuntarArchivo", "DocumentoSAFI", new { id = Model.id_facturacion_safi })';
+    var urlAccionEliminarArchivoAdjunto = '@Url.Action("EliminarArchivo", "DocumentoSAFI")';
+    var ext = "";
+
+    $(document).ready(function () {
+        $("#seccion-titulo-modal").text('@Html.Raw(ViewBag.TituloModal)');
+    });
+
+</script>
+
+<h1>ashjashjas</h1>
+

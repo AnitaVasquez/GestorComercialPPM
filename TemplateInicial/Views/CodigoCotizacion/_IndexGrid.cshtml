@@ -1,0 +1,44 @@
+﻿
+@model IEnumerable<GestionPPM.Entidades.Modelo.CodigoCotizacionInfo>
+@{
+    var acciones = (List<string>)ViewBag.AccionesUsuario;
+}
+
+@(Html
+            .Grid(Model)
+            .Build(columns =>
+            {
+
+
+                //columns.Add(model => model.NombresApellidosUsuario).Titled("Usuario");
+                columns.Add(model => model.fecha_cotizacion).Titled("Fecha Cotización").Formatted("{0:d}");
+                columns.Add(model => model.codigo_cotizacion).Titled("Código Cotización");
+                columns.Add(model => model.EstatusCodigo).Titled("Estatus Código");
+                columns.Add(model => model.Responsable).Titled("Responsable");
+                columns.Add(model => model.nombre_comercial_cliente).Titled("Cliente");
+                columns.Add(model => model.nombre_proyecto).Titled("Nombre Proyecto");
+                columns.Add(model => model.Ejecutivo).Titled("Ejecutivo");
+                columns.Add(model => model.TipoFEE).Titled("Tipo FEE");
+                columns.Add(model => model.TipoProyecto).Titled("Tipo Proyecto");
+                columns.Add(model => model.EtapaCliente).Titled("Fases");
+                columns.Add(model => model.TipoEtapaPTOP).Titled("Etapa PTOP");
+                columns.Add(model => (((Math.Round(model.TotalSubLineaNegocio, 2).ToString("N2")).Replace(",", "-")).Replace(".", ",")).Replace("-", ".")).AppendCss("alinear-derecha").Titled("Total (US$)");
+
+                columns.Add(model => "<button title='Actualizar' style='background-color:#00AD8E;border-color: #00AD8E;' class='btn btn-success " + Auxiliares.GestionBontonesGrid(acciones, "ACCIONES-SIST-01-ACTUALIZAR") + "' onclick='location.href=\"" + @Url.Action("Edit", "CodigoCotizacion", new { id = model.id_codigo_cotizacion }) + "\"' id='editar' data-id=\"" + model.id_codigo_cotizacion + "\"><span class='glyphicon glyphicon-pencil' aria-hidden='true'></span></button>" +
+                 " <a title='Adjuntar archivos.' data-backdrop='static' data-toggle='modal' data-target='#contenido-modal' onclick='_GetCreate({id:" + model.id_codigo_cotizacion + "},\"" + @Url.Action("_AdjuntarArchivos", "CodigoCotizacion") + "\");' style='cursor: pointer;background-color:#ccc;border-color:#ccc; display:" + (model.IdSolicitud == null || Auxiliares.GestionBontonesGrid(acciones, "ACCIONES-SIST-01-ADJUNTOS").Equals("ocultar-accion-catalogo") ? "none" : "block") + ";' class='btn btn-danger " + Auxiliares.GestionBontonesGrid(acciones, "ACCIONES-SIST-01-ADJUNTOS") + "' id='adjuntar-archivos' data-id=\"" + model.id_codigo_cotizacion + "\"><i style='color: black;' class='glyphicon glyphicon-folder-open' aria-hidden='true'></i></a>" +
+                " <a data-backdrop='static' title='Cambiar status de Código de Cotización.'  data-toggle='modal' data-target='#contenido-modal' onclick='_GetCreate({id:" + model.id_codigo_cotizacion + "},\"" + @Url.Action("_CambiarStatus", "CodigoCotizacion") + "\");' style='cursor: pointer;background-color:#FF5E00;border-color:#FF5E00; display:" + (model.CreacionSAFI.Contains("SI") || model.CreacionSAFI.Contains("NO") || Auxiliares.GestionBontonesGrid(acciones, "ACCIONES-SIST-01-APRO-SOLI").Equals("ocultar-accion-catalogo") ? "none" : "block") + ";' class='btn btn-danger " + Auxiliares.GestionBontonesGrid(acciones, "ACCIONES-SIST-01-APRO-SOLI") + "' id='cambiar-status' data-id=\"" + model.id_codigo_cotizacion + "\"><i class='glyphicon glyphicon-random' aria-hidden='true'></i></a>" +
+                " <a title='Ver archivos de las Solicitudes.' data-backdrop='static' data-toggle='modal' data-target='#contenido-modal' onclick='_GetCreate({id:" + model.id_codigo_cotizacion + "},\"" + @Url.Action("_VerSolicitudesAdjuntas", "CodigoCotizacion") + "\");' style='cursor: pointer;background-color:#FFC52D;border-color:#FFC52D; display:" + (model.IdSolicitud == null || Auxiliares.GestionBontonesGrid(acciones, "ACCIONES-SIST-01-VER-SOLI").Equals("ocultar-accion-catalogo") ? "none" : "block") + ";'  class='btn btn-danger " + Auxiliares.GestionBontonesGrid(acciones, "ACCIONES-SIST-01-VER-SOLI") + "' id='ver-adjuntos' data-id=\"" + model.id_codigo_cotizacion + "\"><i style='color: black;' class='glyphicon glyphicon-folder-close' aria-hidden='true'></i></a>").Encoded(false);
+            })
+            .Empty(Mensajes.MensajeNoDataListado)
+            .Id("grid-CodigoCotizacion")
+            .Pageable(pager =>
+            {
+                pager.PagesToDisplay = 5;
+                pager.RowsPerPage = 10;
+            })
+            .Filterable()
+            .Sortable())
+
+
+
+

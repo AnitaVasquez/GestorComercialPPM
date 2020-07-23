@@ -1,0 +1,173 @@
+﻿
+@model GestionPPM.Entidades.Modelo.Cliente 
+
+@* Formato para el template de datos *@
+<link href="~/Content/css/personalizar.css" rel="stylesheet" />
+
+<script>
+    $(document).ready(function () {
+
+        $("#seccion-titulo-modal").text('@Html.Raw(ViewBag.TituloModal)');
+    });
+
+</script>
+
+<form action="#" id="form-codigoCotizacion" role="form" data-toggle="validator" method="post" accept-charset="utf-8">
+    <div class="row">
+        <div class="col-md-offset-1 col-md-10">
+            <div class="form-horizontal">
+
+                <div class="form-group">
+                    <table class="table table-hover mb-0" >
+                        <thead>
+                            <tr>
+                                <th class="th-lg">
+                                    CategorÍa
+                                </th>
+                                <th class="th-lg"> 
+                                    Paga a Tiempo
+                                </th>
+                                <th class="th-lg">
+                                    Solicitan Regularmente
+                                </th>
+                                <th>
+                                    Problemáticos
+                                </th>
+                                <th>
+                                    Refieren a PPM
+                                </th>
+                                <th>
+                                    Valoran el Trabajo
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    A+
+                                </td>
+                                <td>
+                                    SI
+                                </td>
+                                <td>
+                                    SI
+                                </td>
+                                <td>
+                                    NO
+                                </td>
+                                <td>
+                                    SI
+                                </td>
+                                <td>
+                                    SI
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    A
+                                </td>
+                                <td>
+                                    SI
+                                </td>
+                                <td>
+                                    SI
+                                </td>
+                                <td>
+                                    SI O NO
+                                </td>
+                                <td>
+                                    NO
+                                </td>
+                                <td>
+                                    SI
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    A-
+                                </td>
+                                <td>
+                                    SI
+                                </td>
+                                <td>
+                                    SI
+                                </td>
+                                <td>
+                                    SI O NO
+                                </td>
+                                <td>
+                                    NO
+                                </td>
+                                <td>
+                                    NO
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    B
+                                </td>
+                                <td>
+                                    SI
+                                </td>
+                                <td>
+                                    NO
+                                </td>
+                                <td>
+                                    SI O NO
+                                </td>
+                                <td>
+                                    SI O NO
+                                </td>
+                                <td>
+                                    SI
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    C
+                                </td>
+                                <td>
+                                    NO
+                                </td>
+                                <td>
+                                    NO
+                                </td>
+                                <td>
+                                    SI O NO
+                                </td>
+                                <td>
+                                    SI O NO
+                                </td>
+                                <td>
+                                    NO
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    D
+                                </td>
+                                <td>
+                                    NO
+                                </td>
+                                <td>
+                                    NO
+                                </td>
+                                <td>
+                                    SI O NO
+                                </td>
+                                <td>
+                                    SI O NO
+                                </td>
+                                <td>
+                                    SI O NO
+                                </td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</form>

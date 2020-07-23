@@ -1,0 +1,99 @@
+﻿@model GestionPPM.Entidades.Modelo.SolicitudCliente
+@using GestionPPM.Entidades.Metodos
+
+
+@* Formato para el template de datos *@
+<link href="~/Content/css/personalizar.css" rel="stylesheet" />
+
+@*@if (Model.id_estado_solicitud == 762)
+{
+    <script>
+        $(document).ready(function () {
+            debugger
+            var select = document.getElementById("id_estado_solicitud");
+
+            var op = select.getElementsByTagName("option")
+
+            op[1].style.display = "none";
+        });
+    </script>
+}
+@if (Model.id_estado_solicitud == 763)
+{
+    <script>
+        $(document).ready(function () {
+            debugger
+            var select = document.getElementById("id_estado_solicitud");
+
+            var op = select.getElementsByTagName("option")
+
+            op[1].style.display = "none";
+            op[2].style.display = "none";
+        });
+    </script>
+}
+@if (Model.id_estado_solicitud == 764)
+{
+    <script>
+        $(document).ready(function () {
+            debugger
+            var select = document.getElementById("id_estado_solicitud");
+
+            var op = select.getElementsByTagName("option")
+
+            op[1].style.display = "none";
+            op[2].style.display = "none";
+            op[3].style.display = "none";
+        });
+    </script>
+}*@
+
+
+<script>
+    var urlAccionEditarStatusCodigo = '@Url.Action("CambiarEstadoSolicitud", "SolicitudesClienteInterno")';
+
+    $(document).ready(function () {
+        $("#seccion-titulo-modal").text('@Html.Raw(ViewBag.TituloModal)');
+    });
+
+    $("#guardar-status").click(function () {
+        debugger
+        var flag = validarCamposRequeridosFormularioCompleto("form-codigoCotizacion");
+        if (flag)
+            guardarStatus(); // continue the submit unbind preventDefault
+        else
+            toastr.error('@Mensajes.MensajeDatosObligatorios')
+    })
+
+    function guardarStatus() {
+        debugger
+        var data_form = JSON.stringify({ "solicitud": $('#form-codigoCotizacion').serializeObject() })
+        _GuardarModalStatusCodigoCotizacion(data_form, urlAccionEditarStatusCodigo);
+    }
+
+</script>
+
+<form action="#" id="form-codigoCotizacion" role="form" data-toggle="validator" method="post" accept-charset="utf-8">
+    <div class="row">
+        <div class="col-md-offset-2 col-md-8">
+            <div class="form-horizontal">
+
+                @Html.Hidden("id_solicitud", Model.id_solicitud)
+
+                <div class="form-group">
+                    <label class="etiqueta-seccion control-label col-md-3">Estado Solicitud: <span class="requerido"> *</span></label>
+                    <div class="col-md-7">
+                        @Html.DropDownList("id_estado_solicitud", CatalogoEntity.ObtenerListadoCatalogosByCodigoSinOrdenar("SLT-01", Model.id_estado_solicitud.ToString()), Etiquetas.TituloComboVacio, new { @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-4 col-md-12">
+                        <input id="guardar-status" type="button" value="Guardar" class="btn btn-default" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+

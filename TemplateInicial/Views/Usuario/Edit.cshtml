@@ -1,0 +1,299 @@
+﻿@model GestionPPM.Entidades.Modelo.UsuarioCE
+
+@{
+    ViewBag.Title = "Editar Usuario";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@* Formato para el template de datos *@
+<link href="~/Content/css/personalizar.css" rel="stylesheet" />
+
+<script>
+    $(document).ready(function () {
+
+        //Obtener el tipo de usuario
+        var tipoUsuarioId = '@ViewBag.tipoUsuarioId';
+
+        //Los campos que varian la visualizacion
+        var div_cliente_asociado1 = document.getElementById('cliente_asociado');
+        var div_area_departamento_lista1 = document.getElementById('area_departamento_lista');
+        var div_area_departamento_texto1 = document.getElementById('area_departamento_texto');
+        var div_codigo_usuario = document.getElementById('codigo_usuario_etiqueta');
+        var div_link_firma = document.getElementById('link_firma');
+        var div_cargo_lista1 = document.getElementById('cargo_lista');
+        var div_cargo_texto1 = document.getElementById('cargo_texto');
+        var div_validar_correo = document.getElementById('validar_correo');
+
+        if (tipoUsuarioId == 109 || tipoUsuarioId == null) {
+            div_cliente_asociado1.hidden = true;
+            div_area_departamento_texto1.hidden = true;
+            div_area_departamento_lista1.hidden = false;
+            div_cargo_lista1.hidden = false;
+            div_cargo_texto1.hidden = true;
+            div_codigo_usuario.hidden = false;
+            div_link_firma.hidden = false;
+            div_validar_correo.hidden = false;
+        }
+
+        if (tipoUsuarioId == 110) {
+            div_cliente_asociado1.hidden = false;
+            div_area_departamento_texto1.hidden = false;
+            div_area_departamento_lista1.hidden = true;
+            div_cargo_lista1.hidden = true;
+            div_cargo_texto1.hidden = false;
+            div_codigo_usuario.hidden = true;
+            div_link_firma.hidden = true;
+            div_validar_correo.hidden = true;
+        }
+
+        var resultado = @Html.Raw(Json.Encode(ViewBag.Resultado));
+        var estado = @Html.Raw(Json.Encode(ViewBag.Estado));
+
+        if (estado != "" && estado != null) {
+            if (estado == "True") {
+                toastr.success(resultado)
+            } else {
+                toastr.error(resultado)
+            }
+        }
+    });
+
+</script>
+
+@using (Html.BeginForm())
+{
+    
+    @Html.HiddenFor(model => model.id_usuario)
+    @Html.HiddenFor(model => model.clave_usuario)
+    @Html.HiddenFor(model => model.codigo_usuario)
+    @Html.HiddenFor(model => model.id_empresa)
+    @Html.HiddenFor(model => model.activo_usuario)
+    @Html.HiddenFor(model => model.tipo_usuario)
+    @Html.HiddenFor(model => model.mail_usuario)
+    @Html.HiddenFor(model => model.secu_usua)
+    @Html.HiddenFor(model => model.id_empresa)
+    @Html.HiddenFor(model => model.reset_clave)
+
+    <div class="row">
+        <div class="col-md-12">
+            <form id="rol" class="form-horizontal" method="POST" role="form" action="/Candidate/editprofileex/">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="row">
+                    <div class="col-md-offset-2 col-md-8">
+                        <div class="panel">
+
+                            <div class="panel-heading-create custom-header-panel">
+                                <h4>@Etiquetas.TituloPanelEdicionUsuario</h4>
+                            </div>
+
+                            <div class="panel-body">
+                                <div class="form-horizontal">
+                                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3">Tipo de Usuario: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("tipo_usuario", ViewBag.listadoTipoUsuario as List<SelectListItem>, new { @class = "form-control", disabled = "disabled" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" id="cliente_asociado">
+                                        <label class="control-label col-md-3">Cliente Asociado: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("cliente_asociado", ViewBag.listadoClientes as List<SelectListItem>, Etiquetas.TituloComboVacio, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3">Nombre: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8" onkeypress="return soloLetras(event)">
+                                            @Html.EditorFor(model => model.nombre_usuario, new { htmlAttributes = new { @class = "form-control", maxlength = 150 } })
+                                            @Html.ValidationMessageFor(model => model.nombre_usuario, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3">Apellidos: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8" onkeypress="return soloLetras(event)">
+                                            @Html.EditorFor(model => model.apellido_usuario, new { htmlAttributes = new { @class = "form-control", maxlength = 200 } })
+                                            @Html.ValidationMessageFor(model => model.apellido_usuario, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" id="area_departamento_lista">
+                                        <label class="control-label col-md-3">Área o Departamento: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("area_departamento", ViewBag.ListadoAreasDepartamentos as List<SelectListItem>, Etiquetas.TituloComboVacio, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" id="area_departamento_texto">
+                                        <label class="control-label col-md-3">Área o Departamento: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.EditorFor(model => model.area_departamento_texto, new { htmlAttributes = new { @class = "form-control", maxlength = 200 } })
+                                            @Html.ValidationMessageFor(model => model.area_departamento_texto, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group" id="cargo_lista">
+                                        <label class="control-label col-md-3">Cargo: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("cargo_usuario", ViewBag.ListadoCargos as List<SelectListItem>, Etiquetas.TituloComboVacio, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" id="cargo_texto">
+                                        <label class="control-label col-md-3">Cargo: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.EditorFor(model => model.cargo_usuario_texto, new { htmlAttributes = new { @class = "form-control", maxlength = 200 } })
+                                            @Html.ValidationMessageFor(model => model.cargo_usuario_texto, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3">País: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("pais", ViewBag.listadoPaises as List<SelectListItem>, Etiquetas.TituloComboVacio, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3">Ciudad: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("ciudad", ViewBag.listadoCiudades as List<SelectListItem>, Etiquetas.TituloComboVacio, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3">Dirección: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.EditorFor(model => model.direccion_usuario, new { htmlAttributes = new { @class = "form-control" }, maxlength = 500 })
+                                            @Html.ValidationMessageFor(model => model.direccion_usuario, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3">Mail: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.EditorFor(model => model.mail_usuario, new { htmlAttributes = new { @class = "form-control", maxlength = 300, disabled = "disabled" } })
+                                            @Html.ValidationMessageFor(model => model.mail_usuario, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3">Teléfono: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8" onkeypress="if ( isNaN( String.fromCharCode(event.keyCode) )) return false;">
+                                            @Html.EditorFor(model => model.telefono_usuario, new { htmlAttributes = new { @class = "form-control", maxlength = 15 } })
+                                            @Html.ValidationMessageFor(model => model.telefono_usuario, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3">Celular:</label>
+                                        <div class="col-md-8" onkeypress="if ( isNaN( String.fromCharCode(event.keyCode) )) return false;">
+                                            @Html.EditorFor(model => model.celular_usuario, new { htmlAttributes = new { @class = "form-control", maxlength = 15 } })
+                                            @Html.ValidationMessageFor(model => model.celular_usuario, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3">Rol: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("id_rol", ViewBag.listadoRoles as List<SelectListItem>, Etiquetas.TituloComboVacio, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+
+                                    <div style="display:none" class="form-group">
+                                        <label class="control-label col-md-3">Estado<span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("estado_usuario", new SelectList(new List<SelectListItem> { new SelectListItem { Text = "Activo", Value = "True" },
+                                            new SelectListItem { Text = "Inactivo", Value = "False" },}, "Value", "Text", Model.estado_usuario), new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.estado_usuario, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" id="codigo_usuario_etiqueta">
+                                        <label class="control-label col-md-3">Código Vendedor:<span class="requerido"> *</span></label>
+                                        <div class="col-md-8" onkeypress="if ( isNaN( String.fromCharCode(event.keyCode) )) return false;">
+                                            @Html.EditorFor(model => model.secu_usua, new { htmlAttributes = new { @class = "form-control", maxlength = 2, disabled = "disabled" } })
+                                            @Html.ValidationMessageFor(model => model.secu_usua, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" id="link_firma">
+                                        <label class="control-label col-md-3">Link Firma:<span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.EditorFor(model => model.link_firma, new { htmlAttributes = new { @class = "form-control", maxlength = 500 } })
+                                            @Html.ValidationMessageFor(model => model.link_firma, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" id="validar_correo">
+                                        <label class="control-label col-md-3">Validar Office 365: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            <div>
+                                                @Html.DropDownList("validacion_correo", new SelectList(new List<SelectListItem> { new SelectListItem { Text = "Si", Value = "True"},
+                                                new SelectListItem { Text = "No", Value = "False" },}, "Value", "Text", null), new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.validacion_correo, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <br />
+
+                                    <div class="form-group">
+                                        <div class="col-md-offset-5 col-md-12">
+                                            <input type="submit" value="Guardar" class="btn btn-default" />
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            @Html.ActionLink("Regresar", "Index", null, new { @class = "btn btn-default" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+}
+
+<script>
+    function soloLetras(e) {
+        key = e.keyCode || e.which;
+        tecla = String.fromCharCode(key).toLowerCase();
+        letras = " áéíóúabcdefghijklmnñopqrstuvwxyz";
+        especiales = "8-37-39-46";
+
+        tecla_especial = false
+        for (var i in especiales) {
+            if (key == especiales[i]) {
+                tecla_especial = true;
+                break;
+            }
+        }
+
+        if (letras.indexOf(tecla) == -1 && !tecla_especial) {
+            return false;
+        }
+    }
+</script>
+
+<script>
+$(document).ready(function () {
+    $("#pais").change(function () {
+        debugger;
+        $("#ciudad").empty();
+        $.getJSON('@Url.Action("GetCiudad", "Usuario")', { id: $('#pais').val() }, function (data) {
+            $.each(data, function () {
+                $("#ciudad").append("<option value=" + this.Value + ">" + this.Text + "</option>");
+            });
+        });
+    });
+});
+</script>
+
+
+
+

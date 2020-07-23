@@ -1,0 +1,266 @@
+﻿@using GestionPPM.Entidades.Modelo
+@using GestionPPM.Entidades.Metodos
+
+@{
+    var Modelo = (CostoSublineaNegocio)ViewBag.Modelo;
+}
+
+@* Formato para el template de datos *@
+<link href="~/Content/css/personalizar.css" rel="stylesheet" />
+
+<form action="#" id="form-sublineaNegocio" role="form" data-toggle="validator" method="post" accept-charset="utf-8">
+    <div class="row">
+        <div class="col-md-offset-2 col-md-8">
+            <div class="form-horizontal">
+
+                @Html.Hidden("IDCostoSublineaNegocio", Modelo.IDCostoSublineaNegocio)
+                @Html.Hidden("Estado", Modelo.Estado)
+
+
+                <div class="form-group">
+                    <label class="control-label col-md-4">Línea de Negocio: <span class="requerido"> *</span></label>
+                    <div class="col-md-8">
+                        @Html.DropDownList("id_linea_negocio", LineaNegocioEntity.ConsultarLineaNegocioInverso(Modelo.CatalogoSublineaNegocioID, Modelo.CatalogoSublineaNegocioID.ToString()), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-4">Segmentación 1: <span class="requerido"> *</span></label>
+                    <div class="col-md-8"> 
+                        @Html.DropDownList("id_sublinea_negocio", SublineaNegocioEntity.ConsultarSublineaNegocioInverso(Modelo.CatalogoSublineaNegocioID, Modelo.CatalogoSublineaNegocioID.ToString()), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-4">Segmentación 2: <span class="requerido"> *</span></label>
+                    <div class="col-md-8">
+                        @Html.DropDownList("id_producto_general", ProductosGeneralGestorEntity.ConsultarProductosGeneralInverso(Modelo.CatalogoSublineaNegocioID, Modelo.CatalogoSublineaNegocioID.ToString()), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-4">Producto Comercial: <span class="requerido"> *</span></label>
+                    <div class="col-md-8">
+                        @Html.DropDownList("CatalogoSublineaNegocioID", ProductosGestorEntity.ConsultarProductosGestorInverso(Modelo.CatalogoSublineaNegocioID, Modelo.CatalogoSublineaNegocioID.ToString()), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido" })
+                    </div>
+                </div>
+
+                <hr />
+
+
+                <div class="form-group">
+                    <label class="control-label col-md-4">Tipo de Solicitud: <span class="requerido"> *</span></label>
+                    <div class="col-md-8">
+                        @Html.DropDownList("CatalogoTipoSolicitudID", CatalogoEntity.ObtenerListadoCatalogosByCodigo("TSL-01", Modelo.CatalogoTipoSolicitudID.ToString()), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-4">Subtipo de Solicitud: <span class="requerido"> *</span></label>
+                    <div class="col-md-8">
+                        @Html.DropDownList("CatalogoSubTipoSolicitudID", CatalogoEntity.ConsultarCatalogoPorPadreByCodigo("SUBTIPO", Modelo.CatalogoTipoSolicitudID, Modelo.CatalogoSubTipoSolicitudID.HasValue ? Modelo.CatalogoSubTipoSolicitudID.Value.ToString() : string.Empty), new { @class = "form-control campo-requerido" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="etiqueta-seccion control-label col-md-4">Valor: <span class="requerido"> *</span></label>
+                    <div class="col-md-8">
+                        <div class="input-group">
+                            <span class="input-group-addon">US$</span>
+                            <input id="Valor" name="Valor" class="easyui-numberbox campo-requerido" style="height:35px; padding:10px;" required="" data-options="max:9999999999.999999,precision:6, groupSeparator:'.', decimalSeparator:','">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-4 col-md-12">
+                        <input id="guardar-costoSublineaNegocio" type="button" value="Guardar" class="btn btn-default" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<script src="~/Scripts/easyloader.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.easyui.min.js"></script>
+<script src="~/Scripts/locale/easyui-lang-es.js"></script>
+
+<script>
+    var urlAccionGuardar = '@Url.Action("CreateOrUpdate", "CostoSublineaNegocio")';
+
+    $(document).ready(function () {
+        debugger
+        easyloader.locale = 'es';
+        $("#seccion-titulo-modal").text('@Html.Raw(ViewBag.TituloModal)');
+
+        var producto = '@Modelo.CatalogoSublineaNegocioID';
+         
+
+         
+
+        setTimeout(function () { $('#Valor').numberbox('setValue', '@Modelo.Valor'); }, 500);
+
+        //Dropdownlist Selectedchange event
+        $("#CatalogoTipoSolicitudID").change(function (e) {
+            debugger
+            var elemento = $(e.currentTarget);
+            var id = elemento.attr("id");
+            var valor = elemento.val();
+
+            $("#CatalogoSubTipoSolicitudID").empty();
+
+            cargarDependientes(valor, "CatalogoSubTipoSolicitudID")
+            return false;
+        })
+
+        $("#id_linea_negocio").change(function () {
+            debugger
+            $("#id_sublinea_negocio").empty();
+            $("#id_sublinea_negocio").append('<option value="' + 0 + '">' + "Seleccione una opción" + '</option>');
+
+            if ($("#id_linea_negocio").val() > 0) {
+                cargarSegmentacion1();
+            }
+            return false;
+        })
+
+        $("#id_sublinea_negocio").change(function () {
+            debugger
+            $("#id_producto_general").empty();
+            $("#id_producto_general").append('<option value="' + 0 + '">' + "Seleccione una opción" + '</option>');
+
+            if ($("#id_sublinea_negocio").val() > 0) {
+                cargarSegmentacion2();
+            }
+            return false;
+        })
+
+        $("#id_producto_general").change(function () {
+            debugger
+            $("#CatalogoSublineaNegocioID").empty();
+            $("#CatalogoSublineaNegocioID").append('<option value="' + 0 + '">' + "Seleccione una opción" + '</option>');
+
+            if ($("#id_producto_general").val() > 0) {
+                cargarProductosComercial();
+            }
+            return false;
+        })
+
+    });
+
+    $("#guardar-costoSublineaNegocio").click(function () {
+        debugger
+        var flag = validarCamposRequeridosFormularioCompleto("form-sublineaNegocio");
+        if (flag && !ValorSublineaNegocioIncorrecto())
+            guardarSublineaNegocio();
+        else
+            toastr.error('@Mensajes.MensajeDatosObligatorios')
+    })
+
+    function ValorSublineaNegocioIncorrecto() {
+        debugger
+        let valorSublinea = parseFloat($('#Valor').numberbox('getValue'));
+        if (valorSublinea == 0 || Number.isNaN(valorSublinea))
+            return true;
+        else
+            return false;
+    }
+
+    function guardarSublineaNegocio() {
+        debugger
+        var data_form = JSON.stringify({ "formulario": $('#form-sublineaNegocio').serializeObject()})
+        _GuardarModal(data_form, urlAccionGuardar);
+    }
+
+    function cargarDependientes(valor, idDDLDependiente) {
+        $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetDependientesTipoSolicitud")',
+                    dataType: 'json',
+                    data: { id: valor },
+                    success: function (data) {
+                        debugger
+                        var data = data.Data;
+                        // states contains the JSON formatted list
+                        // of states passed from the controller
+                        $.each(data, function (i, catalogo) {
+                            $("#" + idDDLDependiente).append('<option value="' + catalogo.Value + '">' + catalogo.Text + '</option>');
+                        });
+                    },
+                    error: function (ex) {
+                        debugger
+                        console.log(ex)
+                        //toastr.error(ex)
+                    }
+        });
+    } 
+
+    function cargarSegmentacion1() {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetSegmentacion1")',
+            dataType: 'json',
+            data: { id: $("#id_linea_negocio").val() },
+            success: function (data) {
+                debugger
+                $("#id_sublinea_negocio").empty();
+                $("#id_sublinea_negocio").append('<option value="' + 0 + '">' + "Seleccione una opción" + '</option>');
+                $.each(data, function (i, catalogo) {
+                    debugger
+                    $("#id_sublinea_negocio").append('<option value="' + catalogo.Value + '">' + catalogo.Text + '</option>');
+                });
+            },
+            error: function (ex) {
+                debugger
+                toastr.error(ex)
+            }
+        });
+    }
+
+    function cargarSegmentacion2() {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetSegmentacion2")',
+            dataType: 'json',
+            data: { id: $("#id_sublinea_negocio").val() },
+            success: function (data) {
+                debugger
+                $("#id_producto_general").empty();
+                $("#id_producto_general").append('<option value="' + 0 + '">' + "Seleccione una opción" + '</option>');
+                $.each(data, function (i, catalogo) {
+                    $("#id_producto_general").append('<option value="' + catalogo.Value + '">' + catalogo.Text + '</option>');
+                });
+            },
+            error: function (ex) {
+                debugger
+            }
+        });
+    }
+
+     function cargarProductosComercial() {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetProductoComercial")',
+            dataType: 'json',
+            data: { id: $("#id_producto_general").val() },
+            success: function (data) {
+                debugger
+                $("#CatalogoSublineaNegocioID").empty();
+                $("#CatalogoSublineaNegocioID").append('<option value="' + 0 + '">' + "Seleccione una opción" + '</option>');
+                $.each(data, function (i, catalogo) {
+                    $("#CatalogoSublineaNegocioID").append('<option value="' + catalogo.Value + '">' + catalogo.Text + '</option>');
+                });
+            },
+            error: function (ex) {
+                debugger
+            }
+        });
+    }
+
+    
+
+</script>
+
+

@@ -1,0 +1,222 @@
+﻿@model GestionPPM.Entidades.Modelo.PrefacturaSAFIInfo
+
+<link rel="stylesheet" type="text/css" href="~/Content/themes/default/tree.css">
+<link href="~/Content/themes/default/menu.css" rel="stylesheet" />
+
+<script type="text/javascript" src="~/Scripts/jquery.easyui.min.js"></script>
+
+<style>
+    .fixed-width {
+        width: 150px;
+    }
+
+    .checkbox input[type="checkbox"] {
+        opacity: 0;
+    }
+
+    .checkbox label {
+        position: relative;
+        display: inline-block;
+        /*16px width of fake checkbox + 6px distance between fake checkbox and text*/
+        padding-left: 22px;
+    }
+
+        .checkbox label::before,
+        .checkbox label::after {
+            position: absolute;
+            content: "";
+            /*Needed for the line-height to take effect*/
+            display: inline-block;
+        }
+
+        /*Outer box of the fake checkbox*/
+        .checkbox label::before {
+            height: 16px;
+            width: 16px;
+            border: 1px solid;
+            left: 0px;
+            /*(24px line-height - 16px height of fake checkbox) / 2 - 1px for the border
+     *to vertically center it.
+     */
+            top: 3px;
+        }
+
+        /*Checkmark of the fake checkbox*/
+        .checkbox label::after {
+            height: 5px;
+            width: 9px;
+            border-left: 2px solid;
+            border-bottom: 2px solid;
+            transform: rotate(-45deg);
+            left: 4px;
+            top: 7px;
+        }
+
+    /*Hide the checkmark by default*/
+    .checkbox input[type="checkbox"] + label::after {
+        content: none;
+    }
+
+    /*Unhide on the checked state*/
+    .checkbox input[type="checkbox"]:checked + label::after {
+        content: "";
+    }
+
+    /*Adding focus styles on the outer-box of the fake checkbox*/
+    .checkbox input[type="checkbox"]:focus + label::before {
+        outline: rgb(59, 153, 252) auto 5px;
+    }
+</style>
+
+<script>
+    var urlAccionCargarData = '@Url.Action("AdjuntarArchivo", "DocumentoSAFI", new { id = Model.id_facturacion_safi })';
+    var urlAccionEliminarArchivoAdjunto = '@Url.Action("EliminarArchivo", "DocumentoSAFI")';
+    var ext = "";
+
+    $(document).ready(function () {
+        $("#seccion-titulo-modal").text('@Html.Raw(ViewBag.TituloModal)');
+        setTimeout(function () { $(".tree-hit").hide(); }, 100);
+    });
+
+    function myLoadFilter(data, parent) {
+            debugger
+			var state = $.data(this, 'tree');
+
+            function setData() {
+                debugger
+		    	var serno = 1;
+		        var todo = [];
+		        for(var i=0; i<data.length; i++){
+		            todo.push(data[i]);
+		        }
+		        while(todo.length){
+		            var node = todo.shift();
+		            if (node.id == undefined){
+		            	node.id = '_node_' + (serno++);
+		            }
+		            if (node.children){
+		                node.state = 'closed';
+		                node.children1 = node.children;
+		                node.children = undefined;
+		                todo = todo.concat(node.children1);
+		            }
+		        }
+		        state.tdata = data;
+		    }
+            function find(id) {
+                debugger
+		    	var data = state.tdata;
+		    	var cc = [data];
+		    	while(cc.length){
+		    		var c = cc.shift();
+		    		for(var i=0; i<c.length; i++){
+		    			var node = c[i];
+		    			if (node.id == id){
+		    				return node;
+		    			} else if (node.children1){
+		    				cc.push(node.children1);
+		    			}
+		    		}
+		    	}
+		    	return null;
+		    }
+
+		    setData();
+
+		    var t = $(this);
+		    var opts = t.tree('options');
+		    opts.onBeforeExpand = function(node){
+	    		var n = find(node.id);
+	    		if (n.children && n.children.length){return}
+		    	if (n.children1){
+		    		var filter = opts.loadFilter;
+		    		opts.loadFilter = function(data){return data;};
+		    		t.tree('append',{
+		    			parent:node.target,
+		    			data:n.children1
+		    		});
+		    		opts.loadFilter = filter;
+		    		n.children = n.children1;
+		    	}
+		    };
+			return data;
+    }
+
+    $('#file-upload').change(function () {
+        debugger
+        var nombreArchivo = $('#file-upload')[0].files[0].name;
+        ext = nombreArchivo.split('.').pop();
+        $('.custom-file-upload').text(nombreArchivo);
+    });
+
+    $('#reversar-consolidado').click(function () {
+        location.href = '@Url.Action("ReversarConsolidacion", "Reversar")?listadoIDs=' + @Model.id_facturacion_safi;
+    });
+
+    function descargarArchivoAdjunto() {
+        debugger
+        var node = $('#archivos-DocumentoSAFI').tree('getSelected');
+        var rutaArchivo = node.desc;
+        var esCarpeta = node.esCarpeta;
+        if (!esCarpeta)
+            location.href = '@Url.Action("DescargarArchivoAdjunto", "DocumentoSAFI")?path=' + rutaArchivo;
+        else
+            toastr.warning("Solo puede descargar archivos.");
+    }
+
+    function eliminarArchivoAdjunto() {
+        debugger
+        var node = $('#archivos-DocumentoSAFI').tree('getSelected');
+        console.log(node)
+
+        var rutaArchivo = node.desc;
+
+        EliminarArchivoAdjunto(rutaArchivo, urlAccionEliminarArchivoAdjunto, "seccion-archivos-adjuntos", "archivos-DocumentoSAFI");
+
+        $('#archivos-DocumentoSAFI').tree('remove', node.target);
+    }
+
+
+</script>
+
+@*<div class="row">
+    <div class="col-md-12">
+        <div class="checkbox">
+            <input type="checkbox" value="@Model.aprobacion_prefactura_ejecutivo.Value" @( Model.aprobacion_prefactura_ejecutivo.Value ? "checked" : "" ) id="aprobacion_prefactura_ejecutivo">
+            <label for="aprobacion_prefactura_ejecutivo">Aprobar</label>
+        </div>
+    </div>
+</div>*@
+
+@*<div class="row">
+    <div class="col-sm-9">
+        <label title="Cargar archivo" for="file-upload" class="custom-file-upload">
+            <i class="fa fa-cloud-upload"></i> Seleccionar Archivo
+        </label>
+        <input id="file-upload" type="file" accept="application/pdf" />
+    </div>
+    <div class="col-sm-3">
+        <input style="width: 100%; background-color:#00AD8E;border-color: #00AD8E;" class="btn btn-primary" type="submit" id="adjuntar-archivo" value="Adjuntar" />
+    </div>
+</div>*@
+
+<div id="seccion-archivos-adjuntos" class="easyui-panel" style="padding:5px;">
+    <ul id="archivos-DocumentoSAFI" class="easyui-tree" data-options="url:'@Url.Action("_GetArchivosAdjuntos", "DocumentoSAFI", new { id =  Model.id_facturacion_safi })',method:'get',loadFilter:myLoadFilter,animate:true,onContextMenu: function(e,node){
+                    e.preventDefault();
+                    $(this).tree('select',node.target);
+                    $('#menu-archivo').menu('show',{
+                        left: e.pageX,
+                        top: e.pageY
+                    });
+                }"></ul>
+</div>
+
+<div id="menu-archivo" class="easyui-menu" style="width:120px;">
+    <div onclick="descargarArchivoAdjunto()" data-options="iconCls:'glyphicon glyphicon-floppy-save'">Descargar</div>
+    @*<div onclick="eliminarArchivoAdjunto()" data-options="iconCls:'glyphicon glyphicon-trash'">Eliminar</div>*@
+</div>
+
+<div style="text-align: center;" class="center">
+    <input title="Revisar el documento primero por favor." style="background-color:#00AD8E;border-color: #00AD8E;" class="btn btn-primary" type="submit" id="reversar-consolidado" value="REVERSAR" />
+</div>
+

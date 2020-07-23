@@ -1,0 +1,583 @@
+﻿@using GestionPPM.Entidades.Metodos
+@model GestionPPM.Entidades.Modelo.Organigrama
+
+@{
+    ViewBag.Title = "Organigrama";
+    Layout = "~/Views/Shared/_LayoutBasico.cshtml";
+    var ListadoUsuarios = ViewBag.ListadoUsuarios;
+    var acciones = ViewBag.AccionesUsuario;
+
+}
+<link href="~/Content/css/personalizar.css" rel="stylesheet" />
+
+<link href="~/Content/css/OrgChart/custom.css" rel="stylesheet" />
+<link href="~/Content/css/OrgChart/jquery.jOrgChart.css" rel="stylesheet" />
+<style type="text/css">
+    .slidecontainer {
+        width: 100%;
+    }
+
+    .slider {
+        -webkit-appearance: none;
+        width: 100%;
+        height: 23px;
+        background: #ffffff; /*#d3d3d3*/
+        outline: none;
+        opacity: 0.7;
+        -webkit-transition: .2s;
+        transition: opacity .2s;
+        cursor: zoom-in
+    }
+
+        .slider:hover {
+            opacity: 1;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            background: #449d44;
+            cursor: pointer;
+        }
+
+        .slider::-moz-range-thumb {
+            width: 25px;
+            height: 25px;
+            background: #4CAF50;
+            cursor: pointer;
+        }
+
+    .board {
+        position: absolute;
+        border: 1px solid black;
+    }
+
+    .jOrgChart .node {
+        background-color: #00B5E6;
+        display: inline-block;
+        width: 177px !important;
+        height: 60px;
+        z-index: 10;
+        margin: 0 2px;
+    }
+
+    #getjson {
+        width: 100px;
+        height: 50px;
+        border-radius: 3px;
+        margin-left: 20px;
+        margin-top: 20px;
+    }
+
+    ul#upload-chart {
+        float: right;
+        list-style: none outside none;
+    }
+
+        ul#upload-chart li {
+            background: none repeat scroll 0 0 #FFC52D;
+            border: 1px solid #808080;
+            border-radius: 2px;
+            /*height: 44px;*/
+            margin-top: 5px;
+            padding-top: 5px;
+            width: 157px;
+            z-index: 100;
+            padding-left: 0px;
+        }
+
+    #fancy_edit,
+    #fancy_add {
+        position: fixed;
+        top: 100px;
+        width: 500px;
+        background: #fff;
+        right: 0;
+        left: 0;
+        margin: auto;
+        padding: 20px;
+        border: 3px solid red;
+        border-radius: 5px;
+        z-index: 99999;
+    }
+
+        #fancy_edit i,
+        #fancy_add i {
+            position: absolute;
+            top: 0;
+            width: 15px;
+            height: 15px;
+            right: 0;
+            color: #000;
+            background: gray;
+            opacity: 1;
+            font-size: 15px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+    .scroll-zone {
+        overflow: scroll;
+        width: 100%;
+        /*height: 500px;*/
+        border: 1px solid #f8f8f9;
+    }
+</style>
+
+<form action="#" id="form-organigrama" role="form" data-toggle="validator" method="post" accept-charset="utf-8">
+
+    @Html.Hidden("IDOrganigrama", Model.IDOrganigrama)
+    @Html.Hidden("Codigo", Model.Codigo)
+    @Html.Hidden("Estado", Model.Estado)
+    @Html.Hidden("EmpresaID", Model.EmpresaID)
+
+    @Html.Hidden("Nombre", Model.Nombre)
+    @Html.Hidden("Descripcion", Model.Descripcion)
+    @Html.Hidden("TipoOrganigramaID", Model.TipoOrganigramaID)
+
+    @Html.Hidden("EstructuraOrganigrama", string.Empty)
+
+    <div id="contenido-organigrama" class="row">
+        <div class="row">
+            <div class="col-lg-12">
+                <div id="in" style="display: none">
+                </div>
+
+                <div class="row">
+
+
+
+                    <div class="col-lg-10 " style="padding-right: 3px !important;">
+
+                        <div class="panel">
+                            <div class="panel-heading-create custom-header-panel">
+                                <h4>
+                                    ORGANIGRAMA
+                                    <div class="btn-group pull-right">
+                                        <div class="row">
+                                            <div class="col-lg-7">
+                                                <input title="Zoom organigrama." class="slider" id="test" min="1" max="20" value='10' step="1" onchange="showVal(this.value)" type="range" />
+                                            </div>
+                                            <div class="col-lg-5">
+                                                <button title="Desplazar organigrama hacia la izquierda." type="button" class="btn btn-xs btn-success" id="slideLeft">
+                                                    <span class="glyphicon glyphicon-arrow-left"></span>
+                                                </button>
+                                                <button title="Desplazar organigrama hacia la derecha." type="button" class="btn btn-xs btn-success" id="slideRight">
+                                                    <span class="glyphicon glyphicon-arrow-right"></span>
+                                                </button>
+
+                                                <button title="Descargar Organigrama." type="button" class="btn btn-xs btn-warning @Auxiliares.GestionBontonesGrid(acciones, "ACCIONES-SIST-01-DESC-ORG")" onclick="ExportarContenidoID('chart')">
+                                                    <span style="color: black;" class="glyphicon glyphicon-download-alt"></span>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </h4>
+                            </div>
+
+
+
+                            @*<button id="slideLeft" type="button">Slide left</button>
+                                <button id="slideRight" type="button">Slide right</button>*@
+
+                            <div class="panel-body">
+                                <div class="scroll-zone" style="overflow-x: hidden;height: calc(100vh - 275px);">
+                                    <div id="chart" class="orgChart contenedor-org-chart"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-2" style="padding: 0px !important;">
+                        <div class="panel">
+                            <div class="panel-heading-create custom-header-panel">
+                                <h4>USUARIOS</h4>
+                            </div>
+                            <div class="panel-body">
+                                <div class="scroll-zone" style="overflow-x: hidden; height: calc(100vh - 275px);">
+                                    <div class="zoomViewport">
+                                        <!-- Here below code for Right side box model. Please dont change ID -->
+                                        <ul id="upload-chart">
+                                            @foreach (var item in ListadoUsuarios)
+                                            {
+                                                <li title="Puede arrastrar el elemento hacia el organigrama." id="@item.Id" class="node child usuarios-lista" style="cursor: -webkit-grab !important;cursor: grab !important;">
+                                                    @*<span class="label_node nombres"><a href="#" title="@item.Codigo">@item.Nombres_Completos</a><br><i style="        font-size: 10px;">@item.Cargo</i> </span>*@
+                                                    <div class="seccion1-detalles" style="margin-bottom: -3px;"><i class="fa fa-user-o" aria-hidden="true"></i> <a style="font-size: 11px;" class="nombres" href="#" title="@item.Codigo"> @item.Nombres_Completos</a></div>
+                                                    <div class="seccion2-detalles"> <small><b style="font-size: 9px;"><i class="fa fa-briefcase" aria-hidden="true"></i>  @item.Cargo</b></small></div>
+                                                    <div class="details">
+                                                        <strong style="display: none;">Mail</strong><p style="display:none;" class="cargo">@item.Cargo</p>
+                                                        <strong>Mail</strong><p class="mail">@item.Mail</p>
+                                                        <strong>Codigo</strong><p class="codigo">@item.Codigo</p>
+                                                        <strong>Departamento</strong><p class="departamento">@item.Area_o_Departamento</p>
+                                                    </div>
+
+                                                </li>
+                                            }
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+
+
+
+                </div>
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-offset-2 col-md-8">
+                <div class="form-horizontal">
+
+                    <div class="form-group">
+                        <div class="col-md-offset-4 col-md-12">
+                            <input id="guardar" type="button" value="Guardar" class="btn btn-default  @Auxiliares.GestionBontonesGrid(acciones, "ACCIONES-SIST-01-CREAR")" />
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            @Html.ActionLink("Regresar", "Index", null, new { @class = "btn btn-default  " })
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <input id="eliminar" type="button" value="Limpiar" class="btn btn-default  @Auxiliares.GestionBontonesGrid(acciones, "ACCIONES-SIST-01-ELIMINAR") " />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</form>
+
+
+<script src="~/Content/js/ExportarContenidoCanvasSVG.js"></script>
+
+<script>
+    var urlAccionGuardar = '@Url.Action("Create","Organigrama")';
+    var urlAccionEliminar = '@Url.Action("Eliminar", "Organigrama")';
+
+    $(document).ready(function () {
+        $(window).resize(function () {
+            debugger
+            var bodyheight = $(document).height();
+            $(".scroll-zone").css({ height: 'calc(100vh - 275px)'});//.height(bodyheight);
+            $(".scroll-zone").css({ height: 'calc(100vh - 275px)'});//.height(bodyheight);
+        });
+    })
+
+
+    function setZoom(zoom, el) {
+
+        transformOrigin = [0, 0];
+        el = el || instance.getContainer();
+        var p = ["webkit", "moz", "ms", "o"],
+            s = "scale(" + zoom + ")",
+            oString = (transformOrigin[0] * 100) + "% " + (transformOrigin[1] * 100) + "%";
+
+        for (var i = 0; i < p.length; i++) {
+            el.style[p[i] + "Transform"] = s;
+            el.style[p[i] + "TransformOrigin"] = oString;
+        }
+
+        el.style["transform"] = s;
+        el.style["transformOrigin"] = oString;
+
+    }
+
+    //setZoom(5,document.getElementsByClassName('container')[0]);
+
+    function showVal(a) {
+        var zoomScale = Number(a) / 10;
+        setZoom(zoomScale, document.getElementsByClassName('contenedor-org-chart')[0])
+    }
+
+    $("#element").click(function (evt) {
+        $(this).zoomTo({ targetsize: 0.75, duration: 600 });
+        evt.stopPropagation();
+    });
+
+
+
+    $("#slideRight").click(function () {
+        //document.getElementById('container').scrollLeft += 20;
+        //$(".scroll-zone").scrollLeft("+20");
+        $('.scroll-zone').animate({ scrollLeft: '+=200' }, 100);
+    });
+
+    $("#slideLeft").click(function () {
+        //document.getElementById('container').scrollLeft -= 20;
+        //$(".scroll-zone").scrollLeft("-20");
+        $('.scroll-zone').animate({ scrollLeft: '-=200' }, 100);
+    });
+
+    $("#guardar").click(function () {
+        debugger
+        var organigrama = GetOrganigrama();
+        guardar(organigrama);
+        @*var flag = organigrama.length > 1 ? true : false;
+        if (flag)
+            guardar(organigrama);
+        else
+            toastr.error('@Mensajes.MensajeDatosObligatorios')*@
+    })
+
+    $("#eliminar").click(function () {
+        debugger
+        var id = '@Model.IDOrganigrama';
+        eliminar(id);
+        @*var flag = organigrama.length > 1 ? true : false;
+        if (flag)
+            guardar(organigrama);
+        else
+            toastr.error('@Mensajes.MensajeDatosObligatorios') *@
+    })
+
+    function eliminar(id) {
+        _eliminar(id, urlAccionEliminar)
+    }
+
+    function guardar(organigrama) {
+        var data = $('#form-organigrama').serializeObject();
+        data.EstructuraOrganigrama = JSON.stringify(organigrama);
+        debugger
+        var data_form = JSON.stringify({ "organigrama": data })
+        _GuardarGenerico(data_form, urlAccionGuardar)
+    }
+
+</script>
+
+<script>
+    var node_to_edit;
+    var data = JSON.parse(@Html.Raw(Json.Encode(ViewBag.Organigrama)));
+    var esInicial = ('@ViewBag.esInicial' == 'true');
+    // read json and convert to html formate
+    // Here I am laod the json format to html structure. You no need to do this incase you have order list HTML in you body
+    //Start Load HTML
+    function loadjson() {
+        debugger
+        var items = [];
+        var organigrama = @Html.Raw(Json.Encode(ViewBag.Organigrama));
+        organigrama = !esInicial ? organigrama : JSON.parse(organigrama);
+
+        var data = TAFFY(
+            organigrama
+            //{
+            //    "id": 1,
+            //    "name": "Andrey",
+            //    "rank": "Manager",
+            //    "department": "Administration",
+            //    "level": "Systems and Network Manager",
+            //    "parent": ""
+            //},
+        );
+
+        data({
+            "parent": ""
+        }).each(function (record, recordnumber) {
+            debugger
+            loops(record);
+        });
+
+        //start loop the json and form the html
+        function loops(root) {
+            debugger
+            if (root.parent == "") {
+                items.push("<li class='unic" + root.id + " root' id='" + root.id + "'><span class='label_node'><i class='fa fa-user-o' aria-hidden='true'></i> <a href=''>" + root.usuario + "</a></br><i class='fa fa-briefcase' aria-hidden='true'> </i> <i class='cargo'>" + root.cargo + "</i></span><div class='details'><strong>Email:</strong><p>" + root.mail + "</p><strong>Departamento:</strong><p>" + root.departamento + "</p></div>");
+            } else {
+                items.push("<li  class='child unic" + root.id + "' id='" + root.id + "'><span class='label_node'><i class='fa fa-user-o' aria-hidden='true'></i><a href=''>" + root.usuario + "</a></br><i class='fa fa-briefcase' aria-hidden='true'> </i> <i class='cargo'> " + root.cargo + "</i></span><div class='details'><strong>Email:</strong><p class='mail'>" + root.mail + "</p><strong>Departamento:</strong><p class='departamento'>" + root.departamento + "</p><p class='cargo' style='display: none;'>" + root.cargo + "</p><p class='codigo' style='display: none;'>" + root.codigo + "</p></div>");
+            }
+            var c = data({
+                "parent": root.id
+            }).count();
+            if (c != 0) {
+                items.push("<ul>");
+                data({
+                    "parent": root.id
+                }).each(function (record, recordnumber) {
+                    loops(record);
+                });
+                items.push("</ul></li>");
+            } else {
+                items.push("</li>");
+            }
+        } // End the generate html code
+
+        //push to html code
+        $("<ul/>", {
+            "id": "org",
+            "style": "float:right;",
+            html: items.join("")
+        }).appendTo("body");
+    }
+    // End Load HTML
+</script>
+<script type="text/javascript">
+    $(window).resize(function () {
+        $('#content').height($(window).height() - 46);
+    });
+    $(window).trigger('resize');
+    function init_tree() {
+        var opts = {
+            chartElement: '#chart',
+            dragAndDrop: true,
+            expand: true,
+            control: true,
+            rowcolor: false
+        };
+        $("#chart").html("");
+        $("#org").jOrgChart(opts);
+    }
+
+    function scroll() {
+        $(".node").click(function () {
+            $("#chart").scrollTop(0)
+            $("#chart").scrollTop($(this).offset().top - 140);
+        })
+    }
+
+
+
+    function makeArrays() {
+        var hierarchy = [];
+        var listado = [];
+
+        $("#org li").each(function () {
+            debugger
+            var uid = $(this).attr("id");
+            var name = $(this).find(">:first-child a").text();
+            var hidSTR = "";
+            var hid = $(this).parents("li");
+            if (hid.length == 0) //If this object is the root user, substitute id with "orgName" so the DB knows it's the name of organization and not a user
+            {
+                hidSTR = "orgName";
+                var user = new Object();
+                user.key = name;
+                user.hierarchy = hidSTR;
+                hierarchy.push(user);
+
+                listado.push({
+                    "id": "orgName-1",
+                    "name": "Test",
+                    "rank": "Test",
+                    "department": "Ninguno",
+                    "level": "ICT Service Desk Manager",
+                    "parent": ''
+                })
+
+            } else {
+                for (var i = hid.length - 1; i >= 0; i--) {
+                    if (i != hid.length - 1) {
+                        hidSTR = hid[i].id + ",";
+                    } else {
+                        hidSTR = hid[i].id + '"';
+                    }
+                }
+                var user = new Object();
+                user.key = name;
+                user.hierarchy = hidSTR;
+                hierarchy.push(user);
+
+                listado.push({
+                    "id": name,
+                    "name": "asas",
+                    "rank": "asas",
+                    "department": "asasas",
+                    "level": "asasas",
+                    "parent": hidSTR
+                })
+
+            }
+        });
+        console.log(hierarchy)
+        alert("Check console")
+    }
+
+
+    function GetOrganigrama() {
+        var listado = [];
+
+        $("#org li").each(function () {
+            debugger
+
+            var ID = $(this).attr("id");
+
+            var detalles = $(this).children(".details");
+
+            var mail = $(detalles).children(".mail").text();
+            var codigo = $(detalles).children(".codigo").text();
+            var departamento = $(detalles).children(".departamento").text();
+            var cargo = $(detalles).children(".cargo").text();
+            var nombres = $(this).find(">:first-child a").text();
+
+            var hidSTR = "";
+            var hid = $(this).parents("li");
+            if (hid.length == 0) //If this object is the root user, substitute id with "orgName" so the DB knows it's the name of organization and not a user
+            {
+                hidSTR = "orgName";
+
+                listado.push({
+                    "id": ID,
+                    "usuario": data[0].usuario,
+                    "cargo": data[0].cargo,
+                    "departamento": data[0].departamento,
+                    "codigo": data[0].codigo,
+                    "mail": data[0].mail,
+                    "parent": ''
+                })
+
+            } else {
+                for (var i = hid.length - 1; i >= 0; i--) {
+                    hidSTR = hid[i].id;
+                }
+                listado.push({
+                    "id": ID,
+                    "usuario": nombres,
+                    "cargo": cargo,
+                    "departamento": departamento,
+                    "codigo": codigo,
+                    "mail": mail,
+                    "parent": hidSTR
+                })
+
+            }
+        });
+        return listado;
+    }
+
+
+    $(document).ready(function () {
+        loadjson();
+        init_tree();
+
+        //forms behavior
+        $("#new_node_name, #edit_node_name").on("keyup", function (evt) {
+            var id = $(this).attr("id");
+            if ($(this).val() != '') {
+                if (id == "new_node_name") {
+                    $("#add_node").show();
+                } else {
+                    $("#edit_node").show();
+                }
+            } else {
+                if (id == "new_node_name") {
+                    $("#add_node").hide();
+                } else {
+                    $("#edit_node").hide();
+                }
+            }
+        });
+
+
+        scroll()
+
+    });
+</script>
+
+@*<script src="~/Scripts/taffy.js"></script>
+    <script src="~/Scripts/jquery.jOrgChart.js"></script>*@

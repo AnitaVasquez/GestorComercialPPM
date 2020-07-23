@@ -1,0 +1,36 @@
+﻿@model IEnumerable<GestionPPM.Entidades.Modelo.ListadoCliente>
+@{
+    var acciones = (List<string>)ViewBag.AccionesUsuario;
+}
+@(Html
+        .Grid(Model)
+        .Build(columns =>
+        {
+            columns.Add(model => model.Id).Titled("Id");
+            columns.Add(model => model.Usuario).Titled("Usuario");
+            columns.Add(model => model.RUC).Titled("RUC");
+            columns.Add(model => model.Razon_Social).Titled("Razón Social");
+            columns.Add(model => model.Nombre_Comercial).Titled("Nombre Comercial");
+            columns.Add(model => model.Tamanio_Empresa).Titled("Tamaño Empresa");
+            columns.Add(model => model.sector).Titled("Sector");
+            columns.Add(model => model.Pais).Titled("Pais");
+            columns.Add(model => model.ciudad).Titled("Ciudad");
+            columns.Add(model => model.Direccion).Titled("Dirección");
+            columns.Add(model => model.PotencialCrecimiento).Titled("Potencial Crecimiento");
+            columns.Add(model => model.CategorizacionCliente).Titled("Categorización Cliente");
+            columns.Add(model => model.EtapaCliente).Titled("Etapa Cliente");
+            columns.Add(model => model.Tipo_Cliente).Titled("Tipo Cliente");
+            columns.Add(model => model.Tipo_Zoho).Titled("Tipo CRM");
+            columns.Add(model => model.Estado).Titled("Estado");
+            columns.Add(model => "<button style='background-color:#00AD8E;border-color: #00AD8E;' class='btn btn-success " + Auxiliares.GestionBontonesGrid(acciones, "ACCIONES-SIST-01-ACTUALIZAR") + "' onclick='location.href=\"" + @Url.Action("Edit", "Cliente", new { id = model.Id }) + "\"' id='editar' data-id=\"" + model.Id + "\"><span class='glyphicon glyphicon-pencil' aria-hidden='true'></span></button>" +
+                " <button onclick='ConfirmarCambioEstado(" + model.Id + ",\"" + @Url.Action("Eliminar", "Cliente") + "\",\"" + model.Estado + "\");' style='background-color:#FF5E00;border-color:#FF5E00;' class='btn btn-danger " + Auxiliares.GestionBontonesGrid(acciones, "ACCIONES-SIST-01-ELIMINAR") + "' id='eliminar' data-id=\"" + model.Id + "\"><span class='glyphicon glyphicon-random' aria-hidden='true'></span></button>").Encoded(false);
+        })
+        .Empty(Mensajes.MensajeNoDataListado)
+        .Id("grid-Cliente")
+        .Pageable(pager =>
+        {
+            pager.PagesToDisplay = 5;
+            pager.RowsPerPage = 10;
+        })
+        .Filterable()
+        .Sortable())

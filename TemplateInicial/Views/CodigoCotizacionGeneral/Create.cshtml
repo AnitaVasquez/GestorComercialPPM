@@ -1,0 +1,1326 @@
+﻿@model GestionPPM.Entidades.Modelo.CodigoCotizacion
+@using GestionPPM.Entidades.Modelo
+@using GestionPPM.Entidades.Metodos
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var Usuario = (UsuarioCE)ViewBag.DatosUsuario;
+}
+
+@* Formato para el template de datos *@
+<link href="~/Content/css/personalizar.css" rel="stylesheet" />
+
+<link rel="stylesheet" type="text/css" href="~/Content/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="~/Content/themes/icon.css">
+<link rel="stylesheet" type="text/css" href="~/Content/css/demo.css">
+
+<script type="text/javascript" src="~/Scripts/jquery.min.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.easyui.min.js"></script>
+
+
+
+<style>
+    .fila-seccion {
+        margin-bottom: 15px;
+    }
+
+    .etiqueta-seccion {
+        text-align: right;
+    }
+
+    .input-bloqueado {
+        pointer-events: none;
+    }
+
+    .alinear-derecha {
+        text-align: right;
+        min-width: 15em;
+    }
+</style>
+
+<div class="panel">
+
+    <div class="panel-heading-create custom-header-panel">
+        <h4>@Etiquetas.TituloPanelCreacionCodigoCotizacion</h4>
+    </div>
+
+    <div class="panel-body">
+        <form action="#" id="form-codigoCotizacion" role="form" data-toggle="validator" method="post" accept-charset="utf-8">
+
+            <div class="row" style="display: none;">
+                <div class="col-lg-12">
+                    <div class="box box-default">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Información Principal</h3>
+
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-remove"></i></button>
+                            </div>
+                        </div>
+                        <div class="box-body">
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Nombres: </label>
+                                        <div class="col-md-8">
+                                            @Html.Editor("nombre_usuario", new { htmlAttributes = new { @class = "form-control", @Value = Usuario.nombre_usuario, disabled = "disabled", required = "" } })
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Apellidos: </label>
+                                        <div class="col-md-8">
+                                            @Html.Editor("apellido_usuario", new { htmlAttributes = new { @class = "form-control", @Value = Usuario.apellido_usuario, disabled = "disabled" } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row  fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Dirección: </label>
+                                        <div class="col-md-8">
+                                            @Html.Editor("direccion", new { htmlAttributes = new { @class = "form-control", @Value = Usuario.direccion_usuario, disabled = "disabled" } })
+                                            @Html.Hidden("direccion", Usuario.direccion_usuario)
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Email: </label>
+                                        <div class="col-md-8">
+                                            @Html.Editor("email_usuario", new { htmlAttributes = new { @class = "form-control", @Value = Usuario.mail_usuario, disabled = "disabled" } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row  fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Teléfono: </label>
+                                        <div class="col-md-8">
+                                            @Html.Editor("telefono_usuario", new { htmlAttributes = new { @class = "form-control", @Value = Usuario.telefono_usuario, disabled = "disabled" } })
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Celular: </label>
+                                        <div class="col-md-8">
+                                            @Html.Editor("celular_usuario", new { htmlAttributes = new { @class = "form-control", @Value = Usuario.celular_usuario, disabled = "disabled" } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row  fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">País: </label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("pais", CatalogoEntity.ObtenerListadoCatalogosByCodigo("PAI-01", Usuario.pais.Value.ToString()), new { @class = "form-control", disabled = "disabled" })
+                                            @Html.Hidden("pais", Usuario.pais.Value.ToString())
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Ciudad: </label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("ciudad", CatalogoEntity.ObtenerListadoCatalogosByCodigoSeleccion("CIUDAD", Usuario.ciudad.Value.ToString()), new { @class = "form-control", disabled = "disabled" })
+                                            @Html.Hidden("ciudad", Usuario.ciudad.Value.ToString())
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row  fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Área o Departamento: </label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("area_departamento_usuario", CatalogoEntity.ObtenerListadoCatalogosByCodigo("DTO-01", Usuario.area_departamento_texto), new { @class = "form-control", disabled = "disabled" })
+                                            @Html.Hidden("area_departamento_usuario", Usuario.area_departamento)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Código de Usuario: </label>
+                                        <div class="col-md-8">
+                                            @Html.Editor("codigo_usuario", new { htmlAttributes = new { @class = "form-control", @Value = Usuario.secu_usua, disabled = "disabled" } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="box box-default">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Información General</h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="row fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Fecha: </label>
+                                        <div class="col-md-8">
+                                            @Html.Editor("fecha_cotizacion", new { htmlAttributes = new { @class = "form-control", @Value = System.DateTime.Now.ToString("dd/MM/yyyy"), disabled = "disabled", required = "" } })
+                                            @Html.Hidden("fecha_cotizacion", System.DateTime.Now.ToString("dd/MM/yyyy"))
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Referido: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("referido", CatalogoEntity.ObtenerListadoCatalogosByCodigo("REF-01"), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido", required = "" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-6">
+
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Responsable:</label>
+                                        <div class="col-md-8">
+                                            @Html.Hidden("responsable", Usuario.id_usuario)
+                                            @Html.Editor("nombres_responsable", new { htmlAttributes = new { @class = "form-control", @Value = Usuario.nombre_usuario + " " + Usuario.apellido_usuario, disabled = "disabled", required = "" } })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+
+
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Intermediario: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("tipo_intermediario", CatalogoEntity.ObtenerListadoCatalogosByCodigo("INT-01"), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido", required = "" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Estatus Código: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("estatus_codigo", CatalogoEntity.ObtenerListadoCatalogosByCodigo("ECT-01", "67"), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido", required = "" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+
+
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Tipo CRM: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("tipo_zoho", CatalogoEntity.ObtenerListadoCatalogosByCodigo("TZO-01"), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido", required = "" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+                            <hr />
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-12">
+
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-2">Cliente: <span class="requerido"> *</span> </label>
+                                        <div class="col-md-10">
+                                            @Html.DropDownList("id_cliente", ClienteEntity.ObtenerListadoClientes(), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido", required = "" })
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Tipo de Cliente: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("tipo_cliente", CatalogoEntity.ObtenerListadoCatalogosByCodigo("TCL-01"), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido", required = "" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Tipo de FEE: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("tipo_fee", CatalogoEntity.ObtenerListadoCatalogosByCodigo("TFE-01"), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido", required = "" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Ejecutivo/a: <span class="requerido"> *</span></label>
+                                        <div class="col-md-7">
+                                            @Html.DropDownList("ejecutivo", new List<SelectListItem>(), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido", required = "" })
+
+                                        </div>
+                                        <div class="col-md-1 zona-agregarContacto" style="margin-top: 6px;">
+                                            <span>
+                                                <a style="cursor: pointer" title="Agregar un nuevo contacto" id="get-creacion" data-backdrop="static" @*data-keyboard="false"*@ data-toggle="modal" data-target="#contenido-modal" onclick="_GetCreate({flag: true, prefijo: $('#prefijo').val(), idCliente: $('#id_cliente').val()}, '@Url.Action("_Create", "ContactoCliente")');"> <i class="fa fa-user-plus" aria-hidden="true"></i></a>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Tipo de Proyecto: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("tipo_proyecto", CatalogoEntity.ObtenerListadoCatalogosByCodigo("TPY-01"), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido", required = "" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class=" etiqueta-seccion control-label col-md-4">Tipo de Requerimiento: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("tipo_requerido", CatalogoEntity.ObtenerListadoCatalogosByCodigo("TUS-01"), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido", required = "" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Dimensión del Proyecto: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("dimension_proyecto", CatalogoEntity.ObtenerListadoCatalogosByCodigo("DPY-01"), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido", required = "" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="box box-default">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Formas de Pago</h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="row fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Aplica Contrato: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("aplica_contrato", new SelectList(new List<SelectListItem>
+                                                { new SelectListItem { Text = "SI", Value = "True" },
+                                                new SelectListItem { Text = "NO", Value = "False" },}, "Value", "Text", null), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido", required = "" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Pago 1: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            <div class="input-group">
+                                                <span class="input-group-addon">( % )</span>
+                                                <input id="forma_pago_1" name="forma_pago_1" class="forma_pago_1 easyui-numberbox" style="height:35px; padding:10px;" required="" value="0,00" data-options="max:100, precision:2, groupSeparator:'.', decimalSeparator:','">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Pagos Parciales: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("forma_pago", new SelectList(new List<SelectListItem>
+                                                { new SelectListItem { Text = "SI", Value = "True" },
+                                                new SelectListItem { Text = "NO", Value = "False" },}, "Value", "Text", null), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido", required = "" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Pago 2: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @*@Html.EditorFor(model => model.forma_pago_2, new { htmlAttributes = new { @class = "form-control campo-requerido" } })
+                                                @Html.ValidationMessageFor(model => model.forma_pago_2, "", new { @class = "text-danger" })*@
+
+                                            <div class="input-group">
+                                                <span class="input-group-addon">( % )</span>
+                                                <input id="forma_pago_2" name="forma_pago_2" class="forma_pago_2 easyui-numberbox campo-requerido" style="height:35px; padding:10px;" value="0,00" required="" data-options="max:100, precision:2, groupSeparator:'.', decimalSeparator:','">
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Facturable: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("facturable", new SelectList(new List<SelectListItem>
+                                                { new SelectListItem { Text = "SI", Value = "True" },
+                                                new SelectListItem { Text = "NO", Value = "False" },}, "Value", "Text", null), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido", required = "" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Pago 3: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @*@Html.EditorFor(model => model.forma_pago_3, new { htmlAttributes = new { @class = "form-control campo-requerido" } })
+                                                @Html.ValidationMessageFor(model => model.forma_pago_3, "", new { @class = "text-danger" })*@
+
+
+
+                                            <div class="input-group">
+                                                <span class="input-group-addon">( % )</span>
+                                                <input id="forma_pago_3" name="forma_pago_3" class="forma_pago_3 easyui-numberbox campo-requerido" style="height:35px; padding:10px;" value="0,00" required="" data-options="max:100, precision:2, groupSeparator:'.', decimalSeparator:','">
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Creación de ERP: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @*@Html.DropDownList("creacion_safi", new SelectList(new List<SelectListItem>
+                                                { new SelectListItem { Text = "SI", Value = "True" },
+                                                new SelectListItem { Text = "NO", Value = "False" },}, "Value", "Text", null), Etiquetas.TituloComboVacio, new { @class = "form-control" })*@
+
+                                            @Html.DropDownList("creacion_safi", CatalogoEntity.ObtenerListadoCatalogosByCodigo("CSF-01", "295"), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido", required = "" })
+
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-md-6">
+
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Pago 4: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @*@Html.EditorFor(model => model.forma_pago_4, new { htmlAttributes = new { @class = "form-control campo-requerido" } })
+                                                @Html.ValidationMessageFor(model => model.forma_pago_4, "", new { @class = "text-danger" })*@
+
+
+
+                                            <div class="input-group">
+                                                <span class="input-group-addon">( % )</span>
+                                                <input id="forma_pago_4" name="forma_pago_4" class="forma_pago_4 easyui-numberbox campo-requerido" style="height:35px; padding:10px;" value="0,00" required="" data-options="max:100, precision:2, groupSeparator:'.', decimalSeparator:','">
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="box box-default">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Etapas del Proyecto</h3>
+                        </div>
+                        <div class="box-body">
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-6">
+
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Fases: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("etapa_cliente", CatalogoEntity.ObtenerListadoCatalogosByCodigoSinOrdenar("ECL-01"), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido", required = "" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Estatus Detallado: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @*@(Html.Awe().AjaxDropdown("estatus_detallado")
+                                                .Load(false)
+                                                .Enabled(false)
+                                                .CssClass("auto-ajustar")
+                                                .HtmlAttributes(null, new { @class = "campo-requerido" })
+                                                .ParameterFunc("parametrosEtapaCliente")
+                                                .Url(Url.Action("GetDependientesEtapaClienteEstatusDetallado", "Cliente")))*@
+                                            @Html.DropDownList("estatus_detallado", new List<SelectListItem>(), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido", required = "" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Etapa General: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @*@(Html.Awe().AjaxDropdown("etapa_general")
+                                                .Enabled(false)
+                                                .Load(false)
+                                                .CssClass("auto-ajustar")
+                                                .HtmlAttributes(null, new { @class = "campo-requerido" })
+                                                .ParameterFunc("parametrosEtapaCliente")
+                                                .Url(Url.Action("GetDependientesEtapaClienteEtapaGeneral", "Cliente")))*@
+                                            @Html.DropDownList("etapa_general", new List<SelectListItem>(), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido", required = "" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Estatus General: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @*@(Html.Awe().AjaxDropdown("estatus_general")
+                                                .Enabled(false)
+                                                .Load(false)
+                                                .CssClass("auto-ajustar")
+                                                .HtmlAttributes(null, new { @class = "campo-requerido" })
+                                                .ParameterFunc("parametrosEtapaCliente")
+                                                .Url(Url.Action("GetDependientesEtapaClienteEstatusGeneral", "Cliente")))*@
+                                            @Html.DropDownList("estatus_general", new List<SelectListItem>(), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido", required = "" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr />
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Tipo Producto PTOP:</label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("tipo_producto_PtoP", CatalogoEntity.ObtenerListadoCatalogosByCodigo("TPP-01", "77"), Etiquetas.TituloComboVacio, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Tipo de Migración:</label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("tipo_migracion", CatalogoEntity.ObtenerListadoCatalogosByCodigo("TMR-01", "95"), Etiquetas.TituloComboVacio, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-6">
+
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Tipo de Plan:</label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("tipo_plan", CatalogoEntity.ObtenerListadoCatalogosByCodigo("TPL-01", "82"), Etiquetas.TituloComboVacio, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Tipo de Subsidio:</label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("tipo_subsidio", CatalogoEntity.ObtenerListadoCatalogosByCodigo("TSB-01", "292"), Etiquetas.TituloComboVacio, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-6">
+
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Tipo de Tarifa:</label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("tipo_tarifa", CatalogoEntity.ObtenerListadoCatalogosByCodigo("TTR-01", "91"), Etiquetas.TituloComboVacio, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Etapa de PTOP:</label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("tipo_etapa_PtoP", CatalogoEntity.ObtenerListadoCatalogosByCodigo("ETP-01", "107"), Etiquetas.TituloComboVacio, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="box box-default">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Información del Proyecto</h3>
+                        </div>
+                        <div class="box-body">
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-2">Nombre del Proyecto: <span class="requerido"> *</span></label>
+                                        <div class="col-md-10">
+                                            @Html.EditorFor(model => model.nombre_proyecto, new { htmlAttributes = new { @class = "form-control campo-requerido", maxlength = 250, required = "" } })
+                                            @Html.ValidationMessageFor(model => model.nombre_proyecto, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-2">Descripción del Proyecto: <span class="requerido"> *</span></label>
+                                        <div class="col-md-10">
+                                            @Html.TextArea("descripcion_proyecto", null, new { @class = "form-control campo-requerido", rows = 4, @style = "resize: none;", maxlength = 300, required = "" })
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr />
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-12">
+
+                                    <table id="sublinea-negocio-tabla" class=" table order-list">
+                                        <thead>
+                                            <tr>
+                                                <td>Código Linea</td>
+                                                <td><b>Línea de Negocio </b> <span class="requerido"><b> *</b></span></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="col-sm-0">
+                                                    <br />
+                                                </td>
+                                                <td class="col-sm-12" colspan="3">
+                                                    @Html.DropDownList("id_linea_negocio", LineaNegocioEntity.ObtenerListadoLineaNegocio(), Etiquetas.TituloComboVacio, new { @class = "form-control" })
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Código Linea</td>
+                                                <td><b>Segmentación 1</b> <span class="requerido"><b> *</b></span></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="col-sm-0">
+                                                    <br />
+                                                </td>
+                                                <td class="col-sm-12" colspan="3">
+                                                    @Html.DropDownList("id_sublinea_negocio", new List<SelectListItem>(), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido", required = "" })
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Código Linea</td>
+                                                <td><b>Segmentación 2</b> <span class="requerido"><b> *</b></span></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="col-sm-0">
+                                                    <br />
+                                                </td>
+                                                <td class="col-sm-12" colspan="3">
+                                                    @Html.DropDownList("id_producto_general", new List<SelectListItem>(), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido", required = "" })
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Codigo Catalogo</td>
+                                                <td><b>Producto Comercial</b><span class="requerido"><b> *</b></span></td>
+                                                <td>Valor</td>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <input type="text" id="codigoCatalogoSublineaNegocio" class="form-control " />
+                                                </td>
+                                                <td class="col-sm-10">
+                                                    @Html.DropDownList("tipo_sublinea_negocio", new List<SelectListItem>(), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido", required = "" })
+                                                </td>
+
+                                                <td class="col-sm-1">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">US$</span>
+                                                        <input id="valor_sublinea_negocio" name="valor_sublinea_negocio" class="valor_sublinea_negocio easyui-numberbox campo-requerido alinear-derecha" style="height:35px; padding:10px; text-align: right;" required="" value="0,00" data-options="max:9999999999.99, precision:2, groupSeparator:'.', decimalSeparator:','">
+                                                    </div>
+                                                </td>
+                                                <td class="col-sm-1">
+                                                    <a class="deleteRow"></a>
+                                                    <button id="addrow" type="button" class="btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+
+                                        <tfoot>
+                                            <tr>
+                                                <td style="text-align: right;"></td>
+                                                <td style="text-align: right; padding-top: 15px;">
+                                                    <span><b>TOTAL:</b></span>
+                                                </td>
+                                                <td class="col-md-2" style="text-align: left;">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">US$</span>
+                                                        @Html.Editor("total", new { htmlAttributes = new { @class = "form-control input-bloqueado alinear-derecha mone", @Value = "0,00" } })
+                                                    </div>
+
+                                                </td>
+                                            </tr>
+                                            <tr></tr>
+                                        </tfoot>
+
+
+                                    </table>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="box box-default">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Contactos de Facturación <span class="requerido"> *</span></h3>
+                        </div>
+                        <div class="box-body">
+
+                            <div class="row fila-seccion">
+                                <div class="form-group">
+                                    <div class="col-md-11">
+                                        @*@(Html.Awe().AjaxCheckboxList("idsContactosClientesFacturacion")
+                                            .Multiselect(o => o.ItemFunc("awem.imgItem").CaptionFunc("").NoSelectClose())
+                                            .CssClass("auto-ajustar")
+                                            .HtmlAttributes(null, new { @class = "campo-requerido", required = "" })
+                                            .ParameterFunc("parametrosContactosCliente")
+                                            .Url(Url.Action("GetContactosFacturacion", "Cliente")))*@
+
+                                        <input class="easyui-tagbox auto-ajustar campo-requerido" id="idsContactosClientesFacturacion" name="idsContactosClientesFacturacion" style="width:100%" data-options="
+                url: '@Url.Action("_GetContactosFacturacion", "CodigoCotizacion" )',
+                                               method: 'get' ,
+                                               valueField: 'id' ,
+                                               value:'',
+                                               textField: 'text' ,
+                                               limitToList: true,
+                                               hasDownArrow: true,
+                                               formatter: formatItem,
+                                               tagFormatter: formatoTargetMultiSelect,
+                                               ">
+
+                                    </div>
+                                    <div class="col-md-1 zona-agregarContacto" style="margin-top: 6px;">
+                                        <span>
+                                            <a style="cursor: pointer" title="Agregar un nuevo contacto" id="get-creacion" data-backdrop="static" @*data-keyboard="false"*@ data-toggle="modal" data-target="#contenido-modal" onclick="_GetCreate({flag: false, idCliente: $('#id_cliente').val()}, '@Url.Action("_Create", "ContactoCliente")');"> <i class="fa fa-user-plus" aria-hidden="true"></i></a>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-offset-2 col-md-8">
+                    <div class="form-horizontal">
+
+                        <div class="form-group">
+                            <div class="col-md-offset-4 col-md-12">
+                                <input id="guardar" type="button" value="Guardar" class="btn btn-default" />
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                @Html.ActionLink("Regresar", "Index", null, new { @class = "btn btn-default" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+<script>
+    debugger
+
+    var etiquetaFP1 = document.getElementById('forma_pago_1');
+    var etiquetaFP2 = document.getElementById('forma_pago_2');
+    var etiquetaFP3 = document.getElementById('forma_pago_3');
+    var etiquetaFP4 = document.getElementById('forma_pago_4');
+    var etiquetaTotal = document.getElementById('total');
+
+    var urlAccionGuardarCodigoCotizacion = '@Url.Action("Create","CodigoCotizacion")';
+    var urlAccionListado = '@Url.Action("Index","CodigoCotizacion")';
+    var urlAccionCotizador = unescape('@Url.Action("Create", "Cotizacion", new { idCodigoCotizacion = "{0}" })');
+
+    var lineaNegocioValorInicial = $("#tipo_sublinea_negocio").val();
+
+    var validacionRolSAFI = '@ViewBag.ValidacionRolCreacionSAFI';
+
+    //Arreglo de objeto para enviar al controlador
+    var listadoSubLineaNegocio = [];
+    var counter = 0;
+
+    $(document).ready(function () {
+        debugger;
+
+        //easyloader.locale = 'es';
+
+        //desactivar el total para no editar
+        etiquetaTotal.readonly = true;
+        etiquetaTotal.disabled = true;
+
+        validacionRolSAFI = (validacionRolSAFI === "True");
+
+        $('#contenido-modal').on('hidden.bs.modal', function () {
+            cargarEjecutivoCliente();
+            //$("#idsContactosClientesFacturacion").data('api').load();
+
+            $('#idsContactosClientesFacturacion').combobox('reload');
+        })
+
+        // En caso de que no pueda modificar el campo SAFI
+        if (!validacionRolSAFI) {
+            $("#creacion_safi").addClass("input-bloqueado")
+        }
+
+        //console.log(JSON.stringify($('form').serializeObject()));
+        $(".o-empt").text("No existen elementos.");
+
+        //Ocultar primera columna que contiene el codigo del catálogo seleccionado de la sublinea de negocio
+        $('td:nth-child(1)').hide();
+
+        //Cargar codigo inicial de la linea de negocio
+        $("#codigoCatalogoSublineaNegocio").val(lineaNegocioValorInicial);
+
+        //Pagos deshabilitados hasta elegir la opcion pagos parciales
+
+        bloquearPagos();
+
+        //Dropdownlist Selectedchange event
+        $("#etapa_cliente").change(function () {
+            debugger
+            $("#etapa_general").empty();
+            $("#estatus_detallado").empty();
+            $("#estatus_general").empty();
+
+            cargarEtapaClienteDependientes();
+            return false;
+        })
+
+        $("#tipo_fee").change(function (value) {
+            debugger
+            var valor = $(value.currentTarget).val();
+            if (valor == 149 || valor == 150) {
+                $("#tipo_proyecto option[value='60']").prop('selected', true);
+                $('#tipo_proyecto').addClass("input-bloqueado")
+
+            } else {
+                $('#tipo_proyecto').removeClass("input-bloqueado");
+                $("#tipo_proyecto option[value='']").prop('selected', true);
+            }
+            return false;
+        })
+
+        $("#id_cliente").change(function () {
+            debugger
+            $("#ejecutivo").empty();
+
+            cargarEjecutivoCliente();
+
+            var id = getContactosCliente();
+
+            //$("#idsContactosClientesFacturacion").data('api').load();
+            $('#idsContactosClientesFacturacion').combobox('clear');// Primero limpiar el select multiple
+            $('#idsContactosClientesFacturacion').combobox('reload', '@Url.Action("_GetContactosFacturacion", "CodigoCotizacion")?id=' + id);
+
+            //setTimeout(function () {
+            //    $(".o-empt").text("No existen elementos.");
+            //}, 300);
+            return false;
+        })
+
+        $("#id_linea_negocio").change(function () {
+            debugger
+            $("#id_sublinea_negocio").empty();
+            $("#id_sublinea_negocio").append('<option value="' + 0 + '">' + "Seleccione una opción" + '</option>');
+
+            if($("#id_linea_negocio").val() > 0)
+            {
+                cargarSegmentacion1();
+            }
+            return false;
+        })
+
+        $("#id_sublinea_negocio").change(function () {
+            debugger
+            $("#id_producto_general").empty();
+            $("#id_producto_general").append('<option value="' + 0 + '">' + "Seleccione una opción" + '</option>');
+
+            if ($("#id_sublinea_negocio").val() > 0) {
+                cargarSegmentacion2();
+            }
+            return false;
+        })
+
+        $("#id_producto_general").change(function () {
+            debugger
+            $("#tipo_sublinea_negocio").empty();
+            $("#tipo_sublinea_negocio").append('<option value="' + 0 + '">' + "Seleccione una opción" + '</option>');
+
+            if ($("#id_producto_general").val() > 0) {
+                cargarProductosComercial();
+            }
+            return false;
+        })
+
+
+        $('#tipo_sublinea_negocio').change(function (value) {
+            debugger
+            var valor = $(value.currentTarget).val();
+            $("#codigoCatalogoSublineaNegocio").val(valor);
+        });
+
+        $('#forma_pago').change(function (value) {
+            debugger
+            var valor = ($(value.currentTarget).val() == "True");
+            if (valor) {
+
+                $('#forma_pago_1').numberbox('setValue', 0.00);
+                $("#forma_pago_2").numberbox('setValue', 0.00);
+                $("#forma_pago_3").numberbox('setValue', 0.00);
+                $("#forma_pago_4").numberbox('setValue', 0.00);
+
+                desbloquearPagos()
+            }
+            else {
+
+                $('#forma_pago_1').numberbox('setValue', 100.00);
+                $("#forma_pago_2").numberbox('setValue', 0.00);
+                $("#forma_pago_3").numberbox('setValue', 0.00);
+                $("#forma_pago_4").numberbox('setValue', 0.00);
+
+                bloquearPagos()
+            }
+        });
+
+        $("#addrow").on("click", function () {
+            debugger
+            var sublineaNegocioCodigoSeleccionada = $("#tipo_sublinea_negocio").val();
+
+            if (sublineaNegocioCodigoSeleccionada.length === 0) {
+                toastr.error('Seleccione una Sublínea de Negocio.')
+                return;
+            }
+
+            var valorSublineaNegocio = $('#valor_sublinea_negocio').numberbox('getValue')
+
+            if (valorSublineaNegocio == 0 || valorSublineaNegocio == "0,00") {
+                toastr.error('La Sublínea de Negocio debe tener un valor.')
+                return;
+            }
+
+            var busqueda = listadoSubLineaNegocio.filter(function (el) { return el.CodigoCatalogoSublineaNegocio === sublineaNegocioCodigoSeleccionada; });
+            if (busqueda.length > 0) {
+                toastr.error('La sublínea de negocio ya se encuentra agregada.')
+                return;
+            }
+
+            var newRow = $("<tr>");
+            var cols = "";
+
+            var sublineaNegocioTextoSeleccionada = $("#tipo_sublinea_negocio option:selected").text();
+            var valorSublineaNegocio = $("#_easyui_textbox_input6").val();
+            var valorSublineaNegocioAgregar = $("#_easyui_textbox_input6").val();
+
+            cols += '<td style="display: none;"><input type="text" class="form-control" name="objetoLineaNegocio' + counter + '" value ="' + sublineaNegocioCodigoSeleccionada + '" disabled/>  </td>';
+            cols += '<td><input type="text" class="form-control" name="objetoLineaNegocio' + counter + '" value ="' + sublineaNegocioTextoSeleccionada + '" disabled/>  </td>';
+
+            cols += '<td> <div class="input-group"> <span class="input-group-addon">US$</span> <input class="form-control sumatoria-total-proyecto money alinear-derecha" name="objetoLineaNegocio' + counter + '" value ="' + valorSublineaNegocio + '" disabled/> </div> </td>';
+
+            cols += '<td><button type="button" class="ibtnDel btn btn-danger"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>';//'<td><input type="button" class="ibtnDel btn btn-md btn-danger "  value="Eliminar"></td>';
+
+            newRow.append(cols);
+            $("table.order-list").append(newRow);
+            counter++;
+
+            calcularTotalSubLineaNegocio();
+
+            debugger
+
+            listadoSubLineaNegocio.push({
+                "CodigoCatalogoSublineaNegocio": sublineaNegocioCodigoSeleccionada,
+                "TextoCatalogoSublineaNegocio": sublineaNegocioTextoSeleccionada,
+                "Valor": valorSublineaNegocioAgregar
+            })
+
+            $('#tipo_sublinea_negocio').prop('selectedIndex', 0);
+            $('#valor_sublinea_negocio').numberbox('setValue', 0.00);
+
+        });
+
+        $("table.order-list").on("click", ".ibtnDel", function (event) {
+            debugger
+            var item = $(this).closest("tr");
+            var td = $(item).find("td:first");
+            var input = $(td).find("input")
+            var codigo = $(input).val();
+
+            $(this).closest("tr").remove();
+            counter -= 1
+
+            calcularTotalSubLineaNegocio()
+
+            listadoSubLineaNegocio = listadoSubLineaNegocio.filter(function (el) { return el.CodigoCatalogoSublineaNegocio !== codigo; });
+        });
+
+        $('.sumatoria-total-proyecto').change(function () {
+            debugger
+            var sumatoriaTotal = 0;
+            $.each(elementosSumatoriaProyecto, function () {
+                debugger
+                var valor = $(this).val() === null || $(this).val() === undefined ? 0 : $(this).val();
+
+            })
+            $("#total").val(sumatoriaTotal);
+
+        });
+
+    })
+
+    // Formato para mostrar si el contacto es de cliente o de facturación en el MultiSelect de contactos
+    function formatItem(row) {
+        //<span class="glyphicon glyphicon-user"></span>
+        var s = '<span style="font-weight:bold">' + row.desc + '</span><br/>' +
+            '<span style="color:#888">' + row.text + '</span>';
+        return s;
+    }
+
+    function formatoTargetMultiSelect(value, row) {
+        debugger
+        if (row != null) {
+            return row.text + ' - ' + row.desc;
+        }
+    }
+
+
+    $("#guardar").click(function () {
+        debugger
+        var flag = validarCamposRequeridosFormularioCompleto("form-codigoCotizacion");
+
+        if (flag && validaSublineasNegocioRequerida())
+            guardar(); // continue the submit unbind preventDefault
+        else
+            toastr.error('@Mensajes.MensajeDatosObligatorios')
+    })
+
+    function cargarEtapaClienteDependientes() {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetDependientesEtapaCliente", "Cliente")',
+            dataType: 'json',
+            data: { id: $("#etapa_cliente").val() },
+            success: function (data) {
+                debugger
+                // states contains the JSON formatted list
+                // of states passed from the controller
+                $.each(data, function (i, catalogo) {
+                    debugger
+                    if (catalogo.codigo_catalogo === "ETAPA-GENERAL")
+                        $("#etapa_general").append('<option value="' + catalogo.id_catalogo + '">' + catalogo.nombre_catalgo + '</option>');
+
+                    if (catalogo.codigo_catalogo === "ESTATUS-DETALLADO")
+                        $("#estatus_detallado").append('<option value="' + catalogo.id_catalogo + '">' + catalogo.nombre_catalgo + '</option>');
+
+                    if (catalogo.codigo_catalogo === "ESTATUS-GENERAL")
+                        $("#estatus_general").append('<option value="' + catalogo.id_catalogo + '">' + catalogo.nombre_catalgo + '</option>');
+                });
+            },
+            error: function (ex) {
+                debugger
+                toastr.error(ex)
+            }
+        });
+    }
+
+    function cargarEjecutivoCliente() {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetDependientesClienteContactos")',
+            dataType: 'json',
+            data: { id: $("#id_cliente").val() },
+            success: function (data) {
+                debugger
+                $("#ejecutivo").empty();
+                // states contains the JSON formatted list
+                // of states passed from the controller
+                $.each(data, function (i, catalogo) {
+                    debugger
+                    $("#ejecutivo").append('<option value="' + catalogo.Value + '">' + catalogo.Text + '</option>');
+                });
+            },
+            error: function (ex) {
+                debugger
+                toastr.error(ex)
+            }
+        });
+
+    }
+
+    function validaSublineasNegocioRequerida() {
+        if (listadoSubLineaNegocio.length > 0)
+            return true;
+        else
+            return false;
+    }
+
+    function guardar() {
+        debugger
+
+        var sublineaNegocioCodigoSeleccionada = $("#tipo_sublinea_negocio").val();
+        var valorSublineaNegocio = $('#valor_sublinea_negocio').numberbox('getValue')
+
+        if (sublineaNegocioCodigoSeleccionada.length > 0 && (valorSublineaNegocio != 0 || valorSublineaNegocio != "0.00")) {
+            toastr.error('Tiene un detalle pendiente de agregar.')
+            return;
+        } else {
+
+            var contactosCodigoCotizacion = getContactosCodigoCotizacion();
+            var data_form = JSON.stringify({ "codigoCotizacion": $('#form-codigoCotizacion').serializeObject(), "codigoUsuario": $("#codigo_usuario").val(), "sublineasNegocio": listadoSubLineaNegocio, "idsContactosCotizacion": contactosCodigoCotizacion })
+
+            _Guardar(data_form, urlAccionGuardarCodigoCotizacion, urlAccionListado, true, urlAccionCotizador)
+
+        }
+    }
+
+
+    function bloquearPagos() {
+
+        debugger
+
+        $('#forma_pago_1').numberbox('disable')
+        $('#forma_pago_2').numberbox('disable')
+        $('#forma_pago_3').numberbox('disable')
+        $('#forma_pago_4').numberbox('disable')
+    }
+
+    function desbloquearPagos() {
+
+        $('#forma_pago_1').numberbox('enable')
+        $('#forma_pago_2').numberbox('enable')
+        $('#forma_pago_3').numberbox('enable')
+        $('#forma_pago_4').numberbox('enable')
+
+    }
+
+    function parametrosContactosCliente() {
+        return { id: $("#id_cliente").val() };
+    }
+
+    function getContactosCliente() {
+        return $("#id_cliente").val();
+    }
+
+    function parametrosEtapaCliente() {
+        debugger
+        return { id: $("#etapa_cliente").val() };
+    }
+
+    function parametrosTipoLineaNegocio() {
+        debugger
+        return { id: $("#tipo_linea_negocio").val() };
+    }
+
+    function calcularTotalSubLineaNegocio() {
+        debugger
+        var sumatoriaTotal = 0;
+        var elementosSumatoriaProyecto = $(".sumatoria-total-proyecto");
+        $.each(elementosSumatoriaProyecto, function () {
+            debugger
+            var valor = $(this).val() === null || $(this).val() === undefined ? 0 : $(this).val();
+            //QUITAR LOS MILES
+            var conversion = valor.replace(".", "");
+            var conversion = conversion.replace(".", "");
+            var conversion = conversion.replace(".", "");
+
+            //REMPLAZAR DECIMALES POR .
+            var conversion = conversion.replace(",", ".");
+            sumatoriaTotal += parseFloat(conversion);
+        })
+        $("#total").val(sumatoriaTotal);
+
+
+        debugger
+        separadorDecimalesInicial = ".";
+        separadorDecimales = ",";
+        separadorMiles = ".";
+        numerodecimales = 2;
+
+
+        sumatoriaTotal = parseFloat(sumatoriaTotal).toFixed(numerodecimales);
+
+        var numero = "";
+        var numero2 = "";
+        numero = "" + sumatoriaTotal;
+        partes = numero.split(separadorDecimalesInicial);
+        entero = partes[0];
+        if (partes.length > 1) {
+            decimal = partes[1];
+        }
+        cifras = entero.length;
+        cifras2 = cifras
+        for (a = 0; a < cifras; a++) {
+            cifras2 -= 1;
+            numero2 += entero.charAt(a);
+            if (cifras2 % 3 == 0 && cifras2 != 0) {
+                numero2 += separadorMiles;
+            }
+        }
+        if (partes.length > 1) {
+            numero2 += separadorDecimales + decimal.substr(0, numerodecimales);
+        }
+
+        $("#total").val(numero2);
+
+        //var params = $("#sublinea-negocio-tabla :input").serializeObject();
+        //console.log(params)
+    }
+
+    function getContactosCodigoCotizacion() {
+        debugger
+        var idsContactosCodigoCotizacion = [];
+        var contactos = $("#idsContactosClientesFacturacion").val();
+        contactos = contactos.split(',');
+
+        for (var i = 0; i < contactos.length; i++) {
+            let id = parseInt(contactos[i]);
+            idsContactosCodigoCotizacion.push(id);
+        }
+        return idsContactosCodigoCotizacion;
+    }
+
+    function cargarSegmentacion1() {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetSegmentacion1")',
+            dataType: 'json',
+            data: { id: $("#id_linea_negocio").val() },
+            success: function (data) {
+                debugger
+                $("#id_sublinea_negocio").empty();
+                $("#id_sublinea_negocio").append('<option value="' + 0 + '">' + "Seleccione una opción" + '</option>');
+                $.each(data, function (i, catalogo) {
+                    debugger
+                    $("#id_sublinea_negocio").append('<option value="' + catalogo.Value + '">' + catalogo.Text + '</option>');
+                });
+            },
+            error: function (ex) {
+                debugger
+                toastr.error(ex)
+            }
+        });
+    }
+
+    function cargarSegmentacion2() {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetSegmentacion2")',
+            dataType: 'json',
+            data: { id: $("#id_sublinea_negocio").val() },
+            success: function (data) {
+                debugger
+                $("#id_producto_general").empty();
+                $("#id_producto_general").append('<option value="' + 0 + '">' + "Seleccione una opción" + '</option>');
+                $.each(data, function (i, catalogo) {
+                    $("#id_producto_general").append('<option value="' + catalogo.Value + '">' + catalogo.Text + '</option>');
+                });
+            },
+            error: function (ex) {
+                debugger
+            }
+        });
+    }
+
+     function cargarProductosComercial() {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetProductoComercial")',
+            dataType: 'json',
+            data: { id: $("#id_producto_general").val() },
+            success: function (data) {
+                debugger
+                $("#tipo_sublinea_negocio").empty();
+                $("#tipo_sublinea_negocio").append('<option value="' + 0 + '">' + "Seleccione una opción" + '</option>');
+                $.each(data, function (i, catalogo) {
+                    $("#tipo_sublinea_negocio").append('<option value="' + catalogo.Value + '">' + catalogo.Text + '</option>');
+                });
+            },
+            error: function (ex) {
+                debugger
+            }
+        });
+    }
+
+</script>
+
+
+@* SCRIPT PARA EL COMPONENTE DE AUTOCOMPLETAR - FORMULARIO MODAL CREAR CONTACTO *@
+@section SeccionScriptAutocomplete {
+    <script src="https://cdn.jsdelivr.net/gh/xcash/bootstrap-autocomplete@v2.2.2/dist/latest/bootstrap-autocomplete.min.js"></script>
+}

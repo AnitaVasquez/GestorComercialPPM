@@ -1,0 +1,89 @@
+﻿<div class="col-lg-12">
+    <div class="box box-default">
+        <div class="box-header with-border">
+            <h3 id="texto-informacion-principal" class="box-title">Participantes <span class="requerido"> *</span></h3>
+            <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button> 
+            </div>
+        </div>
+        <div class="box-body">
+            <div class="row fila-seccion">
+                <div class="col-md-12">
+
+                    <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                        <table class="table" id="tbl-Participantes">
+                            <thead>
+                                <tr>
+                                    <th data-override="IDDetalleActaParticipantes">ID</th>
+                                    <th data-override="Nombres">Nombres</th>
+                                    <th style="text-align: center;" data-override="Presente">Presente</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <tr id="templateParticipantes">
+                                    <td><input type="text" class="form-control idObjeto" value="0" name="IDDetalleActaParticipantes[]" /></td>
+                                    <td style="width:90%"><input type="text" class="form-control" placeholder="Nombres y Apellidos" name="Nombres[]" maxlength="200" /></td>
+                                    <td style="width:10%; text-align: center;">
+
+                                        <input type="checkbox" class="form-check-input chk-presente" value="false" name="Presente[]">
+                                    </td>
+                                    <td id="accion"><button type="button" class="agregarFila btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i></button></td>
+                                </tr>
+
+                                @foreach (var item in ViewBag.ListadoDetalleParticipantes)
+                                {
+                                    <tr id="templateParticipantes-@item.IDDetalleActaParticipantes">
+                                        <td ><input type="text" class="form-control" value="@item.IDDetalleActaParticipantes" name="IDDetalleActaParticipantes[]" /></td>
+                                        <td style="width:90%"><input type="text" class="form-control" value="@item.Nombres" placeholder="Nombres y Apellidos" name="Nombres[]" maxlength="200" /></td>
+                                        <td style="width:10%; text-align: center;">
+
+                                            <input type="checkbox" class="form-check-input chk-presente" value="@(Convert.ToBoolean(item.Presente) ? "true" : "false")" name="Presente[]" @(Convert.ToBoolean(item.Presente) ? "checked='checked'" : string.Empty)>
+                                        </td>
+                                        <td id="accion"><button type="button" onclick="eliminarFila(this.id)" id="eliminar-@item.IDDetalleActaParticipantes" class="eliminarFila btn btn-danger"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                </div>
+                <div class="row fila-seccion">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <div style="margin-left: 11px;" class="col-md-6">
+                                <span id="PorcentajeParticipantes-EleccionSI" style="background-color: #28a745;" class="badge">SI 0%</span>
+                                <span id="PorcentajeParticipantes-EleccionNO" style="background-color: #dc3545;" class="badge">NO 0%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div style="text-align: right;" class="col-md-6">
+                                <b><span id="ResolucionParticipantes"></span></b>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row fila-seccion">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="control-label col-md-2">Observaciones: </label>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            @Html.TextArea("Observaciones", string.IsNullOrEmpty((string)ViewBag.Observaciones) ? "N/A" : (string)ViewBag.Observaciones, new { @class = "form-control campo-requerido", rows = 5, @style = "resize: none;", maxlength = 500 })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

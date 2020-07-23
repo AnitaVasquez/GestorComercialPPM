@@ -1,0 +1,24 @@
+﻿@using GestionPPM.Entidades.Metodos
+@model GestionPPM.Entidades.Modelo.Organigrama
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script>
+    $(window).on('load', function () {
+        _GetCreate(null, '@Url.Action("_SeleccionTipoOrganigrama", "Organigrama")');
+        $('#contenido-modal').modal({
+            'show': 'true',
+            'backdrop': 'static',
+            'keyboard': false
+        });
+
+        $('#contenido-modal').on('hidden.bs.modal', function () {
+            debugger
+            //$("#idsContactosClientes_guardar").data('api').load();
+            location.href = '@Url.Action("Index","Home")';
+        })
+    })
+</script>

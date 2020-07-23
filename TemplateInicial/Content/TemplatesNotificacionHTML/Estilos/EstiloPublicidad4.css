@@ -1,0 +1,49 @@
+﻿body {
+    background-color: #f0e4d4
+}
+
+.logo a:hover, .logo a:focus {
+    color: #859bb1 !important
+}
+
+.mso .layout-has-border {
+    border-top: 1px solid #d6b588;
+    border-bottom: 1px solid #d6b588
+}
+
+.mso .layout-has-bottom-border {
+    border-bottom: 1px solid #d6b588
+}
+
+.mso .border, .ie .border {
+    background-color: #d6b588
+}
+
+.mso h1, .ie h1 {
+}
+
+.mso h1, .ie h1 {
+    font-size: 28px !important;
+    line-height: 36px !important
+}
+
+.mso h2, .ie h2 {
+}
+
+.mso h2, .ie h2 {
+    font-size: 26px !important;
+    line-height: 34px !important
+}
+
+.mso h3, .ie h3 {
+}
+
+.mso .layout__inner, .ie .layout__inner {
+}
+
+.mso .footer__share-button p {
+}
+
+.mso .footer__share-button p {
+    font-family: PT Sans,Trebuchet MS,sans-serif
+}

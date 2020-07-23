@@ -1,0 +1,1554 @@
+﻿@model GestionPPM.Entidades.Modelo.SolicitudCliente
+@using GestionPPM.Entidades.Modelo
+@using GestionPPM.Entidades.Metodos
+
+@{
+    ViewBag.Title = "Solicitud";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var Usuario = (UsuarioCE)ViewBag.DatosUsuario;
+}
+
+<link href="~/Content/css/personalizar.css" rel="stylesheet" />
+
+<link href="~/Content/demo.css" rel="stylesheet" />
+<link href="~/Content/component.css" rel="stylesheet" />
+<link href="~/Content/normalize.css" rel="stylesheet" />
+
+<link rel="stylesheet" type="text/css" href="~/Content/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="~/Content/themes/icon.css">
+<link rel="stylesheet" type="text/css" href="~/Content/css/demo.css">
+
+<style>
+    .fila-seccion {
+        margin-bottom: 15px;
+    }
+
+    .etiqueta-seccion {
+        text-align: right;
+    }
+
+    .input-bloqueado {
+        pointer-events: none;
+    }
+
+    .alinear-derecha {
+        text-align: right;
+        min-width: 15em;
+    }
+</style>
+
+@*@if (!string.IsNullOrEmpty(ViewBag.) == "ACCIONES-SIST-01")
+    {
+        <script>
+            $(document).ready(function () {
+                $("#descripcion").show();
+            });
+        </script>
+    }*@
+
+<div class="panel">
+
+    <div class="panel-heading-create custom-header-panel">
+        <h4>@Etiquetas.TituloPanelCreacionSolicitud</h4>
+    </div>
+
+    <div class="panel-body">
+        <form action="#" id="form-solicitud" role="form" data-toggle="validator" method="post" accept-charset="utf-8" enctype="multipart/form-data">
+
+            <div class="row" style="display: none;">
+                <div class="col-lg-12">
+                    <div class="box box-default">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Información Principal</h3>
+
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-remove"></i></button>
+                            </div>
+                        </div>
+                        <div class="box-body">
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Nombres: </label>
+                                        <div class="col-md-8">
+                                            @Html.Editor("nombre_usuario", new { htmlAttributes = new { @class = "form-control", @Value = Usuario.nombre_usuario, disabled = "disabled", required = "" } })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Apellidos: </label>
+                                        <div class="col-md-8">
+                                            @Html.Editor("apellido_usuario", new { htmlAttributes = new { @class = "form-control", @Value = Usuario.apellido_usuario, disabled = "disabled" } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row  fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Área o Departamento: </label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("cliente_asociado", CatalogoEntity.ObtenerListadoCatalogosByCodigo("DTO-01", Usuario.area_departamento_texto), new { @class = "form-control", disabled = "disabled" })
+                                            @Html.Hidden("cliente_asociado", Usuario.area_departamento)
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Código de Usuario: </label>
+                                        <div class="col-md-8">
+                                            @Html.Editor("codigo_usuario", new { htmlAttributes = new { @class = "form-control", @Value = Usuario.secu_usua, disabled = "disabled" } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="box box-default">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Información General</h3>
+                        </div>
+                        <div class="box-body">
+
+                            <br />
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Fecha: </label>
+                                        <div class="col-md-8">
+                                            @Html.Editor("fecha_cotizacion", new { htmlAttributes = new { @class = "form-control", @Value = System.DateTime.Now.ToString("dd/MM/yyyy"), disabled = "disabled", required = "" } })
+                                            @Html.Hidden("fecha_cotizacion", System.DateTime.Now.ToString("dd/MM/yyyy"))
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Solicita:</label>
+                                        <div class="col-md-8">
+                                            @Html.Hidden("responsable", Usuario.id_usuario)
+                                            @Html.Editor("nombres_responsable", new { htmlAttributes = new { @class = "form-control", @Value = Usuario.nombre_usuario + " " + Usuario.apellido_usuario, disabled = "disabled", required = "" } })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr />
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Tipo: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("id_tipo", ViewBag.ListadoTipo as List<SelectListItem>, new { @class = "form-control campo-requerido", required = "" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6" id="cantidadLabel" hidden>
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Cantidad: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            <input id="cantidad" name="cantidad" class="cantidad easyui-numberbox" style="height:35px; padding:10px;" required="" value="1" data-options="max:100, min:1, precision:0" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Subtipo: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("id_subtipo", ViewBag.ListadoSubtipo as List<SelectListItem>, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6" id="marcaLabel" hidden>
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Marca: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("id_marca", ViewBag.ListadoMarca as List<SelectListItem>, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row fila-seccion" id="portalesMantenimiento">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Marca: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            <input class="easyui-tagbox" id="idsPortales" name="idsPortales" style="width:100%" data-options="
+                                            url: '@Url.Action("_GetOpcionesPortales", "Solicitud")',
+                                            method: 'get',
+                                            value: '',
+                                            valueField: 'id',
+                                            textField: 'text',
+                                            limitToList: true,
+                                            hasDownArrow: true," />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr />
+
+                            <div class="row fila-seccion" id="area" hidden>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Solicitante DCE: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("area_1", ViewBag.SolicitanteDCE as List<SelectListItem>, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Área Solicitante DCE:  <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("area_2", ViewBag.AreaEncargada as List<SelectListItem>, new { @class = "form-control" })
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row fila-seccion" id="op-mkt" hidden>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">OP:</label>
+                                        <div class="col-md-8">
+                                            @Html.EditorFor(model => model.op, new { htmlAttributes = new { @class = "form-control", maxlength = 50 } })
+                                            @Html.ValidationMessageFor(model => model.op, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">MKT:</label>
+                                        <div class="col-md-8">
+                                            @Html.EditorFor(model => model.mkt, new { htmlAttributes = new { @class = "form-control", maxlength = 50, } })
+                                            @Html.ValidationMessageFor(model => model.mkt, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-6" id="areaAsignada">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-4">Área Solicitante: <span class="requerido"> *</span></label>
+                                        <div class="col-md-8">
+                                            @Html.DropDownList("id_area_encargada", ViewBag.AreaEncargada as List<SelectListItem>, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6" id="urgente">
+                                    <div class="form-group">
+                                        <label for="solicitud_urgente" class="etiqueta-seccion control-label col-md-4">Urgente:</label>
+                                        <div class="col-md-8">
+                                            <input type="checkbox" id="solicitud_urgente" value="solicitud_urgente">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row fila-seccion" id="implementacion" hidden>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-2" id="lblimplementacion">Preheader: <span class="requerido"> *</span></label>
+                                        <div class="col-md-10">
+                                            @Html.EditorFor(model => model.implementacion, new { htmlAttributes = new { @class = "implementacion form-control campo-requerido", maxlength = 500, required = "", placeholder = "Se especifica el texto que se despliega debajo del subject en los diferentes clientes de correo: Outlook, Gmail Web, Yahoo Mail Web, Gmail Android App, etc." } })
+                                            @Html.ValidationMessageFor(model => model.implementacion, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row fila-seccion" id="CampoEmpresa" hidden>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-2">Empresa: <span class="requerido"> *</span></label>
+                                        <div class="col-md-10">
+                                            @Html.EditorFor(model => model.empresa, new { htmlAttributes = new { @class = "empresa form-control campo-requerido", maxlength = 500, required = "" } })
+                                            @Html.ValidationMessageFor(model => model.empresa, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row fila-seccion" id="nombre" hidden>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-2" id="lblcampana">Nombre Campaña: <span class="requerido"> *</span></label>
+                                        <div class="col-md-10">
+                                            @Html.EditorFor(model => model.nombre_proyecto, new { htmlAttributes = new { @class = "form-control campo-requerido", maxlength = 250, required = "" } })
+                                            @Html.ValidationMessageFor(model => model.nombre_proyecto, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row fila-seccion" id="descripcion">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="etiqueta-seccion control-label col-md-2">Descripción del Requerimiento: <span class="requerido"> *</span></label>
+                                        <div class="col-md-10">
+                                            @Html.TextArea("descripcion_proyecto", null, new { @class = "form-control", rows = 6, @style = "resize: none;", maxlength = 1200 })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" id="camposPersonalizables" hidden>
+                <div class="col-lg-12">
+                    <div class="box box-default">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Campos Personalizables</h3>
+                        </div>
+                        <div class="box-body">
+
+                            <div class="row fila-seccion">
+                                <div class="col-md-12">
+
+                                    <table id="campos-personalizados-tabla" class=" table order-list-campos">
+                                        <thead>
+                                            <tr>
+                                                <td hidden>Campo</td>
+                                                <td align="center">Nombre</td>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            <tr>
+                                                <td hidden>
+                                                    <input type="text" id="codigoPers" class="form-control" />
+                                                </td>
+
+                                                <td class="col-sm-10">
+                                                    <input type="text" id="nombrePerso" class="form-control" placeholder="Se especifica qué campos principales (que siempre se incluyen en la base) van a ir como texto o como gráfica en el HTML. NO = Gráfica, SI = Texto." />
+                                                </td>
+
+                                                <td class="col-sm-1">
+                                                    <a class="deleteRow"></a>
+                                                    <button id="addrow-Campos" type="button" class="btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" id="urlExterno" hidden>
+                <div class="col-lg-12">
+                    <div class="box box-default">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">URL's Externos</h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="row fila-seccion">
+                                <div class="col-md-12">
+
+                                    <table id="url-externos-tabla" class=" table order-list-url">
+                                        <thead>
+                                            <tr>
+                                                <td hidden>Campo</td>
+                                                <td align="center">Tipo</td>
+                                                <td align="center">Detalle</td>
+                                                <td align="center">N. Teléfono</td>
+                                                <td align="center">URL</td>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            <tr>
+                                                <td hidden>
+                                                    <input type="text" id="codigoUrl" class="form-control" />
+                                                </td>
+
+                                                <td class="col-sm-2">
+                                                    <input type="text" id="tipoUrl" class="form-control" placeholder="Toda la Imagen o por Botón" />
+                                                </td>
+
+                                                <td class="col-sm-4">
+                                                    <input type="text" id="detalleUrl" class="form-control" placeholder="Se especifican URLs de elementos que llevan a sitios" />
+                                                </td>
+
+                                                <td class="col-sm-2">
+                                                    <input id="numeroTelefono" class="form-control" placeholder="Número de Teléfono"
+                                                           oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                                           type="number"
+                                                           maxlength="12" />
+                                                </td>
+
+                                                <td class="col-sm-4">
+                                                    <input type="text" id="url" class="form-control" placeholder="https://www.ppm.com.ec/develop" maxlength="250"  />
+                                                </td>
+
+                                                <td class="col-sm-1">
+                                                    <a class="deleteRow"></a>
+                                                    <button id="addrow-Url" type="button" class="btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" id="urlSoporte">
+                <div class="col-lg-12">
+                    <div class="box box-default">
+                        <div class="box-header with-border">
+                            <h3 class="box-title" id="urlSoporteTitle">URL's Soporte </h3> <span class="requerido"> *</span>
+                        </div>
+                        <div class="box-body">
+                            <div class="row fila-seccion">
+                                <div class="col-md-12">
+
+                                    <table id="url-soporte-tabla" class="table order-list-urlSolicitud">
+                                        <thead>
+                                            <tr>
+                                                <td hidden>Campo</td>
+                                                <td hidden>Tipo</td>
+                                                <td hidden>Detalle</td>
+                                                <td align="left">URL</td>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            <tr>
+                                                <td hidden>
+                                                    <input type="text" id="codigoUrlSoporte" class="form-control" />
+                                                </td>
+
+                                                <td hidden>
+                                                    <input type="text" id="tipoUrlSoporte" class="form-control" placeholder="Toda la Imagen ó por Botón" />
+                                                </td>
+
+                                                <td hidden>
+                                                    <input type="text" id="detalleUrlSoporte" class="form-control" />
+                                                </td>
+
+                                                <td class="col-sm-11">
+                                                    <input type="text" id="urlDeSoporte" class="form-control" placeholder="https://www.ppm.com.ec/develop" maxlength="250" />
+                                                </td>
+
+                                                <td class="col-sm-1">
+                                                    <a class="deleteRow"></a>
+                                                    <button id="addrow-UrlSoporte" type="button" class="btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" id="piezaReferencia" hidden>
+                <div class="col-lg-12">
+                    <div class="box box-default">
+                        <div class="box-header with-border">
+                            <h3 class="box-title" id="pieza">Pieza de Referencia</h3> <span class="requerido"> *</span>
+                        </div>
+                        <div class="box-body">
+                            <div class="col-md-12">
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <strong></strong>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <div class="box-archivo">
+                                            <input type="file" multiple="multiple" class="inputfile inputfile-4" id="referencia" name="referencia" data-multiple-caption="{count} files selected " accept=".jpg, .jpeg">
+                                            <label for="referencia">
+                                                <figure>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 10">
+                                                        <path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z" />
+                                                    </svg>
+                                                </figure>
+                                                <span>Seleccionar Archivos &hellip;</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <strong></strong>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <strong></strong>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <p>- Adjuntar archivos con extensión jpg ó jpeg</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <p>- Cada archivo debe tener un tamaño máximo de 550 KB</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8" id="pixeles" hidden>
+                                            <div class="form-group">
+                                                <p>- La imagen debe tener máximo 700 pixeles de ancho</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8" id="cantidadAdjuntos" hidden>
+                                            <div class="form-group">
+                                                <p style="color:darkblue">- El número de archivos a cargar debe ser igual a la cantidad seleccionada</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" id="envioIcare" hidden>
+                <div class="col-lg-12">
+                    <div class="box box-default">
+                        <div class="box-header with-border">
+                            <h3 class="box-title" id="textoFormato">Formato Carga</h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="col-md-12">
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <strong></strong>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <div class="box-archivo">
+                                            <input type="file" class="inputfile inputfile-4" id="formato" name="formato" data-multiple-caption="{count} files selected " accept=".xls, .xlsm, .xlsx">
+                                            <label for="formato">
+                                                <figure>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 10">
+                                                        <path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z" />
+                                                    </svg>
+                                                </figure>
+                                                <span>Seleccionar Archivo &hellip;</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <strong></strong>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <strong></strong>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <strong></strong>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <strong></strong>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <p>- Adjuntar archivos con extensión xls, xlsx, xslm</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row fila-seccion" id="adjuntar-gif" hidden="">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="gif" class="etiqueta-seccion control-label col-md-1">Aplica GIF:</label>
+                        <div class="col-md-11">
+                            <input type="checkbox" id="gif" value="gif">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" id="cargar_archivo_gif" hidden="">
+                <div class="col-lg-12">
+                    <div class="box box-default">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Gifs de Referencia</h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="col-md-12">
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <strong></strong>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <div class="box-archivo">
+                                            <input type="file" multiple="multiple" class="inputfile inputfile-4" id="archivo_gifs" name="archivo_gifs" data-multiple-caption="{count} files selected " accept=".webp">
+                                            <label for="archivo_gifs">
+                                                <figure>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 10">
+                                                        <path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z" />
+                                                    </svg>
+                                                </figure>
+                                                <span>Seleccionar Archivo &hellip;</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <strong></strong>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <strong></strong>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <p>- Adjuntar archivos con extensión .webp</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <p>- Cada archivo debe tener un tamaño máximo de 1 MB</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <p>- La imagen debe tener máximo 700 pixeles de ancho</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" id="html" hidden>
+                <div class="col-lg-12">
+                    <div class="box box-default">
+                        <div class="box-header with-border">
+                            <h3 class="box-title" id="textoFormato">Materiales</h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="col-md-12">
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <strong></strong>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <div class="box-archivo">
+                                            <input type="file" class="inputfile inputfile-4" id="materialHtml" name="materialHtml" data-multiple-caption="{count} files selected " accept=".zip, .rar">
+                                            <label for="materialHtml">
+                                                <figure>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 10">
+                                                        <path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z" />
+                                                    </svg>
+                                                </figure>
+                                                <span>Seleccionar Archivo &hellip;</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <strong></strong>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <strong></strong>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <strong></strong>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <p>- Adjuntar archivos con extensión .zip, .rar</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <p>- Debe incluir el .spd, .jpg y .mp4</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" id="archivosSoporte">
+                <div class="col-lg-12">
+                    <div class="box box-default">
+                        <div class="box-header with-border">
+                            <h3 class="box-title" id="pieza">Archivos Soporte</h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="col-md-12">
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <strong></strong>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <div class="box-archivo">
+                                            <input type="file" multiple="multiple" class="inputfile inputfile-4" id="soporte" name="soporte" data-multiple-caption="{count} files selected ">
+                                            <label for="soporte">
+                                                <figure>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 10">
+                                                        <path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z" />
+                                                    </svg>
+                                                </figure>
+                                                <span>Seleccionar Archivos &hellip;</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <strong></strong>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <strong></strong>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <strong></strong>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <p>- Adjuntar archivos cualquier extensión</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <p style="color:darkblue">- Es opcional adjuntar archivo(s)</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @*<div id="ZonaListadoArchivosCargados" style="display: none;" class="col-md-12">
+                                    <small id="nombresArchivosCargados">
+                                    </small>
+                            </div>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-offset-2 col-md-8">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <div class="col-md-offset-4 col-md-12">
+                                <input id="guardar" type="button" value="Guardar" class="btn btn-default" />
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <a href="~/SolicitudesClienteExterno/Index/" class="btn btn-default">Cancelar</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+@section SeccionScriptMultiSelect {
+    <script src="~/Scripts/easyloader.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery.easyui.min.js"></script>
+    <script src="~/Scripts/locale/easyui-lang-es.js"></script>
+}
+
+@section ViewSpecificJavascript {
+    <script>
+
+        var urlAccionGuardar = '@Url.Action("Create","Solicitud")';
+        var urlAccionListado = '@Url.Action("Index", "SolicitudesClienteExterno")';
+
+        //atributos del formulario
+        var empresa = document.getElementById('CampoEmpresa');
+        var descripcion = document.getElementById('descripcion');
+        var nombre = document.getElementById('nombre');
+        var opmkt = document.getElementById('op-mkt');
+        var area = document.getElementById('area');
+        var implementacion = document.getElementById('implementacion');
+        var personalizado = document.getElementById('camposPersonalizables');
+        var externo = document.getElementById('urlExterno');
+        var referencia = document.getElementById('piezaReferencia');
+        var envioIcare = document.getElementById('envioIcare');
+        var pieza = document.getElementById('pieza');
+        var pixeles = document.getElementById('pixeles');
+        var datosUrlSoporte = document.getElementById('urlSoporte');
+        var archivosSoporte = document.getElementById('archivosSoporte');
+        var textoFormato = document.getElementById('textoFormato');
+        var html = document.getElementById('html');
+        var marcaLabel = document.getElementById('marcaLabel')
+        var cantidadLabel = document.getElementById('cantidadLabel')
+        var cantidadAdjuntos = document.getElementById('cantidadAdjuntos');
+        var areaAsignada = document.getElementById('areaAsignada');
+        var seccionUrgente = document.getElementById('urgente');
+        var valorUrgente = document.getElementById('solicitud_urgente')
+        var valorGifs = document.getElementById('gif')
+        var divGifs = document.getElementById('adjuntar-gif')
+        var divCargarGifs = document.getElementById('cargar_archivo_gif')
+        var portal = document.getElementById('portalesMantenimiento')
+
+        //Arreglo de objeto para campos personalizados
+        var listadoCamposPersonalizados = [];
+        var counterPersonalizado = 0;
+
+        //Arreglo de objeto para urls externo
+        var listadoUrlExternos = [];
+        var counterUrl = 0;
+
+        //Arreglo de objeto para urls soporte
+        var listadoUrlSoporte = [];
+        var counterUrlSoporte = 0;
+
+        //Variable de check
+        var urgente = false;
+
+        $(document).ready(function () {
+            easyloader.locale = 'es';
+            debugger
+
+            var slt = document.getElementById('id_tipo');
+            //var valor = slt.options[slt.selectedIndex].text;
+            var valor2 = slt.options[slt.selectedIndex].value;
+
+
+            if (valor2 == 737) {
+                camposMantenimiento();
+
+
+            }
+
+            //Si es urgente
+            $("#solicitud_urgente").change(function (){
+                var a = solicitud_urgente.checked
+
+                if (a) {
+                    urgente = true;
+                } else {
+                    urgente = false
+                }
+            });
+
+            //Si tiene gifs
+            $("#gif").change(function () {
+                var a = valorGifs.checked
+                //Habilitar el seleccion gifs
+                if (valorGifs.checked) {
+                    divCargarGifs.hidden = false;
+                } else {
+                    divCargarGifs.hidden = true;
+                }
+            });
+
+            //Cambio el tipo de solicitud
+            $("#id_tipo").change(function () {
+                debugger
+
+                $("#ZonaListadoArchivosCargados").remove()
+
+                //cargar el subtipo
+                $("#id_subtipo").empty();
+                cargarSubtipoDependiente();
+
+                //mostrar campos de eclub
+                var slt = document.getElementById('id_tipo');
+                //var valor = slt.options[slt.selectedIndex].text;
+                var valor = slt.options[slt.selectedIndex].value;
+
+                if (valor == 758) {
+                    camposGeneral();
+                }
+
+                if (valor == 734 || valor == 735) {
+                    camposEclubIcare();
+                }
+
+                if (valor == 736) {
+                    camposEnviosIcare();
+                }
+
+                if (valor == 737) {
+                    camposMantenimiento();
+                }
+
+                if (valor == 739) {
+                    camposHtml5();
+                }
+
+                if (valor == 738) {
+                    camposTag();
+                }
+
+                if (valor == 740) {
+                    camposHtml5Tag();
+                }
+            })
+
+        });
+
+        //Cargar dependencias para tipo
+        function cargarSubtipoDependiente() {
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetSubtipoDependiente")',
+                dataType: 'json',
+                data: { id: $("#id_tipo").val() },
+                success: function (data) {
+                    debugger 
+                    $.each(data, function (i, catalogo) {
+                        $("#id_subtipo").append('<option value="' + catalogo.Value + '">' + catalogo.Text + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    debugger
+                }
+            });
+        }
+
+            //campos General
+            function camposGeneral() {
+                debugger
+                empresa.hidden = false;
+                descripcion.hidden = false;
+                nombre.hidden = true;
+                opmkt.hidden = true;
+                area.hidden = true;
+                implementacion.hidden = true
+                personalizado.hidden = true;
+                externo.hidden = true;
+                referencia.hidden = true;
+                envioIcare.hidden = true;
+                pixeles.hidden = true;
+                datosUrlSoporte.hidden = true;
+                archivosSoporte.hidden = false;
+                html.hidden = true;
+                marcaLabel.hidden = true;
+                cantidadLabel.hidden = true;
+                cantidadAdjuntos.hidden = true;
+                areaAsignada.hidden = true;
+                seccionUrgente.hidden = true;
+                divGifs.hidden = true;
+                divCargarGifs.hidden = true;
+                portal.hidden = true;
+            }
+
+            //campos para Eclub Icare
+            function camposEclubIcare() {
+                empresa.hidden = true;
+                descripcion.hidden = true;
+                nombre.hidden = false;
+                lblcampana.innerText = "Nombre Campaña:";
+                $("#lblcampana").append("<span class='requerido'> *</span>");
+                opmkt.hidden = false;
+                area.hidden = false;
+                implementacion.hidden = false
+                //lblimplementacion.innerText = "Preheader:";
+                personalizado.hidden = false;
+                externo.hidden = false;
+                referencia.hidden = false;
+                envioIcare.hidden = true;
+                pieza.innerText = "Pieza de Referencia";
+                pixeles.hidden = false;
+                datosUrlSoporte.hidden = true;
+                archivosSoporte.hidden = true;
+                html.hidden = true;
+                marcaLabel.hidden = false;
+                cantidadLabel.hidden = false;
+                cantidadAdjuntos.hidden = false;
+                areaAsignada.hidden = true;
+                seccionUrgente.hidden = true;
+                divGifs.hidden = false;
+                divCargarGifs.hidden = true;
+                portal.hidden = true;
+
+                //Habilitar los gifs
+                if (valorGifs.checked) {
+                    divCargarGifs.hidden = false;
+                } else {
+                    divCargarGifs.hidden = true;
+                }
+            }
+
+            //campos para Envios Icare
+            function camposEnviosIcare() {
+                //cambiar la marca
+                empresa.hidden = true;
+                descripcion.hidden = true;
+                nombre.hidden = false;
+                lblcampana.innerText = "Nombre Campaña:";
+                $("#lblcampana").append("<span class='requerido'> *</span>");
+                opmkt.hidden = false;
+                area.hidden = true;
+                implementacion.hidden = true
+                personalizado.hidden = true;
+                externo.hidden = true;
+                referencia.hidden = false;
+                envioIcare.hidden = false;
+                pieza.innerText = "SFTP";
+                pixeles.hidden = true;
+                datosUrlSoporte.hidden = true;
+                archivosSoporte.hidden = true;
+                textoFormato.innerText = "Formato Carga";
+                html.hidden = true;
+                marcaLabel.hidden = true;
+                cantidadLabel.hidden = true;
+                cantidadAdjuntos.hidden = true;
+                areaAsignada.hidden = true;
+                seccionUrgente.hidden = true;
+                divGifs.hidden = true;
+                divCargarGifs.hidden = true;
+                portal.hidden = true;
+            }
+
+            //campos para mantenimiento
+            function camposMantenimiento() {
+                empresa.hidden = true;
+                descripcion.hidden = false;
+                nombre.hidden = false;
+                opmkt.hidden = true;
+                area.hidden = true;
+                implementacion.hidden = true;
+                personalizado.hidden = true;
+                externo.hidden = true;
+                referencia.hidden = true;
+                envioIcare.hidden = true;
+                pixeles.hidden = true;
+                datosUrlSoporte.hidden = false;
+                archivosSoporte.hidden = false;
+                html.hidden = true;
+                urlSoporteTitle.innerText = "URL's Soporte";
+                //lblimplementacion.innerText = "Asunto:";
+                lblcampana.innerText = "Asunto:"
+                $("#lblcampana").append("<span class='requerido'> *</span>");
+                marcaLabel.hidden = true;
+                cantidadLabel.hidden = true;
+                cantidadAdjuntos.hidden = true;
+                areaAsignada.hidden = false;
+                seccionUrgente.hidden = false;
+                divGifs.hidden = true;
+                divCargarGifs.hidden = true;
+                portal.hidden = false;
+                var labelc = $('#lblcampana');
+
+            }
+
+            //campos para Html
+            function camposHtml5() {
+                empresa.hidden = true;
+                descripcion.hidden = true;
+                nombre.hidden = false;
+                lblcampana.innerText = "Nombre Campaña:";
+                $("#lblcampana").append("<span class='requerido'> *</span>");
+                opmkt.hidden = false;
+                area.hidden = true;
+                implementacion.hidden = true
+                personalizado.hidden = true;
+                externo.hidden = true;
+                referencia.hidden = false;
+                envioIcare.hidden = false;
+                pixeles.hidden = true;
+                datosUrlSoporte.hidden = true;
+                archivosSoporte.hidden = true;
+                referencia.hidden = true;
+                textoFormato.innerText = "Matriz";
+                html.hidden = false;
+                urlSoporteTitle.innerText = "Url de Tipificación";
+
+                marcaLabel.hidden = true;
+                cantidadLabel.hidden = true;
+                cantidadAdjuntos.hidden = true;
+                areaAsignada.hidden = true;
+                seccionUrgente.hidden = true;
+                divGifs.hidden = true;
+                divCargarGifs.hidden = true;
+                portal.hidden = true;
+            }
+
+            //campos para Tag
+            function camposTag() {
+                empresa.hidden = true;
+                descripcion.hidden = true;
+                nombre.hidden = false;
+                lblcampana.innerText = "Nombre Campaña:";
+                $("#lblcampana").append("<span class='requerido'> *</span>");
+                opmkt.hidden = false;
+                area.hidden = true;
+                implementacion.hidden = true
+                personalizado.hidden = true;
+                externo.hidden = true;
+                referencia.hidden = false;
+                envioIcare.hidden = false;
+                pixeles.hidden = true;
+                datosUrlSoporte.hidden = false;
+                archivosSoporte.hidden = true;
+                referencia.hidden = true;
+                textoFormato.innerText = "Matriz";
+                html.hidden = false;
+                urlSoporteTitle.innerText = "Url de Tipificación";
+                marcaLabel.hidden = true;
+                cantidadLabel.hidden = true;
+                cantidadAdjuntos.hidden = true;
+                areaAsignada.hidden = true;
+                seccionUrgente.hidden = true;
+                divGifs.hidden = true;
+                divCargarGifs.hidden = true;
+                portal.hidden = true;
+            }
+
+            //campos para Html y Tag
+            function camposHtml5Tag() {
+                empresa.hidden = true;
+                descripcion.hidden = true;
+                nombre.hidden = false;
+                lblcampana.innerText = "Nombre Campaña:";
+                $("#lblcampana").append("<span class='requerido'> *</span>");
+                opmkt.hidden = false;
+                area.hidden = true;
+                implementacion.hidden = true
+                personalizado.hidden = true;
+                externo.hidden = true;
+                referencia.hidden = false;
+                envioIcare.hidden = false;
+                pixeles.hidden = true;
+                datosUrlSoporte.hidden = false;
+                archivosSoporte.hidden = true;
+                referencia.hidden = true;
+                textoFormato.innerText = "Matriz";
+                html.hidden = false;
+                urlSoporteTitle.innerText = "Url de Tipificación";
+                marcaLabel.hidden = true;
+                cantidadLabel.hidden = true;
+                cantidadAdjuntos.hidden = true;
+                areaAsignada.hidden = true;
+                seccionUrgente.hidden = true;
+                divGifs.hidden = true;
+                divCargarGifs.hidden = true;
+                portal.hidden = true;
+            }
+
+            //Agregar campos personalizados
+            $("#addrow-Campos").on("click", function () {
+                debugger
+                var nombreCampo = $("#nombrePerso").val();
+
+                if (nombreCampo.length === 0) {
+                    toastr.error('Ingrese el nombre a personalizar para poder agregar')
+                    return;
+                }
+
+                var busqueda = listadoCamposPersonalizados.filter(function (el) { return el.nombrePers === nombreCampo; });
+                if (busqueda.length > 0) {
+                    toastr.error('El nombre a personalizar ya existe')
+                    return;
+                }
+
+                counterPersonalizado++;
+
+                var newRow = $("<tr>");
+                var cols = "";
+
+                cols += '<td style="display: none;"><input type="text" class="form-control" name="objetoLineaNegocio' + counterPersonalizado + '" value ="' + counterPersonalizado + '" disabled/>  </td>';
+                cols += '<td><input type="text" class="form-control" name="objetoLineaNegocio' + counterPersonalizado + '" value ="' + nombreCampo + '" disabled/>  </td>';
+
+                cols += '<td><button type="button" class="ibtnDel btn btn-danger"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>';//'<td><input type="button" class="ibtnDel btn btn-md btn-danger "  value="Eliminar"></td>';
+
+                newRow.append(cols);
+                $("table.order-list-campos").append(newRow);
+
+                debugger
+
+                listadoCamposPersonalizados.push({
+                    "codigoPers": counterPersonalizado,
+                    "nombrePers": nombreCampo
+                })
+
+                $('#nombrePerso').val("");
+
+            });
+
+            //Eliminar registros que no sean necesarios
+            $("table.order-list-campos").on("click", ".ibtnDel", function (event) {
+                debugger
+                var item = $(this).closest("tr");
+                var td = $(item).find("td:first");
+                var input = $(td).find("input")
+                var codigo = $(input).val();
+
+                $(this).closest("tr").remove();
+                counterPersonalizado -= 1;
+
+                listadoCamposPersonalizados = listadoCamposPersonalizados.filter(function (el) { return el.codigoPers !== parseInt(codigo); });
+            });
+
+            //Agregar url externo
+            $("#addrow-Url").on("click", function () {
+                debugger
+                var nombreDetalle = $("#detalleUrl").val();
+                var tipoUrl = $("#tipoUrl").val();
+                var numeroTelefono = $("#numeroTelefono").val(); // Nuevo campo
+                var url = $("#url").val();
+
+                if (nombreDetalle.length === 0 || tipoUrl.length === 0 /*|| url.length === 0*/) {
+                    toastr.error('Ingrese el tipo, detalle y url para poder agregar')
+                    return;
+                }
+
+                //if ((/^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/|www\.)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/.test(url)) == false && url.length > 0) {
+                //    toastr.error('La url ingresada es incorrecta');
+                //    return;
+                //}
+
+                var busqueda = listadoUrlExternos.filter(function (el) { return el.detalleUrl === nombreDetalle; });
+                if (busqueda.length > 0) {
+                    toastr.error('El detalle ya existe')
+                    return;
+                }
+
+                counterUrl++;
+
+                var newRow = $("<tr>");
+                var cols = "";
+
+                cols += '<td style="display: none;"><input type="text" class="form-control" name="objetoLineaNegocio' + counterUrl + '" value ="' + counterUrl + '" disabled/>  </td>';
+                cols += '<td><input type="text" class="form-control" name="objetoLineaNegocio' + counterUrl + '" value ="' + tipoUrl + '" disabled/>  </td>';
+                cols += '<td><input type="text" class="form-control" name="objetoLineaNegocio' + counterUrl + '" value ="' + nombreDetalle + '" disabled/>  </td>';
+                cols += '<td><input type="text" class="form-control" name="objetoLineaNegocio' + counterUrl + '" value ="' + numeroTelefono + '" disabled/>  </td>';
+                cols += '<td><input type="text" class="form-control" name="objetoLineaNegocio' + counterUrl + '" value ="' + url + '" disabled/>  </td>';
+                cols += '<td><button type="button" class="ibtnDel btn btn-danger"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>';//'<td><input type="button" class="ibtnDel btn btn-md btn-danger "  value="Eliminar"></td>';
+
+                newRow.append(cols);
+                $("table.order-list-url").append(newRow);
+
+                debugger
+
+                listadoUrlExternos.push({
+                    "codigoUrl": counterUrl,
+                    "tipoUrl": tipoUrl,
+                    "detalleUrl": nombreDetalle,
+                    "numeroTelefono": numeroTelefono,
+                    "Url": url
+                })
+
+                $('#codigoUrl').val("");
+                $('#tipoUrl').val("");
+                $('#detalleUrl').val("");
+                $('#numeroTelefono').val("");
+                $('#url').val("");
+
+            });
+
+            //Eliminar registros que no sean necesarios
+            $("table.order-list-url").on("click", ".ibtnDel", function (event) {
+                debugger
+                var item = $(this).closest("tr");
+                var td = $(item).find("td:first");
+                var input = $(td).find("input")
+                var codigo = $(input).val();
+
+                $(this).closest("tr").remove();
+                counterUrl -= 1
+
+                listadoUrlExternos = listadoUrlExternos.filter(function (el) { return el.codigoUrl !== parseInt(codigo); });
+            });
+
+            //Agregar url soporte
+            $("#addrow-UrlSoporte").on("click", function () {
+                debugger
+                var nombreDetalleSoporte = $("#detalleUrlSoporte").val();
+                var tipoUrlSoporte = $("#tipoUrlSoporte").val();
+                var urlLinkSoporte = $("#urlDeSoporte").val();
+
+                if (urlLinkSoporte.length === 0) {
+                    toastr.error('Ingrese url para poder agregar')
+                    return;
+                }
+
+
+                //if ((/^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/|www\.)[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/.test(urlLinkSoporte)) == false) {
+                //    toastr.error('La url ingresada es incorrecta');
+                //    return;
+                //}
+
+                var busqueda = listadoUrlSoporte.filter(function (el) { return el.detalleUrl === urlLinkSoporte; });
+                if (busqueda.length > 0) {
+                    toastr.error('El url ya existe')
+                    return;
+                }
+
+                counterUrlSoporte++;
+
+                debugger
+
+                var newRow = $("<tr>");
+                var cols = "";
+
+                cols += '<td style="display: none;"><input type="text" class="form-control" name="objetoLineaNegocio' + counterUrlSoporte + '" value ="' + counterUrlSoporte + '" disabled/>  </td>';
+                cols += '<td style="display: none;"><input type="text" class="form-control" name="objetoLineaNegocio' + counterUrlSoporte + '" value ="' + tipoUrlSoporte + '" disabled/>  </td>';
+                cols += '<td style="display: none;"><input type="text" class="form-control" name="objetoLineaNegocio' + counterUrlSoporte + '" value ="' + nombreDetalleSoporte + '" disabled/>  </td>';
+                cols += '<td ><input type="text" class="form-control" name="objetoLineaNegocio' + counterUrlSoporte + '" value ="' + urlLinkSoporte + '" disabled/>  </td>';
+                cols += '<td><button type="button" class="ibtnDel btn btn-danger"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>';//'<td><input type="button" class="ibtnDel btn btn-md btn-danger "  value="Eliminar"></td>';
+
+                newRow.append(cols);
+                $("table.order-list-urlSolicitud").append(newRow);
+
+                listadoUrlSoporte.push({
+                    "codigoUrl": counterUrlSoporte,
+                    "tipoUrl": "SOPORTE",
+                    "detalleUrl": urlLinkSoporte,
+                    "Url": urlLinkSoporte
+                })
+
+                $('#codigoUrlSoporte').val("");
+                $('#tipoUrlSoporte').val("");
+                $('#detalleUrlSoporte').val("");
+                $('#urlDeSoporte').val("");
+
+            });
+
+            //Eliminar registros que no sean necesarios
+            $("table.order-list-urlSolicitud").on("click", ".ibtnDel", function (event) {
+                debugger
+                var item = $(this).closest("tr");
+                var td = $(item).find("td:first");
+                var input = $(td).find("input")
+                var codigo = $(input).val();
+
+                $(this).closest("tr").remove();
+                counterUrlSoporte -= 1
+
+                listadoUrlSoporte = listadoUrlSoporte.filter(function (el) { return el.codigoUrl !== parseInt(codigo); });
+            });
+
+            //Guardar los datos del solicitud
+            $("#guardar").click(function () {
+                var flag = true;
+
+                $('#form-solicitud .campo-requerido').each(function (index, value) {
+
+                    if ($(this).val() == "" && $(this).is(":visible")) {
+                        flag = false;
+                    }
+                });
+
+                if (flag) {
+                    debugger
+                    var cantidadSolicitud = $("#cantidad").val();
+
+                    if (cantidadSolicitud == "") {
+                        toastr.error('@Mensajes.MensajeDatosObligatorios')
+                    } else {
+                        //validaciones por tipo de solicitud
+                        var slt = document.getElementById('id_tipo');
+                        //var valor = slt.options[slt.selectedIndex].text;
+                        var valor = slt.options[slt.selectedIndex].value;
+
+                        //Formulario General
+                        if (valor == 758) {
+                            //validar la descripcion
+                            var descripcion = $("#descripcion_proyecto").val();
+                            var empresa = $("#empresa").val();
+                            if (descripcion == "" || empresa == "") {
+                                toastr.error('@Mensajes.MensajeDatosObligatorios')
+                            }
+                            else {
+                                guardar();
+                            }
+                        }
+
+                        //Formulario Eclub o Icare
+                        if (valor == 734 || valor == 735) {
+                            //validar los campos obligatorios
+                            var slt = document.getElementById('id_marca');
+                            var valor = slt.options[slt.selectedIndex].text;
+
+                            //validar que si seleccion gif lo adjunte
+                            //Habilitar los gifs
+
+
+                            if (valorGifs.checked) {
+                                if ($("#archivo_gifs").get(0).value != "") {
+                                    guardar();
+                                } else {
+                                    toastr.error('Seleccione el GIF para continuar')
+                                }
+                            } else {
+
+                                guardar();
+                            }
+                            //if (valor == "N/A") {
+                            //    toastr.error('Seleccione la marca para la campaña')
+                            //}
+                            //else {
+                                //guardar();
+                            //}
+                        }
+
+                        //Formulario Mantenimiento
+                        if (valor == 737) {
+                            //validar la descripcion
+                            var descripcion = $("#descripcion_proyecto").val();
+                            if (descripcion == "") {
+                                toastr.error('@Mensajes.MensajeDatosObligatorios')
+                            } else {
+                                guardar();
+                            }
+                        }
+
+                        //Formulario Envios Icare
+                        if (valor == 736) {
+                                guardar();
+                        }
+
+                        if (valor == 739 || valor == 738 || valor == 740) {
+                            guardar();
+                        }
+                    }
+                }
+                else {
+                    toastr.error('@Mensajes.MensajeDatosObligatorios')
+                }
+        });
+
+        function getPortales() {
+           debugger
+            var idsOpcionesMenu = [];
+            var opciones = $("#idsPortales").val();
+            opciones = opciones.split(',');
+
+            for (var i = 0; i < opciones.length; i++) {
+                let id = parseInt(opciones[i]);
+                idsOpcionesMenu.push(id);
+            }
+            return idsOpcionesMenu;
+        }
+
+
+        function guardar() {
+
+            debugger
+            var portales = getPortales();
+
+            var data_form = {
+                "solicitud": $('#form-solicitud').serializeObject(), "codigoUsuario": $("#codigo_usuario").val(), "camposPersonalizados": listadoCamposPersonalizados, "urlExterno": listadoUrlExternos, "listadoUrlSoporte": listadoUrlSoporte, "urgente": urgente, "portales": portales}
+            var archivo = $("#referencia").get(0);
+            var formato = $("#formato").get(0);
+            var soporte = $("#soporte").get(0);
+            var archivoHtml = $("#materialHtml").get(0);
+            var archivo_gifs = $("#archivo_gifs").get(0);
+
+            _GuardarAdjuntarArchivo(archivo, urlAccionGuardar, urlAccionListado, data_form, formato, soporte, archivoHtml, archivo_gifs)
+        }
+
+        $(".inputfile").change(function (e) {
+            let archivos = $(e.currentTarget)[0].files;
+            $(this).closest('.box-body').find("#ZonaListadoArchivosCargados").remove()
+            if (archivos.length > 0) {
+
+                let nombresArchivos = [];
+
+                let li = '';
+
+                $.each(archivos, function (index, value) {
+                    nombresArchivos.push(value.name)
+                    li += '<li>' + value.name + '</li>'
+                })
+
+               
+                let resultado = '<div id="ZonaListadoArchivosCargados" class="col-md-12"><small id="nombresArchivosCargados"><ul>' + li + '</ul></small></div>';
+
+                $(this).closest('.box-body').append(resultado)
+            }
+        });
+
+    </script>
+
+    <script src="~/Scripts/custom-file-input.js"></script>
+
+} 

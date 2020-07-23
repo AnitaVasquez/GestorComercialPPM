@@ -1,0 +1,174 @@
+﻿@model GestionPPM.Entidades.Modelo.AsignacionSolicitudes 
+@using GestionPPM.Entidades.Metodos
+
+@{
+    ViewBag.Title = "Crear Asignación";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@* Formato para el template de datos *@
+<link href="~/Content/css/personalizar.css" rel="stylesheet" />
+
+<link rel="stylesheet" type="text/css" href="~/Content/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css" href="~/Content/themes/icon.css">
+<link rel="stylesheet" type="text/css" href="~/Content/css/demo.css">
+
+<form action="#" id="form-asignacion" asignacione="form" data-toggle="validator" method="post" accept-charset="utf-8">
+    <div class="row">
+        <div class="col-md-offset-2 col-md-8">
+            <div class="panel">
+
+                <div class="panel-heading-create custom-header-panel">
+                    <h4>@Etiquetas.TituloPanelEdicionAsignacion</h4>
+                </div>
+
+                <div class="panel-body">
+                    <div class="form-horizontal">
+
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                         
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Tipo: <span class="requerido"> *</span></label> 
+                            <div class="col-md-8">
+                                @Html.DropDownList("id_tipo", ViewBag.ListadoTipo as List<SelectListItem>, Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido", required = "" })
+                            </div>
+                        </div> 
+                         
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Subtipo: <span class="requerido"> *</span></label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("id_subtipo", ViewBag.ListadoSubtipo as List<SelectListItem>, Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido", required = "" })
+                            </div>
+                        </div>
+                            
+
+                        <div class="row fila-seccion">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="control-label col-md-3">Usuarios: <span class="requerido"> *</span></label>
+                                    <div class="col-md-8">
+                                        <input class="easyui-tagbox auto-ajustar form-control campo-requerido" id="idsUsuarios_guardar" name="idsUsuarios_guardar" style="width:100%" data-options="
+                                        url: '@Url.Action("_GetUsuarios", "Asignacion")',
+                                        method: 'get',
+                                        value: '',
+                                        valueField: 'id',
+                                        textField: 'text',
+                                        limitToList: true,
+                                        hasDownArrow: true,
+                                        ">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <br />
+
+                        <div class="form-group">
+                            <div class="col-md-offset-4 col-md-12">
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <input id="guardar" type="button" value="Guardar" class="btn btn-default" />
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                @Html.ActionLink("Regresar", "Index", null, new { @class = "btn btn-default" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+@section SeccionScriptMultiSelect {
+    <script src="~/Scripts/easyloader.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery.easyui.min.js"></script>
+    <script src="~/Scripts/locale/easyui-lang-es.js"></script>
+}
+
+@section ViewSpecificJavascript {
+    <script>
+        var urlAccionGuardar = '@Url.Action("Create","Asignacion")';
+        var urlAccionListado = '@Url.Action("Index", "Asignacion")';
+
+        $(document).ready(function () {
+            easyloader.locale = 'es';
+            debugger
+              
+            $("#id_tipo").change(function () {
+                debugger
+                $("#id_subtipo").empty();
+                cargarSubtipoDependiente();
+                return false;
+            })
+        });
+
+        function cargarSubtipoDependiente() {
+            $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("GetSubtipoDependiente")',
+                        dataType: 'json',
+                        data: { id: $("#id_tipo").val() },
+                        success: function (data) {
+                            debugger  
+
+                            $.each(data, function (i, catalogo) {
+                                $("#id_subtipo").append('<option value="' + catalogo.Value + '">' + catalogo.Text + '</option>');
+                            });
+                        },
+                        error: function (ex) {
+                            debugger 
+                        }
+            });
+        }
+
+
+    $("#guardar").click(function () {
+        debugger
+        var flag = true; 
+
+        $('#form-asignacion .campo-requerido').each(function (index, value) {
+            
+            if ($(this).val() == "" && $(this).is(":visible")) { 
+                flag = false;
+            }
+        });
+
+        if (flag) {
+            debugger
+            var opciones = $("#idsUsuarios_guardar").val();
+
+            if (opciones == ""){
+                toastr.error('@Mensajes.MensajeDatosObligatorios')
+            }else {
+                guardar(); 
+            } 
+        }
+        else
+        {
+            toastr.error('@Mensajes.MensajeDatosObligatorios')
+        }
+    })
+
+    function guardar() {
+        debugger
+        var data_form = JSON.stringify({ "asignacion": $('#form-asignacion').serializeObject(), "usuarios": getUsuarios() })
+        _Guardar(data_form, urlAccionGuardar, urlAccionListado)
+    }
+
+    function getUsuarios() {
+        debugger
+        var idsOpcionesMenu = [];
+        var opciones = $("#idsUsuarios_guardar").val();
+        opciones = opciones.split(',');
+
+        for (var i = 0; i < opciones.length; i++) {
+            let id = parseInt(opciones[i]);
+            idsOpcionesMenu.push(id);
+        }
+        return idsOpcionesMenu;
+    }
+
+
+    </script>
+}

@@ -1,0 +1,105 @@
+﻿@model IEnumerable<GestionPPM.Entidades.Modelo.CargaMasiva>
+<link href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css"
+      rel="stylesheet">
+<style>
+    input[type="file"] {
+        display: none;
+    }
+
+    .custom-file-upload {
+        border: 1px solid #ccc;
+        display: inline-block;
+        padding: 6px 12px;
+        cursor: pointer;
+        width: 100%;
+    }
+
+    .ui-widget-header {
+        /*background: #498C4C;*/
+        background: #cedc98;
+        border: 1px solid #DDDDDD;
+        color: #333333;
+        font-weight: bold;
+    }
+
+    .progress-label {
+        position: absolute;
+        left: 50%;
+        top: 6px;
+        font-weight: bold;
+        text-shadow: 1px 1px 0 #fff;
+    }
+
+    .red {
+        color: red;
+    }
+</style>
+
+<!-- Cargas Masivas Modal -->
+<div id="seccion-cargas-masivas-contenido" class="row">
+    <div class="modal fade" id="cargas-masivas-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">X</span></button>
+                    <h4 class="modal-title">Cargar Data</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-9">
+                            @*<input style="width: 100%; background-color:#00AD8E;border-color: #00AD8E;" class="btn btn-primary" type="file" name="uploadFile" value="Examinar" />*@
+                            <label title="Cargar archivo" for="file-upload" class="custom-file-upload">
+                                <i class="fa fa-cloud-upload"></i> Seleccionar Archivo
+                            </label>
+                            <input id="file-upload" type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+                        </div>
+                        <div class="col-sm-3">
+                            <input style="width: 100%; background-color:#00AD8E;border-color: #00AD8E;" class="btn btn-primary" type="submit" id="procesar-carga" value="Procesar" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div id="progressbar-5">
+                                <div class="progress-label">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            @(Html
+                                        .Grid(Model)
+                                        .Build(columns =>
+                                        {
+                                            columns.Add(model => model.Fila).Titled("Fila");
+                                            columns.Add(model => model.Columna).Titled("Columna");
+
+                                            columns.Add(model => model.Valor).Titled("Valor");
+                                            columns.Add(model => model.Error).Titled("Error");
+                                        })
+                                        .Empty(Mensajes.MensajeNoDataListado)
+                                        .Id("grid-CargaMasiva")
+                                        //.Filterable()
+                                        //.Sortable()
+                                    //.Pageable()
+                            )
+                        </div>
+
+                    </div>
+
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+</div>
+
+
+<script>
+    $('#file-upload').change(function () {
+        var nombreArchivo = $('#file-upload')[0].files[0].name;
+        $('.custom-file-upload').text(nombreArchivo);
+        $("#grid-CargaMasiva").find("#Seccion-TituloGrid").html("<h5><i class='fa fa-file-excel-o' aria-hidden='true'></i> Detalle Carga Masiva - " + nombreArchivo + "</h5>");
+    });
+
+</script>

@@ -1,0 +1,235 @@
+﻿@model GestionPPM.Entidades.Modelo.ProductosGestorCE
+@using GestionPPM.Entidades.Metodos
+
+
+@* Formato para el template de datos *@
+<link href="~/Content/css/personalizar.css" rel="stylesheet" />
+
+<script src="~/Scripts/easyloader.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.easyui.min.js"></script>
+<script src="~/Scripts/locale/easyui-lang-es.js"></script>
+
+<script>
+    
+    var urlAccionGuardar = '@Url.Action("CreateOrUpdate", "ProductosGestor")';
+
+    $(document).ready(function () {
+        debugger
+        easyloader.locale = 'es';
+        $("#seccion-titulo-modal").text('@Html.Raw(ViewBag.TituloModal)');
+    });
+
+    $("#guardar-producto").click(function () {
+        var flag = true;
+        debugger
+        $('#form-producto .campo-requerido').each(function (index, value) {
+
+            if ($(this).val() == "" && $(this).is(":visible")) {
+                flag = false;
+            }
+        });
+
+        if (flag )
+            guardarProducto();
+        else
+            toastr.error('@Mensajes.MensajeDatosObligatorios')
+    })
+
+    function guardarProducto() {
+        debugger
+        var data_form = JSON.stringify({ "productoCE": $('#form-producto').serializeObject()})
+        _GuardarModal(data_form, urlAccionGuardar);
+    }
+
+</script>
+
+<form action="#" id="form-producto" role="form" data-toggle="validator" method="post" accept-charset="utf-8">
+    <div class="row">
+        <div class="col-md-offset-2 col-md-8">
+            <div class="form-horizontal">
+                @Html.HiddenFor(model => model.id_producto_gestor)
+                @Html.HiddenFor(model => model.estado)
+
+                <div class="form-group">
+                    <label class="control-label col-md-4">Tipo Producto: <span class="requerido"> *</span></label>
+                    <div class="col-md-8">
+                        @Html.DropDownList("id_tipo_producto", CatalogoEntity.ObtenerListadoCatalogosByCodigoSinOrdenar("TPG-01", Model.id_tipo_producto.ToString()), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido" })
+                    </div>
+                </div>
+
+                <div class="form-group" hidden id="LN">
+                    <label class="control-label col-md-4">Linea de Negocio: <span class="requerido"> *</span></label>
+                    <div class="col-md-8">
+                        @Html.DropDownList("id_linea_negocio", LineaNegocioEntity.ObtenerListadoLineaNegocio(Model.id_linea_negocio.ToString()), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido" })
+                    </div>
+                </div>
+
+                <div class="form-group" hidden id="S1">
+                    <label class="control-label col-md-4">Segmentación 1: <span class="requerido"> *</span></label>
+                    <div class="col-md-8">
+                        @Html.DropDownList("id_sublinea_negocio", SublineaNegocioEntity.ObtenerListadoSublineaNegocio(Model.id_sublinea_negocio.ToString()), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido" })
+                    </div>
+                </div>
+
+                <div class="form-group" hidden id="S2">
+                    <label class="control-label col-md-4">Segmentación 2: <span class="requerido"> *</span></label>
+                    <div class="col-md-8">
+                        @Html.DropDownList("id_producto_general", ProductosGeneralGestorEntity.ObtenerListadoProdutoGeneralGestor(Model.id_producto_general.ToString()), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido" })
+                    </div>
+                </div>
+
+                <div class="form-group" hidden id="Nombre">
+                    <label class="control-label col-md-4">Nombre: <span class="requerido"> *</span></label>
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.nombre, new { htmlAttributes = new { @class = "form-control campo-requerido", maxlength = 50, required = "" } })
+                        @Html.ValidationMessageFor(model => model.nombre, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group" hidden id="Descripcion">
+                    <label class="control-label col-md-4">Descripción: <span class="requerido"> *</span></label>
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.descripcon, new { htmlAttributes = new { @class = "form-control campo-requerido", maxlength = 50, required = "" } })
+                        @Html.ValidationMessageFor(model => model.descripcon, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-5 col-md-12">
+                        <input id="guardar-producto" type="button" value="Guardar" class="btn btn-default" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+
+<script>
+
+    //Campos del formulario
+    var lineaNegocio = document.getElementById('LN');
+    var sublineaNegocio = document.getElementById('S1');
+    var productoGeneral = document.getElementById('S2');
+    var nombre = document.getElementById('Nombre');
+    var descripcion = document.getElementById('Descripcion');
+
+
+    $(document).ready(function () {
+        
+        var tipoDocumento = '@ViewBag.TipoProducto';
+
+        if (tipoDocumento == 907) {
+            lineaNegocio.hidden = false
+            sublineaNegocio.hidden = false
+            productoGeneral.hidden = false
+            nombre.hidden = false;
+            descripcion.hidden = false;
+        } 
+
+        //Si cambia el tipo de producto
+        $("#id_tipo_producto").change(function () {
+            debugger
+            var slt = document.getElementById('id_tipo_producto');
+            ////var valor = slt.options[slt.selectedIndex].text;
+            var valor2 = slt.options[slt.selectedIndex].value;
+
+
+            if (valor2 == 0) {
+                lineaNegocio.hidden = true
+                sublineaNegocio.hidden = true
+                productoGeneral.hidden = true
+                nombre.hidden = false;
+                descripcion.hidden = false;
+            }
+
+            if (valor2 == 904) {
+                nombre.hidden = false;
+                lineaNegocio.hidden = true
+                sublineaNegocio.hidden = true
+                productoGeneral.hidden = true
+                descripcion.hidden = false;
+            }
+            if (valor2 == 905) {
+                lineaNegocio.hidden = false
+                sublineaNegocio.hidden = true
+                productoGeneral.hidden = true
+                nombre.hidden = false;
+                descripcion.hidden = false;
+            }
+            if (valor2 == 906) {
+                lineaNegocio.hidden = false
+                sublineaNegocio.hidden = false
+                productoGeneral.hidden = true
+                nombre.hidden = false;
+                descripcion.hidden = false;
+            }
+            if (valor2 == 907) {
+                lineaNegocio.hidden = false
+                sublineaNegocio.hidden = false
+                productoGeneral.hidden = false
+                nombre.hidden = false;
+                descripcion.hidden = false;
+            }
+
+        });
+
+        //Si cambia el tipo de producto
+        $("#id_linea_negocio").change(function () {
+            $("#id_sublinea_negocio").empty();
+            cargarSegmentacion1();
+        });
+
+        //Si cambia el tipo de producto
+        $("#id_sublinea_negocio").change(function () {
+            $("#id_producto_general").empty();
+            cargarSegmentacion2();
+        });
+
+    });
+
+    //Cargar dependencias de linea de negocio
+    function cargarSegmentacion1() {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetSegmentacion1")',
+            dataType: 'json',
+            data: { id: $("#id_linea_negocio").val() },
+            success: function (data) {
+                debugger
+                $("#id_sublinea_negocio").append('<option value="' + 0 + '">' + "Seleccione una opción" + '</option>');
+                $.each(data, function (i, catalogo) {
+                    $("#id_sublinea_negocio").append('<option value="' + catalogo.Value + '">' + catalogo.Text + '</option>');
+                });
+            },
+            error: function (ex) {
+                debugger
+            }
+        });
+    }
+
+
+    //Cargar dependencias de linea de negocio
+    function cargarSegmentacion2() {
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetSegmentacion2")',
+            dataType: 'json',
+            data: { id: $("#id_sublinea_negocio").val() },
+            success: function (data) {
+                debugger
+                $("#id_producto_general").append('<option value="' + 0 + '">' + "Seleccione una opción" + '</option>');
+                $.each(data, function (i, catalogo) {
+                    $("#id_producto_general").append('<option value="' + catalogo.Value + '">' + catalogo.Text + '</option>');
+                });
+            },
+            error: function (ex) {
+                debugger
+            }
+        });
+    }
+
+
+
+</script>

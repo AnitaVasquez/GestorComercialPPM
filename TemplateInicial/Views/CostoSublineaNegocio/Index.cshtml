@@ -1,0 +1,89 @@
+﻿
+@{
+    ViewBag.Title = "CostoSublineaNegocio";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@Html.AjaxGrid(Url.Action("IndexGrid"))
+
+
+
+
+@section ViewSpecificJavascript {
+    <script>
+        debugger
+        var idGrid = "grid-CostoSublineaNegocio";
+        var urlAccionReporteExcel = '@Url.Action("DescargarReporteFormatoExcel", "CostoSublineaNegocio")';
+        var urlAccionReportePDF = '@Url.Action("DescargarReporteFormatoPDF", "CostoSublineaNegocio")';
+        var urlAccionReporteCSV = '@Url.Action("DescargarReporteFormatoCSV", "CostoSublineaNegocio")';
+
+        $(document).ready(function () {
+            debugger 
+        })
+
+        $(document).click(function (e) {
+            var elemento = $(e.currentTarget.activeElement)[0];
+            var idRegistro = $(elemento).attr("data-id"); //$(elemento).data("id")
+
+            if (elemento.id === 'recargar') {
+                debugger
+                recargarGridByID(idGrid);
+            }
+
+            if (elemento.id === 'nuevo') {
+                debugger
+
+                _GetCreate(null, '@Url.Action("_Formulario", "CostoSublineaNegocio")');
+                $('#contenido-modal').modal({
+                    'show': 'true',
+                    'backdrop': 'static',
+                    'keyboard': false
+                });
+                return;
+            }
+
+            if (elemento.id === '') {
+
+            }
+
+            if (elemento.id === 'ExportarGridExcel') {
+                debugger
+                location.href = urlAccionReporteExcel;
+
+            }
+            if (elemento.id === 'ExportarGridPDF') {
+                debugger
+                reporteGridPDF(urlAccionReportePDF);
+            }
+            if (elemento.id === 'ExportarGridCSV') {
+                debugger
+                location.href = urlAccionReporteCSV;
+            }
+
+            if (elemento.id === 'Ayuda') {
+
+                $('#help-modal').modal({
+                    'show': 'true',
+                    'backdrop': 'static',
+                    'keyboard': false
+                }) 
+            }
+        });
+
+        $(document).keyup(function (e) {
+            var elemento = $(e.currentTarget.activeElement)[0];
+            //Validar que los Grids tengan filtros de búsqueda
+            var filtrosBusqueda = document.getElementById('GridSearch');
+            busquedaGrid(idGrid);
+        });
+
+        $('#contenido-modal').on('hidden.bs.modal', function () {
+            debugger
+            recargarGridByID("grid-CostoSublineaNegocio")
+            $("#preloader").show();
+            setTimeout(function () { $("#preloader").hide(); }, 500);
+        })
+
+
+    </script>
+}

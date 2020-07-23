@@ -1,0 +1,378 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="GestionPlaceToPay.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="ComercioPlaceToPay">
+          <Key>
+            <PropertyRef Name="IDComercioPlaceToPay" />
+          </Key>
+          <Property Name="IDComercioPlaceToPay" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Fecha" Type="datetime" />
+          <Property Name="TipoCodigo" Type="int" />
+          <Property Name="Region" Type="int" />
+          <Property Name="NombresEjecutivo" Type="nvarchar" MaxLength="255" />
+          <Property Name="ApellidosEjecutivo" Type="nvarchar" MaxLength="255" />
+          <Property Name="CorreoElectronicoEjecutivo" Type="nvarchar" MaxLength="255" />
+          <Property Name="FormaContacto" Type="int" />
+          <Property Name="NombresContacto" Type="nvarchar" MaxLength="255" />
+          <Property Name="ApellidosContacto" Type="nvarchar" MaxLength="255" />
+          <Property Name="CorreoElectronicoLiderProyectoComercio" Type="nvarchar" MaxLength="255" />
+          <Property Name="NombresAdministrador" Type="nvarchar" MaxLength="255" />
+          <Property Name="ApellidosAdministrador" Type="nvarchar" MaxLength="255" />
+          <Property Name="NumeroCelularAdministrador" Type="nvarchar" MaxLength="255" />
+          <Property Name="IdentificacionAdministrador" Type="nvarchar" MaxLength="255" />
+          <Property Name="NumeroCuentaBancaria" Type="nvarchar" MaxLength="255" />
+          <Property Name="TipoCuentaBancaria" Type="nvarchar" MaxLength="255" />
+          <Property Name="BancoCuentaBancaria" Type="nvarchar" MaxLength="255" />
+          <Property Name="TelefonoParticular" Type="nvarchar" MaxLength="255" />
+          <Property Name="NumeroTransaccionesMensuales" Type="int" />
+          <Property Name="ProductoRecomendado" Type="nvarchar" MaxLength="255" />
+          <Property Name="MontoPromedioPorTransaccion" Type="decimal" Precision="18" Scale="6" />
+          <Property Name="Segmento" Type="nvarchar" MaxLength="255" />
+          <Property Name="Industria" Type="nvarchar" MaxLength="255" />
+          <Property Name="TipoDeServicio" Type="nvarchar" MaxLength="255" />
+          <Property Name="TiposCreditoDisponer" Type="nvarchar" MaxLength="255" />
+          <Property Name="Plazos" Type="nvarchar" MaxLength="255" />
+          <Property Name="TipoPropuesta" Type="int" />
+          <Property Name="FaseGestion" Type="int" />
+          <Property Name="PropuestaAdjuntada" Type="nvarchar(max)" />
+          <Property Name="CodigoUnico" Type="nvarchar" MaxLength="255" />
+          <Property Name="FechaAfiliacion" Type="datetime" />
+          <Property Name="RUC" Type="nvarchar" MaxLength="255" />
+          <Property Name="Establecimiento" Type="nvarchar" MaxLength="255" />
+          <Property Name="MID" Type="nvarchar" MaxLength="255" />
+          <Property Name="Especialidad" Type="nvarchar" MaxLength="255" />
+          <Property Name="NombreRepresentanteLegal" Type="nvarchar" MaxLength="255" />
+          <Property Name="IdentificacionRepresentanteLegal" Type="nvarchar" MaxLength="255" />
+          <Property Name="RazonSocial" Type="nvarchar" MaxLength="255" />
+          <Property Name="DireccionComercio" Type="nvarchar" MaxLength="255" />
+          <Property Name="Prefijo1" Type="nvarchar" MaxLength="255" />
+          <Property Name="Telefono1" Type="nvarchar" MaxLength="255" />
+          <Property Name="Prefijo2" Type="nvarchar" MaxLength="255" />
+          <Property Name="Telefono2" Type="nvarchar" MaxLength="255" />
+          <Property Name="Prefijo3" Type="nvarchar" MaxLength="255" />
+          <Property Name="Telefono3" Type="nvarchar" MaxLength="255" />
+          <Property Name="Prefijo4" Type="nvarchar" MaxLength="255" />
+          <Property Name="Telefono4" Type="nvarchar" MaxLength="255" />
+          <Property Name="Mail" Type="nvarchar" MaxLength="255" />
+          <Property Name="Marca" Type="nvarchar" MaxLength="255" />
+          <Property Name="CreatedAt" Type="datetime" />
+          <Property Name="CreatedBy" Type="int" />
+          <Property Name="UpdatedAt" Type="datetime" />
+          <Property Name="UpdatedBy" Type="int" />
+        </EntityType>
+        <Function Name="ListadoComercioPlaceToPay" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="pagenum" Type="bigint" Mode="In" />
+          <Parameter Name="searchText" Type="nvarchar" Mode="In" />
+          <Parameter Name="filtro" Type="nvarchar(max)" Mode="In" />
+        </Function>
+        <Function Name="ObtenerTotalRegistrosListadoComercioPlaceToPay" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
+        <EntityContainer Name="GestionPlaceToPayStoreContainer">
+          <EntitySet Name="ComercioPlaceToPay" EntityType="Self.ComercioPlaceToPay" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="GestionPlaceToPay" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="ComercioPlaceToPay">
+          <Key>
+            <PropertyRef Name="IDComercioPlaceToPay" />
+          </Key>
+          <Property Name="IDComercioPlaceToPay" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Fecha" Type="DateTime" Precision="3" />
+          <Property Name="TipoCodigo" Type="Int32" />
+          <Property Name="Region" Type="Int32" />
+          <Property Name="NombresEjecutivo" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="ApellidosEjecutivo" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="CorreoElectronicoEjecutivo" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="FormaContacto" Type="Int32" />
+          <Property Name="NombresContacto" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="ApellidosContacto" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="CorreoElectronicoLiderProyectoComercio" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="NombresAdministrador" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="ApellidosAdministrador" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="NumeroCelularAdministrador" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="IdentificacionAdministrador" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="NumeroCuentaBancaria" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="TipoCuentaBancaria" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="BancoCuentaBancaria" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="TelefonoParticular" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="NumeroTransaccionesMensuales" Type="Int32" />
+          <Property Name="ProductoRecomendado" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="MontoPromedioPorTransaccion" Type="Decimal" Precision="18" Scale="6" />
+          <Property Name="Segmento" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Industria" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="TipoDeServicio" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="TiposCreditoDisponer" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Plazos" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="TipoPropuesta" Type="Int32" />
+          <Property Name="FaseGestion" Type="Int32" />
+          <Property Name="PropuestaAdjuntada" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CodigoUnico" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="FechaAfiliacion" Type="DateTime" Precision="3" />
+          <Property Name="RUC" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Establecimiento" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="MID" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Especialidad" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="NombreRepresentanteLegal" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="RazonSocial" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="DireccionComercio" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Prefijo1" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Telefono1" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Prefijo2" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Telefono2" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Prefijo3" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Telefono3" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Prefijo4" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Telefono4" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Mail" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Marca" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedAt" Type="DateTime" Precision="3" />
+          <Property Name="CreatedBy" Type="Int32" />
+          <Property Name="UpdatedAt" Type="DateTime" Precision="3" />
+          <Property Name="UpdatedBy" Type="Int32" />
+          <Property Name="IdentificacionRepresentanteLegal" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityContainer Name="PlaceToPay" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="ComercioPlaceToPay" EntityType="Self.ComercioPlaceToPay" />
+          <FunctionImport Name="ListadoComercioPlaceToPay" ReturnType="Collection(GestionPlaceToPay.ComercioPlaceToPayInfo)">
+            <Parameter Name="pagenum" Mode="In" Type="Int64" />
+            <Parameter Name="searchText" Mode="In" Type="String" />
+            <Parameter Name="filtro" Mode="In" Type="String" />
+          </FunctionImport>
+        </EntityContainer>
+        <ComplexType Name="ComercioPlaceToPayInfo">
+          <Property Type="Int32" Name="IDComercioPlaceToPay" Nullable="false" />
+          <Property Type="DateTime" Name="Fecha" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="TipoCodigo" Nullable="true" />
+          <Property Type="String" Name="TextoCatalogoTipoCodigo" Nullable="true" MaxLength="500" />
+          <Property Type="Int32" Name="Region" Nullable="true" />
+          <Property Type="String" Name="TextoCatalogoRegion" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="NombresEjecutivo" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="ApellidosEjecutivo" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="CorreoElectronicoEjecutivo" Nullable="true" MaxLength="255" />
+          <Property Type="Int32" Name="FormaContacto" Nullable="true" />
+          <Property Type="String" Name="TextoCatalogoFormaContacto" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="NombresContacto" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="ApellidosContacto" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="NombresApellidosContacto" Nullable="false" MaxLength="511" />
+          <Property Type="String" Name="CorreoElectronicoLiderProyectoComercio" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="NombresAdministrador" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="ApellidosAdministrador" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="NombresApellidosAdministrador" Nullable="false" MaxLength="511" />
+          <Property Type="String" Name="NumeroCelularAdministrador" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="IdentificacionAdministrador" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="NumeroCuentaBancaria" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="TipoCuentaBancaria" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="BancoCuentaBancaria" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="TelefonoParticular" Nullable="true" MaxLength="255" />
+          <Property Type="Int32" Name="NumeroTransaccionesMensuales" Nullable="true" />
+          <Property Type="String" Name="ProductoRecomendado" Nullable="true" MaxLength="255" />
+          <Property Type="Decimal" Name="MontoPromedioPorTransaccion" Nullable="true" Precision="18" Scale="6" />
+          <Property Type="String" Name="Segmento" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="Industria" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="TipoDeServicio" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="TiposCreditoDisponer" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="Plazos" Nullable="true" MaxLength="255" />
+          <Property Type="Int32" Name="TipoPropuesta" Nullable="true" />
+          <Property Type="String" Name="TextoCatalogoTipoPropuesta" Nullable="true" MaxLength="500" />
+          <Property Type="Int32" Name="FaseGestion" Nullable="true" />
+          <Property Type="String" Name="TextoCatalogoFaseGestion" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="PropuestaAdjuntada" Nullable="true" />
+          <Property Type="String" Name="CodigoUnico" Nullable="true" MaxLength="255" />
+          <Property Type="DateTime" Name="FechaAfiliacion" Nullable="true" Precision="23" />
+          <Property Type="String" Name="RUC" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="Establecimiento" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="MID" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="Especialidad" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="NombreRepresentanteLegal" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="RazonSocial" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="DireccionComercio" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="Prefijo1" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="Telefono1" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="TelefonoCompleto1" Nullable="false" MaxLength="510" />
+          <Property Type="String" Name="Prefijo2" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="Telefono2" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="TelefonoCompleto2" Nullable="false" MaxLength="510" />
+          <Property Type="String" Name="Prefijo3" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="Telefono3" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="TelefonoCompleto3" Nullable="false" MaxLength="510" />
+          <Property Type="String" Name="Prefijo4" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="Telefono4" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="TelefonoCompleto4" Nullable="false" MaxLength="510" />
+          <Property Type="String" Name="Mail" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="Marca" Nullable="true" MaxLength="255" />
+          <Property Type="DateTime" Name="CreatedAt" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="CreatedBy" Nullable="true" />
+          <Property Type="String" Name="CreadoPor" Nullable="true" MaxLength="500" />
+          <Property Type="DateTime" Name="UpdatedAt" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="UpdatedBy" Nullable="true" />
+          <Property Type="String" Name="ActualizadoPor" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="IdentificacionRepresentanteLegal" Nullable="true" MaxLength="255" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="GestionPlaceToPayStoreContainer" CdmEntityContainer="PlaceToPay">
+          <EntitySetMapping Name="ComercioPlaceToPay">
+            <EntityTypeMapping TypeName="GestionPlaceToPay.ComercioPlaceToPay">
+              <MappingFragment StoreEntitySet="ComercioPlaceToPay">
+                <ScalarProperty Name="IdentificacionRepresentanteLegal" ColumnName="IdentificacionRepresentanteLegal" />
+                <ScalarProperty Name="IDComercioPlaceToPay" ColumnName="IDComercioPlaceToPay" />
+                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+                <ScalarProperty Name="TipoCodigo" ColumnName="TipoCodigo" />
+                <ScalarProperty Name="Region" ColumnName="Region" />
+                <ScalarProperty Name="NombresEjecutivo" ColumnName="NombresEjecutivo" />
+                <ScalarProperty Name="ApellidosEjecutivo" ColumnName="ApellidosEjecutivo" />
+                <ScalarProperty Name="CorreoElectronicoEjecutivo" ColumnName="CorreoElectronicoEjecutivo" />
+                <ScalarProperty Name="FormaContacto" ColumnName="FormaContacto" />
+                <ScalarProperty Name="NombresContacto" ColumnName="NombresContacto" />
+                <ScalarProperty Name="ApellidosContacto" ColumnName="ApellidosContacto" />
+                <ScalarProperty Name="CorreoElectronicoLiderProyectoComercio" ColumnName="CorreoElectronicoLiderProyectoComercio" />
+                <ScalarProperty Name="NombresAdministrador" ColumnName="NombresAdministrador" />
+                <ScalarProperty Name="ApellidosAdministrador" ColumnName="ApellidosAdministrador" />
+                <ScalarProperty Name="NumeroCelularAdministrador" ColumnName="NumeroCelularAdministrador" />
+                <ScalarProperty Name="IdentificacionAdministrador" ColumnName="IdentificacionAdministrador" />
+                <ScalarProperty Name="NumeroCuentaBancaria" ColumnName="NumeroCuentaBancaria" />
+                <ScalarProperty Name="TipoCuentaBancaria" ColumnName="TipoCuentaBancaria" />
+                <ScalarProperty Name="BancoCuentaBancaria" ColumnName="BancoCuentaBancaria" />
+                <ScalarProperty Name="TelefonoParticular" ColumnName="TelefonoParticular" />
+                <ScalarProperty Name="NumeroTransaccionesMensuales" ColumnName="NumeroTransaccionesMensuales" />
+                <ScalarProperty Name="ProductoRecomendado" ColumnName="ProductoRecomendado" />
+                <ScalarProperty Name="MontoPromedioPorTransaccion" ColumnName="MontoPromedioPorTransaccion" />
+                <ScalarProperty Name="Segmento" ColumnName="Segmento" />
+                <ScalarProperty Name="Industria" ColumnName="Industria" />
+                <ScalarProperty Name="TipoDeServicio" ColumnName="TipoDeServicio" />
+                <ScalarProperty Name="TiposCreditoDisponer" ColumnName="TiposCreditoDisponer" />
+                <ScalarProperty Name="Plazos" ColumnName="Plazos" />
+                <ScalarProperty Name="TipoPropuesta" ColumnName="TipoPropuesta" />
+                <ScalarProperty Name="FaseGestion" ColumnName="FaseGestion" />
+                <ScalarProperty Name="PropuestaAdjuntada" ColumnName="PropuestaAdjuntada" />
+                <ScalarProperty Name="CodigoUnico" ColumnName="CodigoUnico" />
+                <ScalarProperty Name="FechaAfiliacion" ColumnName="FechaAfiliacion" />
+                <ScalarProperty Name="RUC" ColumnName="RUC" />
+                <ScalarProperty Name="Establecimiento" ColumnName="Establecimiento" />
+                <ScalarProperty Name="MID" ColumnName="MID" />
+                <ScalarProperty Name="Especialidad" ColumnName="Especialidad" />
+                <ScalarProperty Name="NombreRepresentanteLegal" ColumnName="NombreRepresentanteLegal" />
+                <ScalarProperty Name="RazonSocial" ColumnName="RazonSocial" />
+                <ScalarProperty Name="DireccionComercio" ColumnName="DireccionComercio" />
+                <ScalarProperty Name="Prefijo1" ColumnName="Prefijo1" />
+                <ScalarProperty Name="Telefono1" ColumnName="Telefono1" />
+                <ScalarProperty Name="Prefijo2" ColumnName="Prefijo2" />
+                <ScalarProperty Name="Telefono2" ColumnName="Telefono2" />
+                <ScalarProperty Name="Prefijo3" ColumnName="Prefijo3" />
+                <ScalarProperty Name="Telefono3" ColumnName="Telefono3" />
+                <ScalarProperty Name="Prefijo4" ColumnName="Prefijo4" />
+                <ScalarProperty Name="Telefono4" ColumnName="Telefono4" />
+                <ScalarProperty Name="Mail" ColumnName="Mail" />
+                <ScalarProperty Name="Marca" ColumnName="Marca" />
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="UpdatedAt" ColumnName="UpdatedAt" />
+                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="ListadoComercioPlaceToPay" FunctionName="GestionPlaceToPay.Store.ListadoComercioPlaceToPay">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GestionPlaceToPay.ComercioPlaceToPayInfo">
+                <ScalarProperty Name="IDComercioPlaceToPay" ColumnName="IDComercioPlaceToPay" />
+                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+                <ScalarProperty Name="TipoCodigo" ColumnName="TipoCodigo" />
+                <ScalarProperty Name="TextoCatalogoTipoCodigo" ColumnName="TextoCatalogoTipoCodigo" />
+                <ScalarProperty Name="Region" ColumnName="Region" />
+                <ScalarProperty Name="TextoCatalogoRegion" ColumnName="TextoCatalogoRegion" />
+                <ScalarProperty Name="NombresEjecutivo" ColumnName="NombresEjecutivo" />
+                <ScalarProperty Name="ApellidosEjecutivo" ColumnName="ApellidosEjecutivo" />
+                <ScalarProperty Name="CorreoElectronicoEjecutivo" ColumnName="CorreoElectronicoEjecutivo" />
+                <ScalarProperty Name="FormaContacto" ColumnName="FormaContacto" />
+                <ScalarProperty Name="TextoCatalogoFormaContacto" ColumnName="TextoCatalogoFormaContacto" />
+                <ScalarProperty Name="NombresContacto" ColumnName="NombresContacto" />
+                <ScalarProperty Name="ApellidosContacto" ColumnName="ApellidosContacto" />
+                <ScalarProperty Name="NombresApellidosContacto" ColumnName="NombresApellidosContacto" />
+                <ScalarProperty Name="CorreoElectronicoLiderProyectoComercio" ColumnName="CorreoElectronicoLiderProyectoComercio" />
+                <ScalarProperty Name="NombresAdministrador" ColumnName="NombresAdministrador" />
+                <ScalarProperty Name="ApellidosAdministrador" ColumnName="ApellidosAdministrador" />
+                <ScalarProperty Name="NombresApellidosAdministrador" ColumnName="NombresApellidosAdministrador" />
+                <ScalarProperty Name="NumeroCelularAdministrador" ColumnName="NumeroCelularAdministrador" />
+                <ScalarProperty Name="IdentificacionAdministrador" ColumnName="IdentificacionAdministrador" />
+                <ScalarProperty Name="NumeroCuentaBancaria" ColumnName="NumeroCuentaBancaria" />
+                <ScalarProperty Name="TipoCuentaBancaria" ColumnName="TipoCuentaBancaria" />
+                <ScalarProperty Name="BancoCuentaBancaria" ColumnName="BancoCuentaBancaria" />
+                <ScalarProperty Name="TelefonoParticular" ColumnName="TelefonoParticular" />
+                <ScalarProperty Name="NumeroTransaccionesMensuales" ColumnName="NumeroTransaccionesMensuales" />
+                <ScalarProperty Name="ProductoRecomendado" ColumnName="ProductoRecomendado" />
+                <ScalarProperty Name="MontoPromedioPorTransaccion" ColumnName="MontoPromedioPorTransaccion" />
+                <ScalarProperty Name="Segmento" ColumnName="Segmento" />
+                <ScalarProperty Name="Industria" ColumnName="Industria" />
+                <ScalarProperty Name="TipoDeServicio" ColumnName="TipoDeServicio" />
+                <ScalarProperty Name="TiposCreditoDisponer" ColumnName="TiposCreditoDisponer" />
+                <ScalarProperty Name="Plazos" ColumnName="Plazos" />
+                <ScalarProperty Name="TipoPropuesta" ColumnName="TipoPropuesta" />
+                <ScalarProperty Name="TextoCatalogoTipoPropuesta" ColumnName="TextoCatalogoTipoPropuesta" />
+                <ScalarProperty Name="FaseGestion" ColumnName="FaseGestion" />
+                <ScalarProperty Name="TextoCatalogoFaseGestion" ColumnName="TextoCatalogoFaseGestion" />
+                <ScalarProperty Name="PropuestaAdjuntada" ColumnName="PropuestaAdjuntada" />
+                <ScalarProperty Name="CodigoUnico" ColumnName="CodigoUnico" />
+                <ScalarProperty Name="FechaAfiliacion" ColumnName="FechaAfiliacion" />
+                <ScalarProperty Name="RUC" ColumnName="RUC" />
+                <ScalarProperty Name="Establecimiento" ColumnName="Establecimiento" />
+                <ScalarProperty Name="MID" ColumnName="MID" />
+                <ScalarProperty Name="Especialidad" ColumnName="Especialidad" />
+                <ScalarProperty Name="NombreRepresentanteLegal" ColumnName="NombreRepresentanteLegal" />
+                <ScalarProperty Name="RazonSocial" ColumnName="RazonSocial" />
+                <ScalarProperty Name="DireccionComercio" ColumnName="DireccionComercio" />
+                <ScalarProperty Name="Prefijo1" ColumnName="Prefijo1" />
+                <ScalarProperty Name="Telefono1" ColumnName="Telefono1" />
+                <ScalarProperty Name="TelefonoCompleto1" ColumnName="TelefonoCompleto1" />
+                <ScalarProperty Name="Prefijo2" ColumnName="Prefijo2" />
+                <ScalarProperty Name="Telefono2" ColumnName="Telefono2" />
+                <ScalarProperty Name="TelefonoCompleto2" ColumnName="TelefonoCompleto2" />
+                <ScalarProperty Name="Prefijo3" ColumnName="Prefijo3" />
+                <ScalarProperty Name="Telefono3" ColumnName="Telefono3" />
+                <ScalarProperty Name="TelefonoCompleto3" ColumnName="TelefonoCompleto3" />
+                <ScalarProperty Name="Prefijo4" ColumnName="Prefijo4" />
+                <ScalarProperty Name="Telefono4" ColumnName="Telefono4" />
+                <ScalarProperty Name="TelefonoCompleto4" ColumnName="TelefonoCompleto4" />
+                <ScalarProperty Name="Mail" ColumnName="Mail" />
+                <ScalarProperty Name="Marca" ColumnName="Marca" />
+                <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
+                <ScalarProperty Name="CreadoPor" ColumnName="CreadoPor" />
+                <ScalarProperty Name="UpdatedAt" ColumnName="UpdatedAt" />
+                <ScalarProperty Name="UpdatedBy" ColumnName="UpdatedBy" />
+                <ScalarProperty Name="ActualizadoPor" ColumnName="ActualizadoPor" />
+                <ScalarProperty Name="IdentificacionRepresentanteLegal" ColumnName="IdentificacionRepresentanteLegal" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

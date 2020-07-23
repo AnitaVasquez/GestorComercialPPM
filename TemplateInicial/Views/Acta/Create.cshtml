@@ -1,0 +1,780 @@
+﻿@using GestionPPM.Entidades.Metodos
+@using GestionPPM.Entidades.Modelo
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string textoPorDefectoAcuerdoConformidadInicio = "Por medio de la presente las partes acuerdan que el proyecto ha iniciado satisfactoriamente.";
+    string textoPorDefectoAcuerdoConformidadFin = "Por medio de la presente las partes acuerdan que el proyecto ha finalizado satisfactoriamente.";
+
+    var usuario = UsuarioEntity.ConsultarInformacionPrincipalUsuario(ViewBag.UsuarioID);
+
+    var clienteID = ViewBag.idCliente;
+    var fechaInicio = ViewBag.fechaInicio;
+    var fechaFin = ViewBag.fechaFin;
+
+
+    var ListadoPrefacturas = ViewBag.ListadoPrefacturas;
+
+}
+
+<style>
+    /*[disabled] {
+        color: #dd4b39;
+        background-color: #ffc;
+    }
+
+    select[disabled="disabled"] {
+        color: #dd4b39;
+        background-color: #ffc;
+    }
+
+    select:disabled {
+        border: solid 1px silver;
+        background-color: #F9F9F9;
+        color: blue;
+    }
+
+    [disabled] option {
+        background-color: #ffc;
+        color: #dd4b39;
+    }*/
+
+    .my-custom-scrollbar {
+        position: relative;
+        height: 150px;
+        overflow: auto;
+    }
+
+    .table-wrapper-scroll-y {
+        display: block;
+    }
+
+    .fila-seccion {
+        margin-bottom: 15px;
+    }
+
+    .fila-firma {
+        margin-bottom: 7px;
+    }
+
+    .etiqueta-seccion {
+        text-align: right;
+    }
+
+    .input-bloqueado {
+        pointer-events: none;
+    }
+
+    .alinear-derecha {
+        text-align: right;
+        min-width: 15em;
+    }
+
+    .alinear-firma {
+        text-align: center;
+    }
+
+    /* OCULTAR COLUMNAS ID DE LAS TABLAS DINAMICAS */
+    #tbl-ResponsablesCliente tr > *:nth-child(1) {
+        display: none;
+    }
+
+    #tbl-Entregables tr > *:nth-child(1) {
+        display: none;
+    }
+
+    #tbl-Participantes tr > *:nth-child(1) {
+        display: none;
+    }
+
+    #tbl-Temas tr > *:nth-child(1) {
+        display: none;
+    }
+
+    #tbl-Acuerdos tr > *:nth-child(1) {
+        display: none;
+    }
+
+    #tbl-ResponsablesCliente tr > *:nth-child(1) {
+        display: none;
+    }
+
+    #tbl-CondicionesGenerales tr > *:nth-child(1) {
+        display: none;
+    }
+
+    #tbl-Cliente tr > *:nth-child(1) {
+        display: none;
+    }
+
+    #tbl-Contabilidad tr > *:nth-child(1) {
+        display: none;
+    }
+
+    .desactivar-input {
+        pointer-events: none;
+        /*cursor: not-allowed;*/
+        background-color: #eee;
+        opacity: 1;
+    }
+</style>
+
+
+<link href="~/Content/themes/default/easyui.css" rel="stylesheet" />
+
+@* Formato para el template de datos *@
+<link href="~/Content/css/personalizar.css" rel="stylesheet" />
+
+<link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet" />
+
+<div class="panel">
+
+    <div class="panel-heading-create custom-header-panel">
+        <h4>@ViewBag.ActaTitulo <div class="pull-right"> @System.DateTime.Now.ToString("yyyy/MM/dd")</div></h4>
+    </div>
+
+    <div class="panel-body">
+        <form action="#" id="form-acta" role="form" data-toggle="validator" method="post" accept-charset="utf-8">
+
+            @Html.Partial("_Cabecera", new ViewDataDictionary { { "DatosUsuario", usuario }, { "CodigoActa", ViewBag.CodigoActa } })
+            @Html.Hidden("TipoActaID", (int)ViewBag.TipoActa)
+
+            @{
+                switch (ViewBag.CodigoActa)
+                {
+                    case "ARE":
+                        @Html.Partial("_DetalleParticipantes", new ViewDataDictionary { { "TituloPanelDetalle", "Participantes" }, { "ListadoDetalleParticipantes", new List<DetalleActaParticipantes>() } })
+                        @Html.Partial("_DetalleTemas", new ViewDataDictionary { { "TituloPanelDetalle", "Temas o Puntos a tratar" }, { "ListadoDetalleTemas", new List<DetalleActaTemasTratar>() } })
+                        @Html.Partial("_DetalleAcuerdos", new ViewDataDictionary { { "TituloPanelDetalle", "Acuerdos" }, { "ListadoDetalleAcuerdos", new List<DetalleActaAcuerdos>() } })
+                        break;
+                    case "AIP":
+                        @Html.Partial("_DetalleResponsables", new ViewDataDictionary { { "TituloPanelDetalle", "Responsables del Cliente" }, { "ListadoDetalleResponsables", new List<DetalleActaResponsables>() } })
+                        @Html.Partial("_DetalleEntregables", new ViewDataDictionary { { "TituloPanelDetalle", "Entregables" }, { "ListadoDetalleEntregables", new List<DetalleActaEntregables>() } })
+                        @Html.Partial("_DetalleCondiciones", new ViewDataDictionary { { "TituloPanelDetalle", "Condiciones Generales" }, { "ListadoDetalleCondiciones", new List<DetalleActaCondicionesGenerales>() } })
+                        @Html.Partial("_PiePagina", new ViewDataDictionary { { "TextoAcuerdoConformidad", textoPorDefectoAcuerdoConformidadFin }, { "CodigoActa", ViewBag.CodigoActa } })
+                        break;
+                    case "ACP":
+                        @Html.Partial("_DetalleResponsables", new ViewDataDictionary { { "TituloPanelDetalle", "Responsables del Cliente" }, { "ListadoDetalleResponsables", new List<DetalleActaResponsables>() } })
+                        @Html.Partial("_DetalleEntregables", new ViewDataDictionary { { "TituloPanelDetalle", "Entregables" }, { "ListadoDetalleEntregables", new List<DetalleActaEntregables>() } })
+                        @Html.Partial("_PiePagina", new ViewDataDictionary { { "TextoAcuerdoConformidad", textoPorDefectoAcuerdoConformidadFin }, { "CodigoActa", ViewBag.CodigoActa } })
+                        break;
+                    case "AECE": //Cliente
+                        @Html.Partial("_DetalleCliente", new ViewDataDictionary { { "TituloPanelDetalle", "Prefacturas SAFI" }, { "ListadoDetalleCliente", new List<DetalleActaCliente>() }, { "clienteID", clienteID }, { "fechaInicio", fechaInicio }, { "fechaFin", fechaFin }, { "ListadoPrefacturas", ListadoPrefacturas }, { "nuevo", true } })
+                        @Html.Partial("_PiePagina", new ViewDataDictionary { { "TextoAcuerdoConformidad", textoPorDefectoAcuerdoConformidadFin }, { "CodigoActa", ViewBag.CodigoActa } })
+                        break;
+                    case "AECF": //Contablidad
+                        @Html.Partial("_DetalleContabilidad", new ViewDataDictionary { { "TituloPanelDetalle", "Prefacturas SAFI" }, { "ListadoDetalleContabilidad", new List<DetalleActaContabilidad>() }, { "clienteID", clienteID }, { "fechaInicio", fechaInicio }, { "fechaFin", fechaFin }, { "ListadoPrefacturas", ListadoPrefacturas }, { "nuevo", true } })
+                        @Html.Partial("_PiePagina", new ViewDataDictionary { { "TextoAcuerdoConformidad", textoPorDefectoAcuerdoConformidadFin }, { "CodigoActa", ViewBag.CodigoActa } })
+                        break;
+                    default:
+                        @Html.Partial("_DetalleParticipantes", new ViewDataDictionary { { "TituloPanelDetalle", "Participantes" }, { "ListadoDetalleParticipantes", new List<DetalleActaParticipantes>() } })
+                        @Html.Partial("_DetalleTemas", new ViewDataDictionary { { "TituloPanelDetalle", "Temas o Puntos a tratar" }, { "ListadoDetalleTemas", new List<DetalleActaTemasTratar>() } })
+                        @Html.Partial("_DetalleAcuerdos", new ViewDataDictionary { { "TituloPanelDetalle", "Acuerdos" }, { "ListadoDetalleAcuerdos", new List<DetalleActaAcuerdos>() } })
+
+                        @Html.Partial("_DetalleResponsables", new ViewDataDictionary { { "TituloPanelDetalle", "Responsables del Cliente" }, { "ListadoDetalleResponsables", new List<DetalleActaResponsables>() } })
+                        @Html.Partial("_DetalleEntregables", new ViewDataDictionary { { "TituloPanelDetalle", "Entregables" }, { "ListadoDetalleEntregables", new List<DetalleActaEntregables>() } })
+                        @Html.Partial("_DetalleCondiciones", new ViewDataDictionary { { "TituloPanelDetalle", "Condiciones Generales" }, { "ListadoDetalleCondiciones", new List<DetalleActaCondicionesGenerales>() } })
+
+                        @Html.Partial("_DetalleCliente", new ViewDataDictionary { { "TituloPanelDetalle", "Prefacturas SAFI" }, { "ListadoDetalleCliente", new List<DetalleActaCliente>() }, { "nuevo", true } })
+                        @Html.Partial("_DetalleContabilidad", new ViewDataDictionary { { "TituloPanelDetalle", "Prefacturas SAFI" }, { "ListadoDetalleContabilidad", new List<DetalleActaContabilidad>() }, { "nuevo", true } })
+
+                        @Html.Partial("_PiePagina", new ViewDataDictionary { { "TextoAcuerdoConformidad", textoPorDefectoAcuerdoConformidadFin }, { "CodigoActa", ViewBag.CodigoActa } })
+                        break;
+                }
+            }
+
+            <div class="row">
+                <div class="col-md-offset-2 col-md-8">
+                    <div class="form-horizontal">
+
+                        <div class="form-group">
+                            <div class="col-md-offset-4 col-md-12">
+                                <input id="guardar" type="button" value="Guardar" class="btn btn-default" />
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                @Html.ActionLink("Regresar", "Index", null, new { @class = "btn btn-default" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<script src="~/Scripts/bootstrap-timepicker.js"></script>
+
+@*<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.es.min.js"></script>*@
+
+
+@section SeccionScriptMultiSelect {
+    <script src="~/Scripts/easyloader.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery.easyui.min.js"></script>
+    <script src="~/Scripts/locale/easyui-lang-es.js"></script>
+}
+
+@section ViewSpecificJavascript {
+
+    <script>
+        var contador = 0;
+        var codigoActa = '@ViewBag.CodigoActa'
+        var tipoActa = '@ViewBag.TipoActa'
+
+        var valorInicialFirmas = [];
+
+        var urlAccionListado = '@Url.Action("Index","Acta")';
+        var urlAccionGuardarActa = '@Url.Action("Create","Acta")';
+
+        var urlAccionInformacionPrefactura = '@Url.Action("_PrefacturaInformacion", "Acta")';
+
+        $(document).ready(function () {
+            //$('.datetimepicker1').datepicker({ language: 'es' });
+
+
+            $("#HoraInicio").addClass("desactivar-input")
+            $("#HoraFin").addClass("desactivar-input")
+
+
+            $('#nombre').editable({
+                //url: '/post',
+                title: 'Nombres',
+                anim: true,
+                placement: 'right'
+            });
+
+            $('#usuarioNombre').editable({
+                //url: '/post',
+                title: 'Nombres',
+                anim: true,
+                placement: 'left'
+            });
+
+            $('#cargo').editable({
+                //url: '/post',
+                title: 'Cargo',
+                anim: true,
+                placement: 'right'
+            });
+            $('#usuarioCargo').editable({
+                //url: '/post',
+                title: 'Cargo',
+                anim: true,
+                placement: 'left'
+            });
+
+            $('#empresa').editable({
+                //url: '/post',
+                title: 'Empresa',
+                anim: true,
+                placement: 'right'
+            });
+            $('#usuarioEmpresa').editable({
+                //url: '/post',
+                title: 'Empresa',
+                anim: true,
+                placement: 'left'
+            });
+
+            $('#texto-acuerdoConformidad').editable({
+                //url: '/post',
+                title: 'Acuerdo de conformidad.',
+                anim: true,
+                placement: 'top',
+                tpl: '<textarea maxlength="300"></textarea>'
+
+            });
+
+            $('#fecha').editable({
+                //url: '/',
+                title: 'Fecha',
+                anim: true,
+                placement: 'right'
+            });
+
+            $('#usuarioFecha').editable({
+                //url: '/',
+                title: 'Fecha',
+                anim: true,
+                placement: 'right'
+            });
+
+            //$('#username').editable('setValue',"changed value");
+            //$('#username').editable('getValue');
+            //$('#username').editable().text();
+            //$('#timepicker').timepicker('setTime', '12:45 AM');
+
+            $('#nombre').editable('option', 'validate', function(v) {
+                if(!v) return 'Campo requerido.';
+            });
+            $('#usuarioNombre').editable('option', 'validate', function(v) {
+                if(!v) return 'Campo requerido.';
+            });
+
+            $('#cargo').editable('option', 'validate', function (v) {
+                if (!v) return 'Campo requerido.';
+            });
+            $('#usuarioCargo').editable('option', 'validate', function (v) {
+                if (!v) return 'Campo requerido.';
+            });
+
+            $('#fecha').editable('option', 'validate', function (v) {
+                if (!v) return 'Campo requerido.';
+            });
+
+            $('#empresa').editable('option', 'validate', function (v) {
+                if (!v) return 'Campo requerido.';
+            });
+            $('#usuarioEmpresa').editable('option', 'validate', function (v) {
+                if (!v) return 'Campo requerido.';
+            });
+
+            $('#texto-acuerdoConformidad').editable('option', 'validate', function (v) {
+                if (!v) return 'Campo requerido.';
+            });
+
+            $('.agregarFila').click(function (e) {
+                debugger
+                var template = $(this).closest("tr");
+                var idTemplate = $(template).attr('id')
+
+                var tabla = template.closest("table")
+                var idTabla = $(tabla).attr('id')
+
+                //Validacion Solo para Actas de Cliente y Contabilidad
+                var repetido = ValidarItemRepetido(tabla, codigoActa);
+
+                if (repetido) {
+                    toastr.error('@Mensajes.MensajeErrorItemRepetido');
+                    return;
+                }
+
+                e.preventDefault();
+                var esFilaVacia = filaVacia(idTemplate);
+                if (!esFilaVacia) {
+                    agregarFila(idTemplate, idTabla, contador)
+                    contador++;
+
+                    if (idTabla == "tbl-Participantes")
+                        CalculoEstadisticasParticipantes(idTabla,'@Mensajes.MensajeActaReunionSuspendida')
+
+                } else {
+                    toastr.error('@Mensajes.MensajeDatosObligatorios');
+                }
+            });
+
+
+            //$('#templateParticipantes .chk-presente').on('ifChecked', function(event){
+            //    $(this).val("true");
+            //});
+
+            //$('#templateParticipantes .chk-presente').on('ifUnchecked', function(event){
+            //    $(this).val("false");
+            //});
+
+            //$('#templateParticipantes .chk-presente').change(function () {
+            //    if ($(this).attr('checked')) {
+            //        $(this).val("true");
+            //    } else {
+            //        $(this).val("false");
+            //    }
+            //});
+            //$('.chk-presente').change(function () {
+            //    if ($(this).attr('checked')) {
+            //        $(this).val("true");
+            //    } else {
+            //        $(this).val("false");
+            //    }
+            //});
+
+            $('.chk-presente').change(function () {
+                debugger
+                if ($(this).is(":checked")) {
+                    $(this).val("true");
+                } else {
+                    $(this).val("false");
+                }
+
+                var elemento = $(this);
+                var idTabla = $(this).closest('table').attr('id');
+                CalculoEstadisticasParticipantes(idTabla,'@Mensajes.MensajeActaReunionSuspendida')
+            });
+
+
+            $('#CodigoCotizacion').autoComplete({
+                resolver: 'custom',
+                noResultsText: 'No se encontraron resultados.',
+                events: {
+                    search: function (qry, callback) {
+                        $("#Cliente").removeClass("desactivar-input")
+                        $("#NombreProyecto").removeClass("desactivar-input")
+                        $("#DescripcionProyecto").removeClass("desactivar-input")
+                        limpiarCamposDependientesCodigoCotizacion();
+                        $.ajax(
+                            '@Url.Action("_GetCodigosCotizacion", "Acta")',
+                            {
+                                data: { 'busqueda': qry }
+                            }
+                        ).done(function (res) {
+                            callback(res.results)
+                        });
+                    }
+                }
+            });
+
+            $("#CodigoCotizacion").change(function (value) {
+                debugger
+                let valor = $(this).val();
+                if (valor.length < 4) {
+                    limpiarCamposDependientesCodigoCotizacion();
+                    $("#Cliente").removeClass("desactivar-input")
+                    $("#NombreProyecto").removeClass("desactivar-input")
+                    $("#DescripcionProyecto").removeClass("desactivar-input")
+                }
+            });
+
+            $("#NumeroReunion").change(function (value) {
+                debugger
+                let valor = $(this).val();
+                if (valor <= 0) {
+                    $(this).val(1);
+                    return;
+                }
+            });
+
+            $('#CodigoCotizacion').on('autocomplete.select', function (e, item) {
+                debugger
+                var id = item.id;
+                var texto = item.texto;
+
+                var descripcion = item.desc;
+                var registro = item.auxiliares;
+
+                for (var prop in registro) {
+                    let elemento = registro[prop]
+
+                    $("#Cliente").val(elemento.nombre_comercial_cliente)
+                    $("#NombreProyecto").val(elemento.nombre_proyecto)
+                    $("#DescripcionProyecto").val(elemento.descripcion_proyecto)
+
+                    $("#Cliente").addClass("desactivar-input")
+                    $("#NombreProyecto").addClass("desactivar-input")
+                    $("#DescripcionProyecto").addClass("desactivar-input")
+                }
+
+                $("#CodigoCotizacionID").val(id);
+            });
+
+            $('#Cliente').autoComplete({
+                resolver: 'custom',
+                noResultsText: 'No se encontraron resultados.',
+                events: {
+                    search: function (qry, callback) {
+                        $.ajax(
+                            '@Url.Action("_GetClientes", "Acta")',
+                            {
+                                data: { 'busqueda': qry }
+                            }
+                        ).done(function (res) {
+                            callback(res.results)
+                        });
+                    }
+                }
+            });
+
+            $('#tmp-HoraInicio').timepicker({
+                defaultTime: 'current',
+                minuteStep: 3,
+                showInputs: false,
+                disableFocus: true,
+                maxHours: 24,
+                showMeridian: false
+            });
+
+            $('#tmp-HoraFin').timepicker({
+                defaultTime: 'current',
+                minuteStep: 3,
+                showInputs: false,
+                disableFocus: true,
+                maxHours: 24,
+                showMeridian: false
+            });
+
+
+
+            $('#tmp-HoraInicio').on('dp.change', function (e) {
+
+                debugger
+                var hora = GetValorComponenteTimePicker('tmp-HoraFin');
+                var elem = hora.split(':');
+                var horaFin = elem[0];
+                var minutosFin = elem[1];
+
+                var horaI = GetValorComponenteTimePicker('tmp-HoraInicio');
+                var dt = new Date();
+                var tiempo = dt.getHours() + ":" + (dt.getMinutes() < 10 ? '0' : '') + dt.getMinutes();
+
+                if (horaI == '') {
+
+                    $("#HoraInicio").val(tiempo);
+                    $("#HoraFin").val(tiempo);
+                    $("#Duracion").val("00:00");
+                    return false;
+                }
+
+                var elem1 = horaI.split(':');
+                var horaInicio = elem1[0];
+                var minutosInicio = elem1[1];
+                if (horaInicio > horaFin) {
+                    $("#Duracion").val("00:00");
+                    return false;
+                }
+                else {
+
+                    $("#Duracion").val(diff(horaInicio + ':' + minutosInicio, horaFin + ':' + minutosFin));
+                }
+            });
+            $('#tmp-HoraFin').on('dp.change', function (e) {
+                debugger
+                var hora = GetValorComponenteTimePicker('tmp-HoraInicio');
+                var elem = hora.split(':');
+                var horaInicio = elem[0];
+                var minutosInicio = elem[1];
+
+                var horaF = GetValorComponenteTimePicker('tmp-HoraFin');
+                var dt = new Date();
+
+                var tiempo = dt.getHours() + ":" + (dt.getMinutes() < 10 ? '0' : '') + dt.getMinutes();
+                //var d = new Date();
+                //var h = addZero(d.getHours());
+                //var m = addZero(d.getMinutes());
+
+                if (horaF == '') {
+                    $("#HoraFin").val(tiempo);
+                    $("#HoraInicio").val(tiempo);
+                    $("#Duracion").val("00:00");
+                    return false;
+                }
+
+                var elem1 = horaF.split(':');
+                var horaFin = elem1[0];
+                var minutosFin = elem1[1];
+
+                if (horaInicio > horaFin) {
+                    $("#Duracion").val("00:00");
+                    return false;
+                }
+                else {
+
+                    $("#Duracion").val(diff(horaInicio + ':' + minutosInicio, horaFin + ':' + minutosFin));
+
+                }
+            });
+
+
+            $('.fecha-acuerdos').datebox({
+                onSelect: function (date) {
+                    debugger
+                    setTimeout(function () {
+                        debugger
+                        $(':focus').blur()
+                        //this.blur();
+                    }, 100);
+                }
+            });
+
+
+        })
+
+        $(window).on('load', function () {
+            valorInicialFirmas = $('.firma').editable('getValue'); // Toma el valor por defecto de firmas que tienen al inicio
+            CalculoEstadisticasParticipantes("tbl-Participantes", '@Mensajes.MensajeActaReunionSuspendida');
+
+        })
+
+        $("#guardar").click(function () {
+            debugger
+            var flag = validarCamposRequeridosFormularioCompleto("form-acta");
+
+            let flag2 = true; // Detalles dinámicos
+            let flag3 = firmasVacias(); // Firmas
+            let detallePendiente = false;
+            switch (codigoActa) {
+                case "ARE":
+                    flag2 = validacionDetallesActaReunion();
+                    flag3 = false; // Acta de reunion no necesita validar firmas.
+                    detallePendiente = DetallesPendientes(["templateParticipantes", "templateTemas","templateAcuerdos"]);
+                    break;
+                case "AIP":
+                    flag2 = validacionDetallesActaInicioProyecto();
+                    detallePendiente = DetallesPendientes(["templateResponsablesCliente", "templateEntregables", "templateCondiciones"]);
+                    break;
+                case "ACP":
+                    flag2 = validacionDetallesActaCierreProyecto();
+                    detallePendiente = DetallesPendientes(["templateEntregables", "templateResponsablesCliente"]);
+                    break;
+
+                case "AECE":
+                    flag2 = validacionDetallesActaCliente();
+                    detallePendiente = DetallesPendientes(["templateCliente"]);
+                    break;
+                case "AECF":
+                    flag2 = validacionDetallesActaContabilidad();
+                    detallePendiente = DetallesPendientes(["templateContabilidad"]);
+                    break;
+
+                default:
+                    flag2 = false;
+                    break;
+            }
+
+            if (flag && flag2 && !flag3) {
+                if (!detallePendiente)
+                    guardar();
+                else
+                    toastr.error('@Mensajes.MensajeValidacionDetallePendiente')
+            }
+            else
+                toastr.error('@Mensajes.MensajeDatosObligatorios')
+        })
+        function guardar() {
+            debugger
+
+            var cabeceraActa = $('#form-acta').serializeObject()
+            var cuerpoActa = {
+                "ActaID": 0, // No es necesario en la acción Crear
+                "Acuerdos": GetListadoTablaDinamica("tbl-Acuerdos"),
+                "Entregables": GetListadoTablaDinamica("tbl-Entregables"),
+                "Participantes": GetListadoTablaDinamica("tbl-Participantes"),
+                "Responsables": GetListadoTablaDinamica("tbl-ResponsablesCliente"),
+                "Temas": GetListadoTablaDinamica("tbl-Temas"),
+                "CondicionesGenerales": GetListadoTablaDinamica("tbl-CondicionesGenerales"),
+                "DetalleCliente": GetListadoTablaDinamica("tbl-Cliente"),
+                "DetalleContabilidad": GetListadoTablaDinamica("tbl-Contabilidad"),
+            };
+
+
+            var piePaginaActa = {
+                "ActaID" : 0,
+                "AcuerdoConformidad": $("#texto-acuerdoConformidad").text() ? $("#texto-acuerdoConformidad").text() : "",
+                "Firmas": GetFirmasActa()
+            };
+
+            var sublineaNegocioCodigoSeleccionada = $("#tipo_sublinea_negocio").val();
+
+            var data_form = JSON.stringify({ "cabecera": cabeceraActa, "cuerpoActa": cuerpoActa, "piePaginaActa": piePaginaActa, "tipoActa": tipoActa })
+            //_Guardar(data_form, urlAccionGuardarActa, urlAccionListado)
+
+            _GuardarGenericoLoading(data_form, urlAccionGuardarActa, urlAccionListado);
+        }
+
+        function diff(start, end) {
+            start = start.split(":");
+            end = end.split(":");
+            var startDate = new Date(0, 0, 0, start[0], start[1], 0);
+            var endDate = new Date(0, 0, 0, end[0], end[1], 0);
+            var diff = endDate.getTime() - startDate.getTime();
+            var hours = Math.floor(diff / 1000 / 60 / 60);
+            diff -= hours * 1000 * 60 * 60;
+            var minutes = Math.floor(diff / 1000 / 60);
+            return (hours < 9 ? "0" : "") + hours + ":" + (minutes < 9 ? "0" : "") + minutes;
+
+        }
+
+        function restringirFechaInicioAcuerdos(fechaInicioLimite) {
+            $('.fecha-acuerdos').datebox().datebox('calendar').calendar({
+                validator: function (date) {
+                    var now = new Date();
+                    var d1 = new Date(fechaInicioLimite.getFullYear(), fechaInicioLimite.getMonth(), fechaInicioLimite.getDate());
+                    //var d2 = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 10);
+                    return d1 <= date; //&& date <= d2;
+                }
+            });
+        }
+
+        // Para las actas de Cliente y de Contabilidad
+        // Controla el detalle de prefactura - No permite repetidos
+        function ValidarItemRepetido(tabla, codigoActa) {
+            var repetido = false;
+            var id = 0; // Control para detalles de actas de contabilidad y cliente
+            var select; // Dropdownlist Prefactura
+
+            switch (codigoActa) {
+                case "AECE":
+                    select = tabla.find("select");
+                    id = select.val();
+
+                    var tablaDetalleActaCliente = GetListadoTablaDinamica("tbl-Cliente")
+
+                    var filtro = tablaDetalleActaCliente.filter(s => s.id_facturacion_safi == id)
+                    repetido = filtro.length > 0 ? true : false;
+                    break;
+                case "AECF":
+                    select = tabla.find("select");
+                    id = select.val();
+
+                    var tablaDetalleActaContabilidad = GetListadoTablaDinamica("tbl-Contabilidad");
+
+                    var filtro = tablaDetalleActaContabilidad.filter(s => s.id_facturacion_safi == id)
+                    repetido = filtro.length > 0 ? true : false;
+                    break;
+                default:
+                    return false;
+                    break;
+            }
+            return repetido;
+        }
+        $(".informacion-prefactura").click(function (e) {
+            debugger
+            let elemento = $(e.currentTarget);
+
+            var fila = elemento.closest("tr"); // fila
+            var ddlPrefactura = fila.find("select"); // dropdownlist
+            var valor = parseInt($(ddlPrefactura).val()); // valor seleccionado
+
+            if (!valor) {
+                toastr.error('@Mensajes.MensajeErrorSeleccionVacia')
+                return;
+            }
+
+            _GetCreate({ flag: null, id: valor }, urlAccionInformacionPrefactura);
+            $('#contenido-modal').modal({
+                'show': 'true',
+                'backdrop': 'static',
+                'keyboard': false
+            });
+            return;
+        })
+    </script>
+
+    <script src="~/Scripts/FuncionesCompartidasViews/Acta.js"></script>
+}
+
+
+@* SCRIPT PARA EL COMPONENTE DE AUTOCOMPLETAR Y EL X-EDITABLE INLINE - FORMULARIO MODAL CREAR CONTACTO *@
+@section SeccionScriptAutocomplete {
+    <script src="https://cdn.jsdelivr.net/gh/xcash/bootstrap-autocomplete@v2.2.2/dist/latest/bootstrap-autocomplete.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+}
+
+<script type="text/javascript">
+    function myformatter(date) {
+        var y = date.getFullYear();
+        var m = date.getMonth() + 1;
+        var d = date.getDate();
+        return y + '/' + (m < 10 ? ('0' + m) : m) + '/' + (d < 10 ? ('0' + d) : d);
+    }
+    function myparser(s) {
+        if (!s) return new Date();
+        var ss = (s.split('/'));
+        var y = parseInt(ss[0], 10);
+        var m = parseInt(ss[1], 10);
+        var d = parseInt(ss[2], 10);
+        if (!isNaN(y) && !isNaN(m) && !isNaN(d)) {
+            return new Date(y, m - 1, d);
+        } else {
+            return new Date();
+        }
+    }
+</script>
+<script src="~/Content/js/TablaDinamica.js"></script>
