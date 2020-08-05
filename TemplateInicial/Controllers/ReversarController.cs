@@ -67,7 +67,7 @@ namespace TemplateInicial.Controllers
             ViewBag.AccionesControlador = GetMetodosControlador(nombreControlador);
 
             //Búsqueda
-            var listado = PrefacturasSAFIEntity.LitadoReversosPrefacturas();
+            var listado = PrefacturasSAFIEntity.ListadoReversosPrefacturas();
 
             search = !string.IsNullOrEmpty(search) ? search.Trim() : "";
 
@@ -1247,7 +1247,7 @@ namespace TemplateInicial.Controllers
             var user = ViewData["usuario"] = System.Web.HttpContext.Current.Session["usuario"];
             var usuario = int.Parse(user.ToString());
 
-            IGrid<PrefacturaSAFIInfo> grid = new Grid<PrefacturaSAFIInfo>(PrefacturasSAFIEntity.LitadoReversosPrefacturas());
+            IGrid<PrefacturaSAFIInfo> grid = new Grid<PrefacturaSAFIInfo>(PrefacturasSAFIEntity.ListadoReversosPrefacturas());
             grid.ViewContext = new ViewContext { HttpContext = HttpContext };
             grid.Query = Request.QueryString;
 
@@ -1296,7 +1296,7 @@ namespace TemplateInicial.Controllers
                 "TOTAL",
             };
 
-            var listado = (from item in PrefacturasSAFIEntity.LitadoReversosPrefacturas()
+            var listado = (from item in PrefacturasSAFIEntity.ListadoReversosPrefacturas()
                            select new object[]
                            {
                                 item.codigo_cotizacion,
@@ -1331,7 +1331,7 @@ namespace TemplateInicial.Controllers
             var usuario = int.Parse(user.ToString());
 
             // Seleccionar las columnas a exportar
-            var results = PrefacturasSAFIEntity.LitadoReversosPrefacturas();
+            var results = PrefacturasSAFIEntity.ListadoReversosPrefacturas();
 
             var list = Reportes.SerializeToJSON(results);
             return Content(list, "application/json");

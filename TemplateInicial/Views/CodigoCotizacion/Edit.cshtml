@@ -274,7 +274,7 @@
                                     <div class="form-group">
                                         <label class="etiqueta-seccion control-label col-md-2">Cliente: <span class="requerido"> *</span> </label>
                                         <div class="col-md-10">
-                                            @Html.DropDownList("id_cliente", ClienteEntity.ObtenerListadoClientes(), Etiquetas.TituloComboVacio, new { @class = !(bool)ViewBag.VieneSolicitud ? "form-control campo-requerido" : "form-control campo-requerido desactivar-input", required = "" })
+                                            @Html.DropDownList("id_cliente", ClienteEntity.ObtenerListadoClientes(), Etiquetas.TituloComboVacio, new { @class = !(bool)ViewBag.VieneSolicitud ? "form-control campo-requerido" : "form-control campo-requerido", required = "" })
                                         </div>
 
                                     </div>

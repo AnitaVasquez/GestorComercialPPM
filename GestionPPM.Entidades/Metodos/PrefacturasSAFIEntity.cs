@@ -340,7 +340,7 @@ namespace GestionPPM.Entidades.Metodos
             }
         }
 
-        public static List<PrefacturaSAFIInfo> LitadoReversosPrefacturas()
+        public static List<PrefacturaSAFIInfo> ListadoReversosPrefacturas()
         {
             List<PrefacturaSAFIInfo> listado = new List<PrefacturaSAFIInfo>();
             try

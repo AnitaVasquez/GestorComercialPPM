@@ -1668,6 +1668,12 @@
     <Content Include="Views\Anular\_Reversar.cshtml" />
     <Content Include="Views\Anular\_VerAdjuntos.cshtml" />
     <Content Include="Views\Anular\Index.cshtml" />
+    <Content Include="Views\AprobarPresupuesto\_Reversar.cshtml" />
+    <Content Include="Views\RechazoPresupuestos\_AprobarPrefactura.cshtml" />
+    <Content Include="Views\RechazoPresupuestos\_IndexGrid.cshtml" />
+    <Content Include="Views\RechazoPresupuestos\_Reversar.cshtml" />
+    <Content Include="Views\RechazoPresupuestos\Index.cshtml" />
+    <Content Include="Views\RechazoPresupuestos\_AsignacionUsuarios.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1712,6 +1718,7 @@
     <Compile Include="Controllers\PerfilesController.cs" />
     <Compile Include="Controllers\AprobarPresupuestoController.cs" />
     <Compile Include="Controllers\AnularFacturaController.cs" />
+    <Compile Include="Controllers\RechazoPresupuestosController.cs" />
     <Compile Include="Controllers\ReversarController.cs" />
     <Compile Include="Controllers\PrefacturaController.cs" />
     <Compile Include="Controllers\PresupuestosSAFIControllerI.cs" />

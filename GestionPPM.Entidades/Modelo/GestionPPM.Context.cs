@@ -97,6 +97,7 @@ namespace GestionPPM.Entidades.Modelo
         public virtual DbSet<SolicitudesDeReverso> SolicitudesDeReverso { get; set; }
         public virtual DbSet<SolicitudesDeAnulacionFactura> SolicitudesDeAnulacionFactura { get; set; }
         public virtual DbSet<SolicitudesDeNotaDeCredito> SolicitudesDeNotaDeCredito { get; set; }
+        public virtual DbSet<SolicitudesDeRechazoPresupuestos> SolicitudesDeRechazoPresupuestos { get; set; }
     
         public virtual ObjectResult<usp_b_lista_usuario> usp_b_lista_usuario()
         {
@@ -1469,6 +1470,28 @@ namespace GestionPPM.Entidades.Modelo
         public virtual ObjectResult<PrefacturaSAFIInfo> ListadoFacturasAprobadasParaGenerarNotaCredito()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<PrefacturaSAFIInfo>("ListadoFacturasAprobadasParaGenerarNotaCredito");
+        }
+    
+        public virtual ObjectResult<ListadoPrefacturasRechazadas> ListadoPrefacturasRechazadas()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<ListadoPrefacturasRechazadas>("ListadoPrefacturasRechazadas");
+        }
+    
+        public virtual int ActualizarPresupuestosSAFI(Nullable<int> tipoAccion, string numeroPrefactura, string numeroPrefacturaConsolidada)
+        {
+            var tipoAccionParameter = tipoAccion.HasValue ?
+                new ObjectParameter("tipoAccion", tipoAccion) :
+                new ObjectParameter("tipoAccion", typeof(int));
+    
+            var numeroPrefacturaParameter = numeroPrefactura != null ?
+                new ObjectParameter("numeroPrefactura", numeroPrefactura) :
+                new ObjectParameter("numeroPrefactura", typeof(string));
+    
+            var numeroPrefacturaConsolidadaParameter = numeroPrefacturaConsolidada != null ?
+                new ObjectParameter("numeroPrefacturaConsolidada", numeroPrefacturaConsolidada) :
+                new ObjectParameter("numeroPrefacturaConsolidada", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("ActualizarPresupuestosSAFI", tipoAccionParameter, numeroPrefacturaParameter, numeroPrefacturaConsolidadaParameter);
         }
     }
 }

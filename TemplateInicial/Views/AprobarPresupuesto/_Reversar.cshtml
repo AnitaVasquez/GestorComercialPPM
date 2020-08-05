@@ -1,0 +1,60 @@
+﻿@model GestionPPM.Entidades.Modelo.SolicitudesDeRechazoPresupuestos
+@using GestionPPM.Entidades.Metodos
+
+
+@* Formato para el template de datos *@
+<link href="~/Content/css/personalizar.css" rel="stylesheet" />
+
+<script>
+    var urlAccionEditarStatusCodigo = '@Url.Action("RechazarPresupuesto", "AprobarPresupuesto")';
+
+
+    $(document).ready(function () {
+        $("#seccion-titulo-modal").text('@Html.Raw(ViewBag.TituloModal)');
+        setTimeout(function () { $(".tree-hit").hide(); }, 100);
+    });
+
+
+    $("#guardar-status").click(function () {
+        debugger
+          var flag = validarCamposRequeridosFormularioCompleto("form-solicitud-rechazo");
+        if (flag)
+            guardarStatus(); // continue the submit unbind preventDefault
+        else
+            toastr.error('@Mensajes.MensajeDatosObligatorios')
+    })
+
+    function guardarStatus() {
+        debugger
+        var data_form = JSON.stringify({ "solicitudRechazo": $('#form-solicitud-rechazo').serializeObject() })
+        _GuardarModalStatusCodigoCotizacion(data_form, urlAccionEditarStatusCodigo);
+    }
+</script>
+
+<form action="#" id="form-solicitud-rechazo" role="form" data-toggle="validator" method="post" accept-charset="utf-8">
+    <div class="row">
+        <div class="col-md-offset-2 col-md-8">
+            <div class="form-horizontal">
+                @Html.Hidden("id_facturacion_safi", Model.id_facturacion_safi)
+
+                <div class="form-group">
+                    <label class="etiqueta-seccion control-label col-md-3">Motivo Rechazo: <span class="requerido"> *</span></label>
+                    <div class="col-md-8">
+                        @Html.DropDownList("id_tipo_rechazo", CatalogoEntity.ObtenerListadoCatalogosByCodigo("MRP-01", Model.id_tipo_rechazo.ToString()), Etiquetas.TituloComboVacio, new { @class = "form-control campo-requerido" })
+                    </div>
+                </div>
+
+                <br />
+
+                <div class="form-group">
+                    <div class="col-md-offset-5 col-md-12">
+                        <input id="guardar-status" type="button" value="Guardar" class="btn btn-default" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+

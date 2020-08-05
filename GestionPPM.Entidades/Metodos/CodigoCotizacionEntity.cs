@@ -321,6 +321,24 @@ namespace GestionPPM.Entidades.Metodos
             }
         }
 
+        public static RespuestaTransaccion ActualizarEjecutivoCodigoCotizacion(CodigoCotizacion codigo)
+        {
+            try
+            {
+                var CodigoCotizacion = db.CodigoCotizacion.Find(codigo.id_codigo_cotizacion);
+                CodigoCotizacion.ejecutivo = codigo.ejecutivo;
+
+                db.Entry(CodigoCotizacion).State = EntityState.Modified;
+                db.SaveChanges();
+
+                return new RespuestaTransaccion { Estado = true, Respuesta = Mensajes.MensajeTransaccionExitosa };
+            }
+            catch (Exception ex)
+            {
+                return new RespuestaTransaccion { Estado = false, Respuesta = Mensajes.MensajeTransaccionFallida + " ;" + ex.Message.ToString() };
+            }
+        }
+
         //Eliminación Lógica
         public static RespuestaTransaccion EliminarCodigoCotizacion(int id)
         {

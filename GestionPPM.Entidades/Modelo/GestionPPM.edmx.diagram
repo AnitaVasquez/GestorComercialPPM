@@ -75,6 +75,7 @@
         <EntityTypeShape EntityType="GestionPPMModel.SolicitudesDeReverso" Width="1.5" PointX="18" PointY="0.5" />
         <EntityTypeShape EntityType="GestionPPMModel.SolicitudesDeAnulacionFactura" Width="1.5" PointX="18" PointY="2.75" />
         <EntityTypeShape EntityType="GestionPPMModel.SolicitudesDeNotaDeCredito" Width="1.5" PointX="18" PointY="5.125" />
+        <EntityTypeShape EntityType="GestionPPMModel.SolicitudesDeRechazoPresupuestos" Width="1.5" PointX="18" PointY="7.5" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

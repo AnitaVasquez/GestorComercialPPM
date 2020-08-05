@@ -51,10 +51,10 @@ namespace TemplateInicial.Controllers
 
         [HttpGet]
         public async Task<PartialViewResult> IndexGrid(String search)
-        { 
+        {
             ViewBag.NombreListado = Etiquetas.TituloGridPrefacturas;
             //var listado = CotizacionEntity.ListadoPrefacturaSAFI().Where(s => s.aprobacion_prefactura_ejecutivo.Value && !s.aprobacion_final.Value && !s.prefactura_consolidada.Value /*&& string.IsNullOrEmpty(s.numero_factura)*/).ToList();
-           
+
             //Controlar permisos
             var user = ViewData["usuario"] = System.Web.HttpContext.Current.Session["usuario"];
             var usuario = int.Parse(user.ToString());
@@ -87,7 +87,7 @@ namespace TemplateInicial.Controllers
             // Only grid query values will be available here.
             return PartialView("_IndexGrid", await Task.Run(() => listado));
         }
-               
+
         #region Impresion PreFactura Safi - Cotizacion
         public ActionResult GeneracionPrefactura(string listadoIDs, bool descargaDirecta = false)
         {
@@ -369,7 +369,7 @@ namespace TemplateInicial.Controllers
                     }
                     else
                         return Json(new { Resultado = new RespuestaTransaccion { Estado = false, Respuesta = "No se pudo aprobar la prefactura." } }, JsonRequestBehavior.AllowGet);
-                }  
+                }
 
                 if (!ajax)
                     return View("Index");
@@ -388,6 +388,47 @@ namespace TemplateInicial.Controllers
                     return Json(new { Resultado = new RespuestaTransaccion { Estado = false, Respuesta = ex.Message.ToString() } }, JsonRequestBehavior.AllowGet);
             }
         }
+
+        public ActionResult _Reversar(int? id)
+        {
+            ViewBag.TituloModal = "Rechazar Presupuesto";
+
+            SolicitudesDeRechazoPresupuestos modelo = new SolicitudesDeRechazoPresupuestos();
+            modelo.id_facturacion_safi = id;
+
+            return PartialView(modelo);
+        }
+
+        [HttpPost]
+        public ActionResult RechazarPresupuesto(SolicitudesDeRechazoPresupuestos solicitudRechazo)
+        {
+            try
+            {
+                var user = ViewData["usuario"] = System.Web.HttpContext.Current.Session["usuario"];
+                var usuarioID = Convert.ToInt16(user);
+
+                solicitudRechazo.id_usuario = usuarioID;
+
+                //validar si no hay un rechazo anterior para el presupuesto
+                var solicitudAnterior = SolicitudDeRechazoPresupuestosEntity.ConsultarSolicitudRechazo(Convert.ToInt32(solicitudRechazo.id_facturacion_safi));
+
+                if (solicitudAnterior == null)
+                {
+                    RespuestaTransaccion resultado = SolicitudDeRechazoPresupuestosEntity.CrearSolicitudRechazoPresupuestoa(solicitudRechazo);
+                    return Json(new { Resultado = resultado }, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json(new { Resultado = new RespuestaTransaccion { Estado = false, Respuesta = "Presupuesto Rechazdo anteriormente, comuniquese con PPM para más detalles" } }, JsonRequestBehavior.AllowGet);
+                }               
+                 
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Resultado = new RespuestaTransaccion { Estado = false, Respuesta = ex.Message } }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
 
         [HttpGet]
         public ActionResult DescargarReporteFormatoExcel()

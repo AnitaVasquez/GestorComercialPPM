@@ -33,5 +33,12 @@ namespace GestionPPM.Entidades.Metodos
             }
         }
 
+        public static SAFIGeneral consultarDatosPresupuesto (int id)
+        {
+            SAFIGeneral safi = db.SAFIGeneral.Find(id);
+
+            return safi;
+        }
+
     }
 }

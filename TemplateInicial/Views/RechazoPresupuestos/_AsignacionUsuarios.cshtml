@@ -1,0 +1,68 @@
+﻿@model GestionPPM.Entidades.Modelo.CodigoCotizacion
+
+@using GestionPPM.Entidades.Modelo
+@using GestionPPM.Entidades.Metodos
+
+
+@* Formato para el template de datos *@
+<link href="~/Content/css/personalizar.css" rel="stylesheet" />
+
+<link href="~/Content/themes/default/combobox.css" rel="stylesheet" />
+<link href="~/Content/themes/default/combo.css" rel="stylesheet" />
+<link href="~/Content/themes/default/tagbox.css" rel="stylesheet" />
+<link href="~/Content/themes/default/searchbox.css" rel="stylesheet" />
+<link href="~/Content/themes/default/textbox.css" rel="stylesheet" />
+
+<script src="~/Scripts/easyloader.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.easyui.min.js"></script>
+<script src="~/Scripts/locale/easyui-lang-es.js"></script>
+
+<script>
+    var urlAccionGuardar = '@Url.Action("CreateOrUpdate", "RechazoPresupuestos")';
+
+    $(document).ready(function () {
+        debugger
+        easyloader.locale = 'es';
+        $("#seccion-titulo-modal").text('@Html.Raw(ViewBag.TituloModal)');
+    }); 
+
+    $("#guardar-UsuariosAginados").click(function () {
+        debugger
+        var flag = validarCamposRequeridosFormularioCompleto("form-UsuariosAginados");
+        if (flag)
+            guardarUsuariosAginados();
+        else
+            toastr.error('@Mensajes.MensajeDatosObligatorios')
+    })
+
+    function guardarUsuariosAginados() {
+        debugger
+        let formulario = $('#form-UsuariosAginados').serializeObject();
+        var data_form = JSON.stringify({ "codigoCotizacion": formulario, "idFacturacionSafi": $('#idFacturacionSafi').val() }); 
+        _GuardarModalRecargar(data_form, urlAccionGuardar);
+    }
+
+</script>
+
+<form action="#" id="form-UsuariosAginados" role="form" data-toggle="validator" method="post" accept-charset="utf-8">
+    <div class="row">
+        @Html.Hidden("idFacturacionSafi", (int)ViewBag.SolicitudID)
+        @Html.HiddenFor(model => model.id_codigo_cotizacion)
+
+        <div class="form-group">
+            <label style="text-align: right;" class="control-label col-md-2">Ejecutivo: <span class="requerido"> *</span></label>
+            <div class="col-md-10">
+                @Html.DropDownList("ejecutivo", ContactoClienteEntity.ListarContactosCliente(Model.id_cliente, Model.ejecutivo), new { @class = "form-control campo-requerido", required = "" })
+            </div>
+        </div>
+    </div>
+    <div class="row" style="margin-top: 10px;">
+        <div class="form-group">
+            <div class="col-md-offset-5 col-md-10">
+                <input id="guardar-UsuariosAginados" type="button" value="Guardar" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+</form>
+
+

@@ -19,11 +19,12 @@ using OfficeOpenXml.Style;
 using System.Drawing;
 using OfficeOpenXml;
 using System.Text;
+using System.Net;
 
 namespace TemplateInicial.Controllers
 {
     [Autenticado]
-    public class AnularFacturaController : BaseAppController
+    public class RechazoPresupuestosController : BaseAppController
     {
         // GET: Prefactura
         public ActionResult Index()
@@ -54,7 +55,7 @@ namespace TemplateInicial.Controllers
         {
             ViewBag.NombreListado = Etiquetas.TituloGridREversarConsolidacion;
             //var listado = CotizacionEntity.ListadoPrefacturaSAFI().Where(s => s.aprobacion_prefactura_ejecutivo.Value && !s.aprobacion_final.Value && !s.prefactura_consolidada.Value /*&& string.IsNullOrEmpty(s.numero_factura)*/).ToList();
-           
+
             //Controlar permisos
             var user = ViewData["usuario"] = System.Web.HttpContext.Current.Session["usuario"];
             var usuario = int.Parse(user.ToString());
@@ -67,7 +68,7 @@ namespace TemplateInicial.Controllers
             ViewBag.AccionesControlador = GetMetodosControlador(nombreControlador);
 
             //Búsqueda
-            var listado = PrefacturasSAFIEntity.ListadoReversosPrefacturas();
+            var listado = SolicitudDeRechazoPresupuestosEntity.ListadoPrefacturasRechazadas();
 
             search = !string.IsNullOrEmpty(search) ? search.Trim() : "";
 
@@ -87,7 +88,7 @@ namespace TemplateInicial.Controllers
             // Only grid query values will be available here.
             return PartialView("_IndexGrid", await Task.Run(() => listado));
         }
-        
+
         public ActionResult _Reversar(int? id)
         {
             ViewBag.TituloModal = "Reversar Consolidación";
@@ -112,11 +113,11 @@ namespace TemplateInicial.Controllers
                     //validar que no tenga reveso
                     var reverso = SolicitudDeReversoEntity.ConsultarReversoConsolidacion(Convert.ToInt32(item.ToString()));
 
-                    if (reverso != null && reverso.estado==true)
+                    if (reverso != null && reverso.estado == true)
                     {
                         aprobado = SolicitudDeReversoEntity.ActualizarSolicitudReveso(ids);
                     }
-                }        
+                }
 
                 if (!aprobado)
                 {
@@ -148,7 +149,6 @@ namespace TemplateInicial.Controllers
             }
         }
 
-        
         #region Impresion PreFactura Safi - Cotizacion
         public ActionResult GeneracionPrefactura(string listadoIDs, bool descargaDirecta = false)
         {
@@ -1193,8 +1193,53 @@ namespace TemplateInicial.Controllers
                 return View("~/Views/Error/InternalServerError.cshtml");
             }
         }
-
         #endregion
+
+        public ActionResult _AsignacionUsuarios(int? id)
+        {
+            ViewBag.TituloModal = "Asignar Ejecutivo";
+            ViewBag.SolicitudID = id.Value;
+
+            //obtener el codigo de cotizacion
+            SAFIGeneral safi = SAFIEntity.consultarDatosPresupuesto(id.Value);
+
+            //obtener los datos del codigo de cotizacion
+            CodigoCotizacion codigo = CodigoCotizacionEntity.ConsultarCodigoCotizacion(safi.id_codigo_cotizacion.Value);
+
+            return PartialView(codigo);
+        }
+
+        [HttpPost]
+        public ActionResult CreateOrUpdate(CodigoCotizacion codigoCotizacion, int idFacturacionSafi)
+        {
+            RespuestaTransaccion resultado = new RespuestaTransaccion();
+            try
+            {
+                //actualizar el ejecutivo en el codigo de cotizacion
+                resultado = CodigoCotizacionEntity.ActualizarEjecutivoCodigoCotizacion(codigoCotizacion);
+
+                //actualizar el estado del  rechazo
+                resultado = SolicitudDeRechazoPresupuestosEntity.ActualizarRechazoPresupuesto(idFacturacionSafi);
+
+                return Json(new { Resultado = resultado }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Resultado = new RespuestaTransaccion { Estado = false, Respuesta = ex.Message } }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult Eliminar(int id)
+        {
+            if (id == 0)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            RespuestaTransaccion resultado = SolicitudDeRechazoPresupuestosEntity.AnularPresupuesto(id);// await db.Cabecera.FindAsync(id);
+             
+            return Json(new { Resultado = resultado }, JsonRequestBehavior.AllowGet);
+        }
 
         [HttpGet]
         public ActionResult DescargarReporteFormatoExcel()
