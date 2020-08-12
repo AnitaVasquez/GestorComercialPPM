@@ -23,7 +23,7 @@ namespace GestionPPM.Entidades.Metodos
             using (var transaction = db.Database.BeginTransaction())
             {
                 try
-                { 
+                {
                     using (var context = new GestionPPMEntities())
                     {
                         foreach (var id in ids)
@@ -52,7 +52,7 @@ namespace GestionPPM.Entidades.Metodos
                     transaction.Rollback();
                     return false;
                 }
-            }             
+            }
         }
 
         public static bool ActualizarSolicitudReveso(List<int> ids)
@@ -67,7 +67,7 @@ namespace GestionPPM.Entidades.Metodos
                         {
                             //insertar las colicitud de reverso
                             SolicitudesDeReverso reverso = new SolicitudesDeReverso();
-                            reverso = context.SolicitudesDeReverso.ToList().Where( s => s.id_facturacion_safi == id).FirstOrDefault();                             
+                            reverso = context.SolicitudesDeReverso.ToList().Where(s => s.id_facturacion_safi == id).FirstOrDefault();
 
                             if (reverso.estado == true)
                             {
@@ -84,6 +84,16 @@ namespace GestionPPM.Entidades.Metodos
                                 //enviar notificaciones
                                 context.usp_guarda_envio_correo_notificaciones(11, Convert.ToInt32(reverso.id_facturacion_safi), "", 1, "");
                                 context.SaveChanges();
+
+                                //listado prefacturas
+                                //List<ConsolidacionPrefactura> listadoReverso = context.ConsolidacionPrefactura.Where(c => c.id_facturacion_safi == reverso.id_facturacion_safi).ToList();
+                                //foreach (var reversoPrefactura in listadoReverso)
+                                //{
+                                //    SolicitudDeRechazoPresupuestosEntity.ReversarConsolidarPresupuestos(Convert.ToInt32(reverso.id_facturacion_safi.Value));
+                                //}
+                                                               
+                                ////anular macro en el ERP
+                                //SolicitudDeRechazoPresupuestosEntity.AnularPresupuesto(Convert.ToInt32(reverso.id_facturacion_safi.Value));
                             }
 
                         }

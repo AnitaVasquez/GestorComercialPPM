@@ -451,6 +451,9 @@ namespace GestionPPM.Entidades.Metodos
 
         public static bool AprobacionInicialPrefactura(List<int> ids, int usuarioID)
         {
+
+            var codigos = "";
+
             using (var transaction = db.Database.BeginTransaction())
             {
                 try
@@ -476,6 +479,22 @@ namespace GestionPPM.Entidades.Metodos
                         }
                     }
 
+                    foreach (var item in ids)
+                    {
+                        //Armar consolidado
+                        if (codigos == "")
+                        {
+                            codigos = item.ToString();
+                        }
+                        else
+                        {
+                            codigos += "," + item.ToString();
+                        }
+                    }
+
+                    //enviar notificaicon
+                    PrefacturasSAFIEntity.EnviarNotificacionAprobarPresupuestosEjecutivo(codigos);
+
                     transaction.Commit();
                     return true;
                 }
@@ -489,6 +508,8 @@ namespace GestionPPM.Entidades.Metodos
 
         public static bool AprobacionFinalPrefactura(List<int> ids, int usuarioID)
         {
+            var codigos = "";
+
             using (var transaction = db.Database.BeginTransaction())
             {
                 try
@@ -512,6 +533,22 @@ namespace GestionPPM.Entidades.Metodos
                             context.SaveChanges();
                         }
                     }
+
+                    foreach (var item in ids)
+                    {
+                        //Armar consolidado
+                        if (codigos == "")
+                        {
+                            codigos = item.ToString();
+                        }
+                        else
+                        {
+                            codigos += "," + item.ToString();
+                        }
+                    }
+
+                    //enviar notificaicon
+                    PrefacturasSAFIEntity.EnviarNotificacionAprobarPresupuestosEjecutivoFinal(codigos);
 
                     transaction.Commit();
                     return true;
@@ -601,8 +638,19 @@ namespace GestionPPM.Entidades.Metodos
                         if (procesoPrefacturacion.Estado)
                         {
                             var prefacturasConsolidadas = db.ConsolidarPrefactura(ids, usuarioID, procesoPrefacturacion.DocumentoSAFIID);
-
                             context.SaveChanges();
+
+                            //consolidar en el ERP
+                            var listadoPrefacturas = !string.IsNullOrEmpty(ids) ? ids.Split(',').Select(int.Parse).ToList() : new List<int> { int.Parse(ids) };
+
+                            foreach (var id in listadoPrefacturas)
+                            {
+                                var prefactura = CotizacionEntity.ConsultarPrefacturaSAFI(id);
+                                if (prefactura != null)
+                                {
+                                    SolicitudDeRechazoPresupuestosEntity.ConsolidarPresupuestos(prefactura.id_facturacion_safi, procesoPrefacturacion.NumeroDocumentoERP);
+                                }
+                            }
 
                             transaction.Commit();
                             return new RespuestaTransaccion { Estado = true, Respuesta = Mensajes.MensajeTransaccionExitosa };
@@ -649,7 +697,35 @@ namespace GestionPPM.Entidades.Metodos
                 return listado;
             }
         }
-         
+
+        public static List<ListadoResumenPrefacturasAprobadas> ListadoResumenPrefacturasAprobadas(int usuario)
+        {
+            List<ListadoResumenPrefacturasAprobadas> listado = new List<ListadoResumenPrefacturasAprobadas>();
+            try
+            {
+                listado = db.ListadoResumenPrefacturasAprobadas(usuario).ToList();
+                return listado;
+            }
+            catch (Exception ex)
+            {
+                return listado;
+            }
+        }
+
+        public static List<ListadoResumenPrefacturasAprobadas> ListadoPrefacturasAprobadasHistorico(int usuario)
+        {
+            List<ListadoResumenPrefacturasAprobadas> listado = new List<ListadoResumenPrefacturasAprobadas>();
+            try
+            {
+                listado = db.ListadoResumenPrefacturasAprobadasHistorico(usuario).ToList();
+                return listado;
+            }
+            catch (Exception ex)
+            {
+                return listado;
+            }
+        }
+
         public static List<PrefacturaSAFIInfo> ListadoCompletoPrefacturaSAFI()
         {
             List<PrefacturaSAFIInfo> listado = new List<PrefacturaSAFIInfo>();
@@ -717,6 +793,7 @@ namespace GestionPPM.Entidades.Metodos
             int DocumentoSAFIID = 0;
             bool EstadoRespuesta = true;
             string MensajeErrorWs = string.Empty;
+            string numeroPresupuestoConsolidado = string.Empty;
 
             try
             {
@@ -840,7 +917,7 @@ namespace GestionPPM.Entidades.Metodos
                                 }
 
                                 DocumentoSAFIID = prefacturaSAFI.id_facturacion_safi;
-
+                                numeroPresupuestoConsolidado = prefacturaSAFI.numero_prefactura;
                                 estado = "OK";
                                 tRespuesta = new Respuesta { mensaje = "PROCESO OK", codigoRetorno = obj.codigoRetorno.ToString(), estado = "OK", numeroDocumento = obj.numeroDocumento };
 
@@ -855,7 +932,7 @@ namespace GestionPPM.Entidades.Metodos
                         EstadoRespuesta = false;
                     }
                 }
-                return new RespuestaTransaccion { Estado = EstadoRespuesta, Respuesta = EstadoRespuesta ? Mensajes.MensajeTransaccionExitosa : Mensajes.MensajeTransaccionFallida + MensajeErrorWs, DocumentoSAFIID = DocumentoSAFIID };
+                return new RespuestaTransaccion { Estado = EstadoRespuesta, Respuesta = EstadoRespuesta ? Mensajes.MensajeTransaccionExitosa : Mensajes.MensajeTransaccionFallida + MensajeErrorWs, DocumentoSAFIID = DocumentoSAFIID, NumeroDocumentoERP = numeroPresupuestoConsolidado };
             }
             catch (Exception ex)
             {

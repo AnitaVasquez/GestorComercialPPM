@@ -99,6 +99,10 @@ namespace TemplateInicial.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             RespuestaTransaccion resultado = PrefacturasSAFIEntity.PrefacturarSAFI(id);// await db.Cabecera.FindAsync(id);
+            if(resultado.Estado)
+            {
+                RespuestaTransaccion resultado2 = PrefacturasSAFIEntity.EnviarNotificacionClientePresupuestosGenerados(id.ToString());
+            }            
 
             //return RedirectToAction("Index");
             return Json(new { Resultado = resultado }, JsonRequestBehavior.AllowGet);
@@ -150,9 +154,10 @@ namespace TemplateInicial.Controllers
             }
 
             //enviar correo de prefacturas generadas
+            RespuestaTransaccion resultado2= PrefacturasSAFIEntity.EnviarNotificacionClientePresupuestosGenerados(codigos);
 
 
-            if(mensaje != "")
+            if (mensaje != "")
             { 
                 return Json(new { Resultado = new RespuestaTransaccion { Estado = false, Respuesta = mensaje } }, JsonRequestBehavior.AllowGet);
             }

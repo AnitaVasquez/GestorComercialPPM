@@ -98,6 +98,7 @@ namespace GestionPPM.Entidades.Modelo
         public virtual DbSet<SolicitudesDeAnulacionFactura> SolicitudesDeAnulacionFactura { get; set; }
         public virtual DbSet<SolicitudesDeNotaDeCredito> SolicitudesDeNotaDeCredito { get; set; }
         public virtual DbSet<SolicitudesDeRechazoPresupuestos> SolicitudesDeRechazoPresupuestos { get; set; }
+        public virtual DbSet<ConsolidacionPrefactura> ConsolidacionPrefactura { get; set; }
     
         public virtual ObjectResult<usp_b_lista_usuario> usp_b_lista_usuario()
         {
@@ -1492,6 +1493,42 @@ namespace GestionPPM.Entidades.Modelo
                 new ObjectParameter("numeroPrefacturaConsolidada", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("ActualizarPresupuestosSAFI", tipoAccionParameter, numeroPrefacturaParameter, numeroPrefacturaConsolidadaParameter);
+        }
+    
+        public virtual ObjectResult<ListadoPresupuestosAprobadosEjecutivo> ListadoPresupuestosAprobadosEjecutivo(Nullable<int> id_usuario)
+        {
+            var id_usuarioParameter = id_usuario.HasValue ?
+                new ObjectParameter("id_usuario", id_usuario) :
+                new ObjectParameter("id_usuario", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<ListadoPresupuestosAprobadosEjecutivo>("ListadoPresupuestosAprobadosEjecutivo", id_usuarioParameter);
+        }
+    
+        public virtual ObjectResult<ListadoPresupuestosAprobadosEjecutivoFinal> ListadoPresupuestosAprobadosEjecutivoFinal(Nullable<int> id_usuario)
+        {
+            var id_usuarioParameter = id_usuario.HasValue ?
+                new ObjectParameter("id_usuario", id_usuario) :
+                new ObjectParameter("id_usuario", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<ListadoPresupuestosAprobadosEjecutivoFinal>("ListadoPresupuestosAprobadosEjecutivoFinal", id_usuarioParameter);
+        }
+    
+        public virtual ObjectResult<ListadoResumenPrefacturasAprobadas> ListadoResumenPrefacturasAprobadas(Nullable<int> id_usuario)
+        {
+            var id_usuarioParameter = id_usuario.HasValue ?
+                new ObjectParameter("id_usuario", id_usuario) :
+                new ObjectParameter("id_usuario", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<ListadoResumenPrefacturasAprobadas>("ListadoResumenPrefacturasAprobadas", id_usuarioParameter);
+        }
+    
+        public virtual ObjectResult<ListadoResumenPrefacturasAprobadas> ListadoResumenPrefacturasAprobadasHistorico(Nullable<int> id_usuario)
+        {
+            var id_usuarioParameter = id_usuario.HasValue ?
+                new ObjectParameter("id_usuario", id_usuario) :
+                new ObjectParameter("id_usuario", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<ListadoResumenPrefacturasAprobadas>("ListadoResumenPrefacturasAprobadasHistorico", id_usuarioParameter);
         }
     }
 }

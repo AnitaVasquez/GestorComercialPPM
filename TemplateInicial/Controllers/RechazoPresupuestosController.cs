@@ -91,64 +91,11 @@ namespace TemplateInicial.Controllers
 
         public ActionResult _Reversar(int? id)
         {
-            ViewBag.TituloModal = "Reversar Consolidación";
+            ViewBag.TituloModal = "Anular Presupuesto";
             PrefacturaSAFIInfo modelo = CotizacionEntity.ConsultarPrefacturaSAFI(id.Value);
             return PartialView(modelo);
         }
-
-        public ActionResult ReversarConsolidacion(string listadoIDs, bool ajax = false)
-        {
-            try
-            {
-                //obtener los ids
-                var ids = !string.IsNullOrEmpty(listadoIDs) ? listadoIDs.Split(',').Select(int.Parse).ToList() : new List<int> { int.Parse(listadoIDs) };
-
-                var user = ViewData["usuario"] = System.Web.HttpContext.Current.Session["usuario"];
-                var usuarioID = Convert.ToInt16(user);
-                bool aprobado = true;
-
-
-                foreach (var item in ids)
-                {
-                    //validar que no tenga reveso
-                    var reverso = SolicitudDeReversoEntity.ConsultarReversoConsolidacion(Convert.ToInt32(item.ToString()));
-
-                    if (reverso != null && reverso.estado == true)
-                    {
-                        aprobado = SolicitudDeReversoEntity.ActualizarSolicitudReveso(ids);
-                    }
-                }
-
-                if (!aprobado)
-                {
-                    if (!ajax)
-                    {
-                        string mensaje = "Error ({0})";
-                        ViewBag.Excepcion = string.Format(mensaje, "No se pudo aprobar la prefactura.");
-                        return View("~/Views/Error/InternalServerError.cshtml");
-                    }
-                    else
-                        return Json(new { Resultado = new RespuestaTransaccion { Estado = false, Respuesta = "No se pudo realizar la solicitud de reverso" } }, JsonRequestBehavior.AllowGet);
-                }
-
-                if (!ajax)
-                    return View("Index");
-                else
-                    return Json(new { Resultado = new RespuestaTransaccion { Estado = true, Respuesta = Mensajes.MensajeTransaccionExitosa } }, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception ex)
-            {
-                if (!ajax)
-                {
-                    string mensaje = "Error ({0})";
-                    ViewBag.Excepcion = string.Format(mensaje, ex.Message.ToString());
-                    return View("~/Views/Error/InternalServerError.cshtml");
-                }
-                else
-                    return Json(new { Resultado = new RespuestaTransaccion { Estado = false, Respuesta = ex.Message.ToString() } }, JsonRequestBehavior.AllowGet);
-            }
-        }
-
+          
         #region Impresion PreFactura Safi - Cotizacion
         public ActionResult GeneracionPrefactura(string listadoIDs, bool descargaDirecta = false)
         {
@@ -1251,7 +1198,7 @@ namespace TemplateInicial.Controllers
                 Int32 col = 1;
 
                 package.Workbook.Worksheets.Add("Data");
-                IGrid<PrefacturaSAFIInfo> grid = CreateExportableGrid();
+                IGrid<ListadoPrefacturasRechazadas> grid = CreateExportableGrid();
                 ExcelWorksheet sheet = package.Workbook.Worksheets["Data"];
 
                 foreach (IGridColumn column in grid.Columns)
@@ -1282,17 +1229,17 @@ namespace TemplateInicial.Controllers
                     }
                 }
 
-                return File(package.GetAsByteArray(), "application/unknown", "ListadoReversosPresupuestos.xlsx");
+                return File(package.GetAsByteArray(), "application/unknown", "ListadoRechazoPresupuestos.xlsx");
             }
         }
 
-        public IGrid<PrefacturaSAFIInfo> CreateExportableGrid()
+        public IGrid<ListadoPrefacturasRechazadas> CreateExportableGrid()
         {
             //Controlar permisos
             var user = ViewData["usuario"] = System.Web.HttpContext.Current.Session["usuario"];
             var usuario = int.Parse(user.ToString());
 
-            IGrid<PrefacturaSAFIInfo> grid = new Grid<PrefacturaSAFIInfo>(PrefacturasSAFIEntity.ListadoReversosPrefacturas());
+            IGrid<ListadoPrefacturasRechazadas> grid = new Grid<ListadoPrefacturasRechazadas>(SolicitudDeRechazoPresupuestosEntity.ListadoPrefacturasRechazadas());
             grid.ViewContext = new ViewContext { HttpContext = HttpContext };
             grid.Query = Request.QueryString;
 
@@ -1341,7 +1288,7 @@ namespace TemplateInicial.Controllers
                 "TOTAL",
             };
 
-            var listado = (from item in PrefacturasSAFIEntity.ListadoReversosPrefacturas()
+            var listado = (from item in SolicitudDeRechazoPresupuestosEntity.ListadoPrefacturasRechazadas()
                            select new object[]
                            {
                                 item.codigo_cotizacion,
@@ -1366,7 +1313,7 @@ namespace TemplateInicial.Controllers
             });
 
             byte[] buffer = Encoding.Default.GetBytes($"{string.Join(",", comlumHeadrs)}\r\n{employeecsv.ToString()}");
-            return File(buffer, "text/csv", $"ListadoReversosPresupuestos.csv");
+            return File(buffer, "text/csv", $"ListadoPresupuestoRechazados.csv");
         }
 
         public ActionResult DescargarReporteFormatoPDF()
@@ -1376,7 +1323,7 @@ namespace TemplateInicial.Controllers
             var usuario = int.Parse(user.ToString());
 
             // Seleccionar las columnas a exportar
-            var results = PrefacturasSAFIEntity.ListadoReversosPrefacturas();
+            var results = SolicitudDeRechazoPresupuestosEntity.ListadoPrefacturasRechazadas();
 
             var list = Reportes.SerializeToJSON(results);
             return Content(list, "application/json");

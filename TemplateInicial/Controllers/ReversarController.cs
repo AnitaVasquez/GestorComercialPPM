@@ -115,7 +115,7 @@ namespace TemplateInicial.Controllers
                     if (reverso != null && reverso.estado==true)
                     {
                         aprobado = SolicitudDeReversoEntity.ActualizarSolicitudReveso(ids);
-                    }
+                    } 
                 }        
 
                 if (!aprobado)

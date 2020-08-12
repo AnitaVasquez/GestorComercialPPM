@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Entity;
 using System.Linq;
-using System.Net.Http; 
+using System.Net.Http;
 
 namespace GestionPPM.Entidades.Metodos
 {
@@ -18,7 +18,7 @@ namespace GestionPPM.Entidades.Metodos
     {
         private static readonly GestionPPMEntities db = new GestionPPMEntities();
         private static Logger logger = LogManager.GetCurrentClassLogger();
-         
+
         public static RespuestaTransaccion PrefacturarSAFI(int idCodigoCotizacion)
         {
             using (var transaction = db.Database.BeginTransaction())
@@ -45,22 +45,22 @@ namespace GestionPPM.Entidades.Metodos
 
                             return new RespuestaTransaccion { Estado = false, Respuesta = Mensajes.MensajeProductoNoExiste };
                         }
-                        
+
                     }
 
                     //Si el Cliente no existe no puede prefacturar
                     if (codigoCliente == 0)
                     {
-                        return new RespuestaTransaccion { Estado = false, Respuesta = Mensajes.MensajeClienteNoExiste};                        
+                        return new RespuestaTransaccion { Estado = false, Respuesta = Mensajes.MensajeClienteNoExiste };
                     }
-                    else if(codigoProducto.Length < 3)
+                    else if (codigoProducto.Length < 3)
                     {
                         return new RespuestaTransaccion { Estado = false, Respuesta = Mensajes.MensajeProductoNoExiste };
                     }
                     else
                     {
                         //Obtener el secuencial 
-                        var secuencial = db.usp_g_codigo_documento("CodigoCotizacion").First().secuencial; 
+                        var secuencial = db.usp_g_codigo_documento("CodigoCotizacion").First().secuencial;
 
                         //Generar Prefactura
                         var data = ProcesaCotizacionesSAFI(ListadoPrefacturaSAFI, secuencial.ToString());
@@ -78,7 +78,7 @@ namespace GestionPPM.Entidades.Metodos
                                 if (Convert.ToInt32(obj.codigoRetorno) != 200)
                                 {
                                     if (obj.mensaje.Any() && obj.mensaje != null)
-                                    mensaje = obj.mensaje;
+                                        mensaje = obj.mensaje;
                                     estado = "ERROR";
                                     tRespuesta = new Respuesta { mensaje = mensaje, codigoRetorno = obj.codigoRetorno.ToString(), estado = "ERROR", numeroDocumento = "" };
                                     return new RespuestaTransaccion { Estado = false, Respuesta = tRespuesta.mensaje };
@@ -89,7 +89,7 @@ namespace GestionPPM.Entidades.Metodos
                                     tRespuesta = new Respuesta { mensaje = "PROCESO OK", codigoRetorno = obj.codigoRetorno.ToString(), estado = "OK", numeroDocumento = obj.numeroDocumento };
 
                                     if (Convert.ToInt32(obj.codigoRetorno) != 200)
-                                    { 
+                                    {
                                         mensaje += obj.mensaje;
                                         estado = "ERROR";
                                         tRespuesta = new Respuesta { mensaje = mensaje, codigoRetorno = obj.codigoRetorno.ToString(), estado = "ERROR", numeroDocumento = obj.numeroDocumento };
@@ -163,9 +163,10 @@ namespace GestionPPM.Entidades.Metodos
                             }
                         }
 
-                        return new RespuestaTransaccion { Estado = false, Respuesta = mensaje};
+                        return new RespuestaTransaccion { Estado = false, Respuesta = mensaje };
                     }
-                }catch (Exception ex)
+                }
+                catch (Exception ex)
                 {
                     transaction.Rollback();
                     return new RespuestaTransaccion { Estado = false, Respuesta = Mensajes.MensajeTransaccionFallida + " ;" + ex.Message.ToString() };
@@ -198,7 +199,7 @@ namespace GestionPPM.Entidades.Metodos
                 return new RespuestaTransaccion { Estado = false, Respuesta = Mensajes.MensajeTransaccionFallida + " ;" + ex.Message.ToString() };
             }
         }
-         
+
         public static List<ListadoCodigosPrefacturar> ListadoCodigosPrefacturar()
         {
             try
@@ -210,7 +211,7 @@ namespace GestionPPM.Entidades.Metodos
                 throw;
             }
         }
-          
+
         public static List<Wrapper> ProcesaCotizacionesSAFI(List<ListadoPresupuestoPrefacturaSAFI> ListadoPrefactura, string secuencial)
         {
             var facturas = new List<Wrapper>();
@@ -223,7 +224,7 @@ namespace GestionPPM.Entidades.Metodos
                         var w = new Wrapper();
                         var cab = new Cabecera();
                         var det = new Detalle();
-                        
+
                         //Cliente
                         var cliente = new ClienteSAFI
                         {
@@ -235,7 +236,7 @@ namespace GestionPPM.Entidades.Metodos
                             Telefono = "",
                             Segmento = ConfigurationManager.AppSettings.Get("segmentoComercial")
                         };
-                        cab.Cliente = cliente; 
+                        cab.Cliente = cliente;
 
                         //Detalle de la cotizacion
                         var cotizacion = new DetallesCotizacion
@@ -251,14 +252,14 @@ namespace GestionPPM.Entidades.Metodos
                         };
 
                         cab.CotizacionDetalle = cotizacion;
-                        w.Cabecera = cab; 
-                           
+                        w.Cabecera = cab;
+
                         //Datos del detalle de la factura
                         var listDet = new List<DetalleFactura>();
                         var detItem = new DetalleFactura
                         {
                             Cantidad = Convert.ToInt32(ele.Cantidad.ToString()),
-                            Detalle = "", 
+                            Detalle = "",
                             Valor = Convert.ToDecimal(ele.Subtotal.ToString()), //subtotal+iva
                             SubTotal = Convert.ToDecimal(ele.Subtotal.ToString()),// !string.IsNullOrEmpty(item.SubTotal) ? decimal.Parse(item.SubTotal) : 0,
                             Descuento = Convert.ToDecimal(ele.Descuento.ToString()),
@@ -310,10 +311,10 @@ namespace GestionPPM.Entidades.Metodos
                 try
                 {
                     var client1 = new RestClient(ConfigurationManager.AppSettings.Get("wsCotizaciones"));
-                    var request = new RestRequest(Method.POST);  
+                    var request = new RestRequest(Method.POST);
                     request.AddParameter("application/json", json, ParameterType.RequestBody);
                     IRestResponse response = client1.Execute(request);
-                     
+
                     return response;
                 }
                 catch (Exception ex)
@@ -332,6 +333,20 @@ namespace GestionPPM.Entidades.Metodos
             try
             {
                 listado = db.ListadoPresupuestosAprobacionEjecutivo(id_usuario).ToList();
+                return listado;
+            }
+            catch (Exception ex)
+            {
+                return listado;
+            }
+        }
+
+        public static List<ListadoPresupuestosAprobadosEjecutivo> ListadoPresupuestoAprobadosEjecutivoHistorico(int id_usuario)
+        {
+            List<ListadoPresupuestosAprobadosEjecutivo> listado = new List<ListadoPresupuestosAprobadosEjecutivo>();
+            try
+            {
+                listado = db.ListadoPresupuestosAprobadosEjecutivo(id_usuario).ToList();
                 return listado;
             }
             catch (Exception ex)
@@ -370,7 +385,73 @@ namespace GestionPPM.Entidades.Metodos
                 }
             }
 
-            
+
+        }
+
+        public static RespuestaTransaccion EnviarNotificacionClientePresupuestosGenerados(string idsCodigoCotizacion)
+        {
+            using (var transaction = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    //enviar notificacion al ejecutivo del cliente 
+                    db.usp_guarda_envio_correo_notificaciones(14, 0, idsCodigoCotizacion, 1, "");
+                    db.SaveChanges();
+
+                    transaction.Commit();
+                    return new RespuestaTransaccion { Estado = true, Respuesta = Mensajes.MensajeTransaccionExitosa };
+                }
+
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    return new RespuestaTransaccion { Estado = false, Respuesta = Mensajes.MensajeTransaccionFallida + " ;" + ex.Message.ToString() };
+                }
+            }
+        }
+
+        public static RespuestaTransaccion EnviarNotificacionAprobarPresupuestosEjecutivo(string idsCodigoCotizacion)
+        {
+            using (var transaction = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    //enviar notificacion al ejecutivo del cliente 
+                    db.usp_guarda_envio_correo_notificaciones(15, 0, idsCodigoCotizacion, 1, "");
+                    db.SaveChanges();
+
+                    transaction.Commit();
+                    return new RespuestaTransaccion { Estado = true, Respuesta = Mensajes.MensajeTransaccionExitosa };
+                }
+
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    return new RespuestaTransaccion { Estado = false, Respuesta = Mensajes.MensajeTransaccionFallida + " ;" + ex.Message.ToString() };
+                }
+            }
+        }
+
+        public static RespuestaTransaccion EnviarNotificacionAprobarPresupuestosEjecutivoFinal(string idsCodigoCotizacion)
+        {
+            using (var transaction = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    //enviar notificacion al ejecutivo del cliente 
+                    db.usp_guarda_envio_correo_notificaciones(16, 0, idsCodigoCotizacion, 1, "");
+                    db.SaveChanges();
+
+                    transaction.Commit();
+                    return new RespuestaTransaccion { Estado = true, Respuesta = Mensajes.MensajeTransaccionExitosa };
+                }
+
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    return new RespuestaTransaccion { Estado = false, Respuesta = Mensajes.MensajeTransaccionFallida + " ;" + ex.Message.ToString() };
+                }
+            }
         }
 
     }

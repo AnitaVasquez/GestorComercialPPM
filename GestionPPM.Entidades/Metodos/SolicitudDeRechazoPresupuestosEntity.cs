@@ -96,7 +96,7 @@ namespace GestionPPM.Entidades.Metodos
                 {
                     using (var context = new GestionPPMEntities())
                     {
-                        //insertar las colicitud de reverso
+                        //Obtener datos del rechazo
                         SolicitudesDeRechazoPresupuestos reverso = new SolicitudesDeRechazoPresupuestos();
                         reverso = context.SolicitudesDeRechazoPresupuestos.ToList().Where(s => s.id_facturacion_safi == id).FirstOrDefault();
 
@@ -122,6 +122,72 @@ namespace GestionPPM.Entidades.Metodos
 
                         //cambiar el estado a ELI en SAFI
                         erp.ActualizarPresupuestosSAFI(1, perfactura.numero_prefactura, "");
+                    }
+
+                    transaction.Commit();
+                    return new RespuestaTransaccion { Estado = true, Respuesta = Mensajes.MensajeTransaccionExitosa };
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    return new RespuestaTransaccion { Estado = false, Respuesta = Mensajes.MensajeTransaccionFallida + " ;" + ex.Message.ToString() };
+                }
+            }
+        }
+
+        public static RespuestaTransaccion ConsolidarPresupuestos(int id, string numeroPresupuestoConsolidado)
+        {
+            using (var transaction = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    ////anular el presupuesto en el safi general
+                    //SAFIGeneral perfactura = new SAFIGeneral();
+                    //perfactura = db.SAFIGeneral.ToList().Where(s => s.id_facturacion_safi == id).FirstOrDefault();
+
+                    //if (perfactura.estado == true)
+                    //{
+                    //    perfactura.estado = false;
+
+                    //    //cambiar el estado del presupuesto
+                    //    db.Entry(perfactura).State = EntityState.Modified;
+                    //    db.SaveChanges();
+                    //}
+
+                    //cambiar el estado a ELI en SAFI
+                    erp.ActualizarPresupuestosSAFI(2, "", numeroPresupuestoConsolidado);
+
+                    transaction.Commit();
+                    return new RespuestaTransaccion { Estado = true, Respuesta = Mensajes.MensajeTransaccionExitosa };
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    return new RespuestaTransaccion { Estado = false, Respuesta = Mensajes.MensajeTransaccionFallida + " ;" + ex.Message.ToString() };
+                }
+            }
+        }
+
+        public static RespuestaTransaccion ReversarConsolidarPresupuestos(long id)
+        {
+            using (var transaction = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    using (var context = new GestionPPMEntities())
+                    {                         //anular el presupuesto en el safi general
+                        SAFIGeneral perfactura = context.SAFIGeneral.Where(s => s.id_facturacion_safi == id).FirstOrDefault();
+                        if (perfactura.estado == true)
+                        {
+                            perfactura.estado = false;
+
+                            //cambiar el estado del presupuesto
+                            context.Entry(perfactura).State = EntityState.Modified;
+                            context.SaveChanges();
+                        }
+
+                        //cambiar el estado a ELI en SAFI
+                        erp.ActualizarPresupuestosSAFI(3, perfactura.numero_prefactura, "");
                     }
 
                     transaction.Commit();

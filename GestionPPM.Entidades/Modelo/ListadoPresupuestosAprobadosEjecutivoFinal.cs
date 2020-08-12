@@ -11,7 +11,7 @@ namespace GestionPPM.Entidades.Modelo
 {
     using System;
     
-    public partial class ListadoPresupuestosAprobacionEjecutivo
+    public partial class ListadoPresupuestosAprobadosEjecutivoFinal
     {
         public int id_facturacion_safi { get; set; }
         public Nullable<int> id_codigo_cotizacion { get; set; }
@@ -65,6 +65,5 @@ namespace GestionPPM.Entidades.Modelo
         public string EstadoDocumento { get; set; }
         public int Anulada { get; set; }
         public string MKT { get; set; }
-        public int IdSolicitud { get; set; }
     }
 }

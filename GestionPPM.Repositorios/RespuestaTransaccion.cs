@@ -24,5 +24,7 @@ namespace GestionPPM.Repositorios
 
         // Parámetro para número de Prefactura
         public int? DocumentoSAFIID { get; set; }
+
+        public string NumeroDocumentoERP { get; set; }
     }
 }

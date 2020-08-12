@@ -420,13 +420,50 @@ namespace TemplateInicial.Controllers
                 else
                 {
                     return Json(new { Resultado = new RespuestaTransaccion { Estado = false, Respuesta = "Presupuesto Rechazdo anteriormente, comuniquese con PPM para más detalles" } }, JsonRequestBehavior.AllowGet);
-                }               
-                 
+                }
+
             }
             catch (Exception ex)
             {
                 return Json(new { Resultado = new RespuestaTransaccion { Estado = false, Respuesta = ex.Message } }, JsonRequestBehavior.AllowGet);
             }
+        }
+
+        public ActionResult _Adjuntos(int? id)
+        {
+            ViewBag.TituloModal = "Repositorio de archivos adjuntos.";
+
+            ViewBag.AdjuntosVacio = "No existen archivos adjuntos.";
+
+            SolicitudClienteExternoInfo solicitud = SolicitudClienteExternoEntity.ConsultarSolicitudClienteExterno(id.Value);
+            if (solicitud == null)
+            {
+                solicitud = new SolicitudClienteExternoInfo();
+                solicitud.id_solicitud = 0;
+            }
+
+            return PartialView(solicitud);
+        }
+
+        public JsonResult _GetArchivosAdjuntos(string id)
+        {
+            List<TreeViewJQueryUI> items = new List<TreeViewJQueryUI>();
+            if (!string.IsNullOrEmpty(id))
+            {
+                string basePath = ConfigurationManager.AppSettings["RepositorioDocumentos"];
+                string rutaArchivos = basePath + "\\GESTION_PPM\\ADJUNTOS_SOLICITUDES";
+
+                var RootDirectory = new DirectoryInfo(rutaArchivos);
+                var directorio = RootDirectory.GetDirectories("*", SearchOption.AllDirectories).Where(s => s.Name.Equals(id)).FirstOrDefault();
+
+                string pathCompletoDirectorio = directorio != null ? directorio.FullName : string.Empty;
+
+                var files = !string.IsNullOrEmpty(pathCompletoDirectorio) ? Directory.GetFiles(pathCompletoDirectorio, "*.*", SearchOption.TopDirectoryOnly).ToList() : new List<string>();
+
+                items = GetSoloArchivosEnDirectorio(files);
+
+            }
+            return Json(items, JsonRequestBehavior.AllowGet);
         }
 
 
@@ -439,9 +476,12 @@ namespace TemplateInicial.Controllers
                 Int32 row = 2;
                 Int32 col = 1;
 
-                package.Workbook.Worksheets.Add("Data");
+                package.Workbook.Worksheets.Add("Presupuestos por Aprobar");
+                package.Workbook.Worksheets.Add("Presupuestos Aprobados");
                 IGrid<ListadoPresupuestosAprobacionEjecutivo> grid = CreateExportableGrid();
-                ExcelWorksheet sheet = package.Workbook.Worksheets["Data"];
+                IGrid<ListadoPresupuestosAprobadosEjecutivo> grid1 = CreateExportableGridHistorico();
+                ExcelWorksheet sheet = package.Workbook.Worksheets["Presupuestos por Aprobar"];
+                ExcelWorksheet sheet1 = package.Workbook.Worksheets["Presupuestos Aprobados"];
 
                 foreach (IGridColumn column in grid.Columns)
                 {
@@ -471,7 +511,38 @@ namespace TemplateInicial.Controllers
                     }
                 }
 
-                return File(package.GetAsByteArray(), "application/unknown", "ListadoDocumentos.xlsx");
+
+                col = 1;
+                row = 2;
+                foreach (IGridColumn column in grid1.Columns)
+                {
+                    sheet1.Cells[1, col].Value = column.Title;
+                    sheet1.Column(col++).Width = 18;
+
+                    column.IsEncoded = false;
+                }
+
+                foreach (IGridRow<ListadoPresupuestosAprobadosEjecutivo> gridRow in grid1.Rows)
+                {
+                    col = 1;
+                    foreach (IGridColumn column in grid1.Columns)
+                        sheet1.Cells[row, col++].Value = column.ValueFor(gridRow);
+
+                    row++;
+                }
+
+                col = 1;
+                foreach (IGridColumn column in grid1.Columns)
+                {
+
+                    using (ExcelRange rowRange = sheet1.Cells[1, col++])
+                    {
+                        rowRange.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        rowRange.Style.Fill.BackgroundColor.SetColor(Color.Orange);
+                    }
+                }
+
+                return File(package.GetAsByteArray(), "application/unknown", "ListadoPresupuestoEjecutivo.xlsx");
             }
         }
 
@@ -482,6 +553,38 @@ namespace TemplateInicial.Controllers
             var usuario = int.Parse(user.ToString());
 
             IGrid<ListadoPresupuestosAprobacionEjecutivo> grid = new Grid<ListadoPresupuestosAprobacionEjecutivo>(PrefacturasSAFIEntity.ListadoPresupuestoAprobadosEjecutivo(usuario));
+            grid.ViewContext = new ViewContext { HttpContext = HttpContext };
+            grid.Query = Request.QueryString;
+
+            grid.Columns.Add(model => model.codigo_cotizacion).Titled("Código de Cotización").AppendCss("celda-grande");
+            grid.Columns.Add(model => model.numero_prefactura).Titled("Número PreFactura").AppendCss("celda-grande");
+            grid.Columns.Add(model => model.MKT).Titled("MKT").AppendCss("celda-grande");
+            grid.Columns.Add(model => model.PrefacturaConsolidada).Titled("Consolidada").AppendCss("celda-grande");
+            grid.Columns.Add(model => model.nombre_comercial_cliente).Titled("Cliente").AppendCss("celda-grande");
+            grid.Columns.Add(model => model.detalle_cotizacion).Titled("Detalle").AppendCss("celda-grande");
+            grid.Columns.Add(model => model.fecha_aprobacion_prefactura_ejecutivo).Titled("Fecha Aprobación Ejecutivo").Formatted("{0:d}").AppendCss("celda-grande");
+            grid.Columns.Add(model => model.Ejecutivo).Titled("Ejecutivo").AppendCss("celda-grande");
+            grid.Columns.Add(model => model.cantidad).Titled("Cantidad").AppendCss("celda-grande");
+            grid.Columns.Add(model => (((Math.Round(model.precio_unitario, 2).ToString("N2").Replace(",", "-")).Replace(".", ",")).Replace("-", "."))).Titled("Precio").AppendCss("celda-grande");
+            grid.Columns.Add(model => (((Math.Round(model.iva_pago, 2).ToString("N2").Replace(",", "-")).Replace(".", ",")).Replace("-", "."))).Titled("IVA").AppendCss("celda-grande");
+            grid.Columns.Add(model => (((Math.Round(model.total_pago, 2).ToString("N2").Replace(",", "-")).Replace(".", ",")).Replace("-", "."))).Titled("Total").AppendCss("celda-grande");
+
+            foreach (IGridColumn column in grid.Columns)
+            {
+                column.Filter.IsEnabled = true;
+                column.Sort.IsEnabled = true;
+            }
+
+            return grid;
+        }
+
+        public IGrid<ListadoPresupuestosAprobadosEjecutivo> CreateExportableGridHistorico()
+        {
+            //Controlar permisos
+            var user = ViewData["usuario"] = System.Web.HttpContext.Current.Session["usuario"];
+            var usuario = int.Parse(user.ToString());
+
+            IGrid<ListadoPresupuestosAprobadosEjecutivo> grid = new Grid<ListadoPresupuestosAprobadosEjecutivo>(PrefacturasSAFIEntity.ListadoPresupuestoAprobadosEjecutivoHistorico(usuario));
             grid.ViewContext = new ViewContext { HttpContext = HttpContext };
             grid.Query = Request.QueryString;
 
@@ -569,6 +672,27 @@ namespace TemplateInicial.Controllers
 
             var list = Reportes.SerializeToJSON(results);
             return Content(list, "application/json");
+        }
+
+        List<TreeViewJQueryUI> GetSoloArchivosEnDirectorio(List<string> dirs)
+        {
+            var nodes = new List<TreeViewJQueryUI>();
+            foreach (string d in dirs)
+            {
+                var extensionArchivo = Path.GetExtension(d);
+                var icono = Auxiliares.GetIconoExtension(extensionArchivo);
+
+                DirectoryInfo di = new DirectoryInfo(d);
+                TreeViewJQueryUI tn = new TreeViewJQueryUI(di.Name);
+                tn.desc = di.FullName;
+                tn.esCarpeta = false;
+                tn.id = Guid.NewGuid();
+                tn.children = null;
+                tn.iconCls = icono;
+
+                nodes.Add(tn);
+            }
+            return nodes;
         }
 
     }

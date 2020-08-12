@@ -1656,7 +1656,6 @@
     <Content Include="Views\Reversar\_AprobarPrefactura.cshtml" />
     <Content Include="Views\Reversar\_IndexGrid.cshtml" />
     <Content Include="Views\Reversar\_Reversar.cshtml" />
-    <Content Include="Views\Reversar\_VerAdjuntos.cshtml" />
     <Content Include="Views\Reversar\Index.cshtml" />
     <Content Include="Views\AnularFactura\_AprobarPrefactura.cshtml" />
     <Content Include="Views\AnularFactura\_IndexGrid.cshtml" />
@@ -1669,11 +1668,11 @@
     <Content Include="Views\Anular\_VerAdjuntos.cshtml" />
     <Content Include="Views\Anular\Index.cshtml" />
     <Content Include="Views\AprobarPresupuesto\_Reversar.cshtml" />
-    <Content Include="Views\RechazoPresupuestos\_AprobarPrefactura.cshtml" />
     <Content Include="Views\RechazoPresupuestos\_IndexGrid.cshtml" />
     <Content Include="Views\RechazoPresupuestos\_Reversar.cshtml" />
     <Content Include="Views\RechazoPresupuestos\Index.cshtml" />
     <Content Include="Views\RechazoPresupuestos\_AsignacionUsuarios.cshtml" />
+    <Content Include="Views\AprobarPresupuesto\_Adjuntos.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

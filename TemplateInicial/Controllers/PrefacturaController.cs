@@ -69,7 +69,7 @@ namespace TemplateInicial.Controllers
             ViewBag.AccionesControlador = GetMetodosControlador(nombreControlador);
 
             //Búsqueda
-            var listado = CotizacionEntity.ListadoPrefacturasAprobadas(usuario);
+            var listado = CotizacionEntity.ListadoResumenPrefacturasAprobadas(usuario);
 
             search = !string.IsNullOrEmpty(search) ? search.Trim() : "";
 
@@ -1365,9 +1365,12 @@ namespace TemplateInicial.Controllers
                 Int32 row = 2;
                 Int32 col = 1;
 
-                package.Workbook.Worksheets.Add("Data");
-                IGrid<PrefacturaSAFIInfo> grid = CreateExportableGrid();
-                ExcelWorksheet sheet = package.Workbook.Worksheets["Data"];
+                package.Workbook.Worksheets.Add("Presupuestos Por Aprobar");
+                package.Workbook.Worksheets.Add("Presupuestos Aprobados");
+                IGrid<ListadoResumenPrefacturasAprobadas> grid = CreateExportableGrid();
+                IGrid<ListadoResumenPrefacturasAprobadas> grid2 = CreateExportableGridHistorico();
+                ExcelWorksheet sheet = package.Workbook.Worksheets["Presupuestos Por Aprobar"];
+                ExcelWorksheet sheet1 = package.Workbook.Worksheets["Presupuestos Aprobados"];
 
                 foreach (IGridColumn column in grid.Columns)
                 {
@@ -1377,7 +1380,7 @@ namespace TemplateInicial.Controllers
                     column.IsEncoded = false;
                 }
 
-                foreach (IGridRow<PrefacturaSAFIInfo> gridRow in grid.Rows)
+                foreach (IGridRow<ListadoResumenPrefacturasAprobadas> gridRow in grid.Rows)
                 {
                     col = 1;
                     foreach (IGridColumn column in grid.Columns)
@@ -1397,30 +1400,97 @@ namespace TemplateInicial.Controllers
                     }
                 }
 
-                return File(package.GetAsByteArray(), "application/unknown", "ListadoDocumentos.xlsx");
+                col = 1;
+                foreach (IGridColumn column in grid2.Columns)
+                {
+                    sheet1.Cells[1, col].Value = column.Title;
+                    sheet1.Column(col++).Width = 18;
+
+                    column.IsEncoded = false;
+                }
+
+                row = 2;
+                foreach (IGridRow<ListadoResumenPrefacturasAprobadas> gridRow in grid2.Rows)
+                {
+                    col = 1;
+                    foreach (IGridColumn column in grid2.Columns)
+                        sheet1.Cells[row, col++].Value = column.ValueFor(gridRow);
+
+                    row++;
+                }
+
+                col = 1;
+                foreach (IGridColumn column in grid2.Columns)
+                {
+
+                    using (ExcelRange rowRange = sheet1.Cells[1, col++])
+                    {
+                        rowRange.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        rowRange.Style.Fill.BackgroundColor.SetColor(Color.Orange);
+                    }
+                }
+
+                return File(package.GetAsByteArray(), "application/unknown", "ListadoPresupuestos.xlsx");
             }
         }
 
-        public IGrid<PrefacturaSAFIInfo> CreateExportableGrid()
+        public IGrid<ListadoResumenPrefacturasAprobadas> CreateExportableGrid()
         {
             //Controlar permisos
             var user = ViewData["usuario"] = System.Web.HttpContext.Current.Session["usuario"];
             var usuario = int.Parse(user.ToString());
 
-            IGrid<PrefacturaSAFIInfo> grid = new Grid<PrefacturaSAFIInfo>(CotizacionEntity.ListadoPrefacturasAprobadas(usuario));
+            IGrid<ListadoResumenPrefacturasAprobadas> grid = new Grid<ListadoResumenPrefacturasAprobadas>(CotizacionEntity.ListadoResumenPrefacturasAprobadas(usuario));
             grid.ViewContext = new ViewContext { HttpContext = HttpContext };
             grid.Query = Request.QueryString;
 
-            //grid.Columns.Add(model => model.id_facturacion_safi).Titled("ID Documento").Css("hidden");
             grid.Columns.Add(model => model.codigo_cotizacion).Titled("Código de Cotización").AppendCss("celda-grande");
-            grid.Columns.Add(model => model.numero_prefactura).Titled("Número PreFactura").AppendCss("celda-grande");
-            grid.Columns.Add(model => model.MKT).Titled("MKT").AppendCss("celda-grande");
-            grid.Columns.Add(model => model.PrefacturaConsolidada).Titled("Consolidada").AppendCss("celda-grande");
+            grid.Columns.Add(model => model.FechaSolicitud).Titled("Fecha Solcitud").AppendCss("celda-grande"); 
             grid.Columns.Add(model => model.nombre_comercial_cliente).Titled("Cliente").AppendCss("celda-grande");
+            grid.Columns.Add(model => model.MKT).Titled("MKT").AppendCss("celda-grande");
             grid.Columns.Add(model => model.detalle_cotizacion).Titled("Detalle").AppendCss("celda-grande");
-            grid.Columns.Add(model => model.fecha_aprobacion_prefactura_ejecutivo).Titled("Fecha Aprobación Ejecutivo").Formatted("{0:d}").AppendCss("celda-grande");
+            grid.Columns.Add(model => model.numero_prefactura).Titled("Número PreFactura").AppendCss("celda-grande");
+            grid.Columns.Add(model => model.fecha_prefactura).Titled("Fecha Prefactura").Formatted("{0:d}").AppendCss("celda-grande");
             grid.Columns.Add(model => model.Ejecutivo).Titled("Ejecutivo").AppendCss("celda-grande");
+            grid.Columns.Add(model => model.fecha_aprobacion_prefactura_ejecutivo).Titled("Fecha Aprobación Ejecutivo").Formatted("{0:d}").AppendCss("celda-grande");
+            grid.Columns.Add(model => model.DiasEnAprobacion).Titled("# Días Aprobación").AppendCss("celda-grande");
             grid.Columns.Add(model => model.cantidad).Titled("Cantidad").AppendCss("celda-grande");
+            grid.Columns.Add(model => (((Math.Round(model.precio_unitario, 2).ToString("N2").Replace(",", "-")).Replace(".", ",")).Replace("-", "."))).Titled("Precio").AppendCss("celda-grande");
+            grid.Columns.Add(model => (((Math.Round(model.iva_pago, 2).ToString("N2").Replace(",", "-")).Replace(".", ",")).Replace("-", "."))).Titled("IVA").AppendCss("celda-grande");
+            grid.Columns.Add(model => (((Math.Round(model.total_pago, 2).ToString("N2").Replace(",", "-")).Replace(".", ",")).Replace("-", "."))).Titled("Total").AppendCss("celda-grande");
+
+            foreach (IGridColumn column in grid.Columns)
+            {
+                column.Filter.IsEnabled = true;
+                column.Sort.IsEnabled = true;
+            }
+
+            return grid;
+        }
+
+        public IGrid<ListadoResumenPrefacturasAprobadas> CreateExportableGridHistorico()
+        {
+            //Controlar permisos
+            var user = ViewData["usuario"] = System.Web.HttpContext.Current.Session["usuario"];
+            var usuario = int.Parse(user.ToString());
+
+            IGrid<ListadoResumenPrefacturasAprobadas> grid = new Grid<ListadoResumenPrefacturasAprobadas>(CotizacionEntity.ListadoPrefacturasAprobadasHistorico(usuario));
+            grid.ViewContext = new ViewContext { HttpContext = HttpContext };
+            grid.Query = Request.QueryString;
+
+            grid.Columns.Add(model => model.codigo_cotizacion).Titled("Código de Cotización").AppendCss("celda-grande");
+            grid.Columns.Add(model => model.FechaSolicitud).Titled("Fecha Solcitud").AppendCss("celda-grande");
+            grid.Columns.Add(model => model.nombre_comercial_cliente).Titled("Cliente").AppendCss("celda-grande");
+            grid.Columns.Add(model => model.MKT).Titled("MKT").AppendCss("celda-grande");
+            grid.Columns.Add(model => model.detalle_cotizacion).Titled("Detalle").AppendCss("celda-grande");
+            grid.Columns.Add(model => model.numero_prefactura).Titled("Número PreFactura").AppendCss("celda-grande");
+            grid.Columns.Add(model => model.fecha_prefactura).Titled("Fecha Prefactura").Formatted("{0:d}").AppendCss("celda-grande");
+            grid.Columns.Add(model => model.Ejecutivo).Titled("Ejecutivo").AppendCss("celda-grande");
+            grid.Columns.Add(model => model.fecha_aprobacion_prefactura_ejecutivo).Titled("Fecha Aprobación Ejecutivo").Formatted("{0:d}").AppendCss("celda-grande");
+            grid.Columns.Add(model => model.DiasEnAprobacion).Titled("# Días Aprobación").AppendCss("celda-grande");
+            grid.Columns.Add(model => model.fecha_prefactura).Titled("Fecha Prefactura").Formatted("{0:d}").AppendCss("celda-grande");
+            grid.Columns.Add(model => model.numero_factura).Titled("Número Factura").AppendCss("celda-grande");
+            grid.Columns.Add(model => model.fecha_factura).Titled("Fecha Factura").Formatted("{0:d}").AppendCss("celda-grande");
             grid.Columns.Add(model => (((Math.Round(model.precio_unitario, 2).ToString("N2").Replace(",", "-")).Replace(".", ",")).Replace("-", "."))).Titled("Precio").AppendCss("celda-grande");
             grid.Columns.Add(model => (((Math.Round(model.iva_pago, 2).ToString("N2").Replace(",", "-")).Replace(".", ",")).Replace("-", "."))).Titled("IVA").AppendCss("celda-grande");
             grid.Columns.Add(model => (((Math.Round(model.total_pago, 2).ToString("N2").Replace(",", "-")).Replace(".", ",")).Replace("-", "."))).Titled("Total").AppendCss("celda-grande");
@@ -1456,7 +1526,7 @@ namespace TemplateInicial.Controllers
                 "TOTAL",
             };
 
-            var listado = (from item in CotizacionEntity.ListadoPrefacturasAprobadas(usuario)
+            var listado = (from item in CotizacionEntity.ListadoResumenPrefacturasAprobadas(usuario)
                            select new object[]
                            {
                                 item.codigo_cotizacion,

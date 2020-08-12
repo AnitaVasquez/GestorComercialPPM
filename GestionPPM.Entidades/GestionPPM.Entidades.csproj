@@ -327,6 +327,9 @@
     <Compile Include="Modelo\ComentariosSolicitudInfo.cs">
       <DependentUpon>GestionPPM.tt</DependentUpon>
     </Compile>
+    <Compile Include="Modelo\ConsolidacionPrefactura.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
     <Compile Include="Modelo\ConsultarCodigoCotizacion.cs">
       <DependentUpon>GestionPPM.tt</DependentUpon>
     </Compile>
@@ -431,6 +434,12 @@
     <Compile Include="Modelo\ListadoPresupuestosAprobacionEjecutivo.cs">
       <DependentUpon>GestionPPM.tt</DependentUpon>
     </Compile>
+    <Compile Include="Modelo\ListadoPresupuestosAprobadosEjecutivo.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ListadoPresupuestosAprobadosEjecutivoFinal.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
     <Compile Include="Modelo\ListadoPresupuestosFacturar.cs">
       <DependentUpon>GestionPPM.tt</DependentUpon>
     </Compile>
@@ -438,6 +447,9 @@
       <DependentUpon>GestionPPM.tt</DependentUpon>
     </Compile>
     <Compile Include="Modelo\ListadoProductosGestor.cs">
+      <DependentUpon>GestionPPM.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Modelo\ListadoResumenPrefacturasAprobadas.cs">
       <DependentUpon>GestionPPM.tt</DependentUpon>
     </Compile>
     <Compile Include="Modelo\MarcaPortales.cs">

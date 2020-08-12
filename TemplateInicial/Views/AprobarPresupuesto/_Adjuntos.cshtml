@@ -1,0 +1,217 @@
+﻿@model GestionPPM.Entidades.Modelo.SolicitudClienteExternoInfo
+
+<link rel="stylesheet" type="text/css" href="~/Content/themes/default/tree.css">
+<link href="~/Content/themes/default/menu.css" rel="stylesheet" />
+
+<script type="text/javascript" src="~/Scripts/jquery.easyui.min.js"></script>
+<style>
+    .easyui-fluid {
+        width: 100% !important;
+    }
+
+    #seccion-archivos-adjuntos {
+        width: 100% !important;
+    }
+
+    .panel-htop {
+        width: 100% !important;
+    }
+
+    /* Important part */
+    .modal-dialog {
+        width: 1000px;
+        overflow-y: initial !important
+    }
+
+    .modal-body {
+        height: 260px;
+        overflow-y: auto;
+    }
+</style>
+<script>
+
+    $(document).ready(function () {
+        $("#seccion-titulo-modal").text('@Html.Raw(ViewBag.TituloModal)');
+        @*$("#texto-adjuntos-vacio").text('@Html.Raw(ViewBag.AdjuntosVacio)');*@
+    });
+
+    function myLoadFilter(data, parent) {
+            debugger
+        var state = $.data(this, 'tree');
+
+        var idElemento = $(this).attr('id');
+        var cantidadListado = data.length;
+
+        switch (idElemento) {
+            case 'archivos-adjuntos-actas':
+                if (cantidadListado === 0) {
+                    $('#seccion-archivos-adjuntos-actas').hide();
+                    $("#seccion-adjuntos-vacio-actas").show();
+                }
+                break;
+            case 'archivos-adjuntos-cotizaciones':
+                if (cantidadListado === 0) {
+                    $('#seccion-archivos-adjuntos-cotizaciones').hide();
+                    $("#seccion-adjuntos-vacio-cotizaciones").show();
+                }
+
+                break;
+            case 'archivos-adjuntos-solicitud':
+                if (cantidadListado === 0) {
+                    $('#seccion-archivos-adjuntos-solicitud').hide();
+                    $("#seccion-adjuntos-vacio-solicitud").show();
+                }
+                break;
+            default:
+                break;
+        }
+
+            function setData() {
+                debugger
+		    	var serno = 1;
+		        var todo = [];
+		        for(var i=0; i<data.length; i++){
+		            todo.push(data[i]);
+		        }
+		        while(todo.length){
+		            var node = todo.shift();
+		            if (node.id == undefined){
+		            	node.id = '_node_' + (serno++);
+		            }
+		            if (node.children){
+		                node.state = 'closed';
+		                node.children1 = node.children;
+		                node.children = undefined;
+		                todo = todo.concat(node.children1);
+		            }
+		        }
+		        state.tdata = data;
+		    }
+            function find(id) {
+                debugger
+		    	var data = state.tdata;
+		    	var cc = [data];
+		    	while(cc.length){
+		    		var c = cc.shift();
+		    		for(var i=0; i<c.length; i++){
+		    			var node = c[i];
+		    			if (node.id == id){
+		    				return node;
+		    			} else if (node.children1){
+		    				cc.push(node.children1);
+		    			}
+		    		}
+		    	}
+		    	return null;
+		    }
+
+		    setData();
+
+		    var t = $(this);
+		    var opts = t.tree('options');
+		    opts.onBeforeExpand = function(node){
+	    		var n = find(node.id);
+	    		if (n.children && n.children.length){return}
+		    	if (n.children1){
+		    		var filter = opts.loadFilter;
+		    		opts.loadFilter = function(data){return data;};
+		    		t.tree('append',{
+		    			parent:node.target,
+		    			data:n.children1
+		    		});
+		    		opts.loadFilter = filter;
+		    		n.children = n.children1;
+		    	}
+		    };
+
+        debugger
+        if (data.length == 0)
+            $("#seccion-adjuntos-vacio").show();
+
+        return data;
+
+
+    }
+
+    function descargarArchivoAdjunto(tipo) {
+        debugger
+        var node = '';
+        switch (tipo) {
+            case '1':
+                node = $('#archivos-adjuntos-actas').tree('getSelected');
+                break;
+            case '2':
+                node = $('#archivos-adjuntos-cotizaciones').tree('getSelected');
+                break;
+            case '3':
+                node = $('#archivos-adjuntos-solicitud').tree('getSelected');
+                break;
+            default:
+                break;
+        }
+        var rutaArchivo = node.desc;
+        var esCarpeta = node.esCarpeta;
+        if (!esCarpeta)
+            location.href = '@Url.Action("DescargarArchivoAdjunto", "SolicitudesClienteExterno")?path=' + rutaArchivo;
+        else
+            toastr.warning("Solo puede descargar archivos.");
+    }
+
+</script>
+
+
+
+
+<table class="table  table-responsive">
+    <thead>
+        <tr style="text-align: center;" class="table-danger"> 
+            <th>ADJUNTOS</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr class="table-secondary">  
+            <td>
+                <div class="row" id="seccion-adjuntos-vacio-solicitud" style="display: none;">
+                    <div class="col-lg-12">
+                        <small><b id="texto-adjuntos-vacio">@Html.Raw(ViewBag.AdjuntosVacio)</b></small>
+                    </div>
+                </div>
+                <div id="seccion-archivos-adjuntos-solicitud" class="easyui-panel seccion-archivos-adjuntos" style="padding:5px;width: 100%;">
+                    <ul id="archivos-adjuntos-solicitud" class="easyui-tree" data-options="url:'@Url.Action("_GetArchivosAdjuntos", "AprobarPresupuesto", new { id = Model.id_solicitud })',method:'get',loadFilter:myLoadFilter,animate:true,onContextMenu: function(e,node){
+                    e.preventDefault();
+                    $(this).tree('select',node.target);
+                    $('#menu-archivo-solicitudes').menu('show',{
+                        left: e.pageX,
+                        top: e.pageY
+                    });
+                }"></ul>
+                </div>
+            </td>
+        </tr>
+
+    </tbody>
+</table>
+
+
+
+
+
+
+
+<div id="menu-archivo-actas" class="easyui-menu" style="width:120px;">
+    <div onclick="descargarArchivoAdjunto('1')" data-options="iconCls:'glyphicon glyphicon-floppy-save'">Descargar</div>
+    @*<div onclick="eliminarArchivoAdjunto()" data-options="iconCls:'glyphicon glyphicon-trash'">Eliminar</div>*@
+</div>
+
+<div id="menu-archivo-cotizaciones" class="easyui-menu" style="width:120px;">
+    <div onclick="descargarArchivoAdjunto('2')" data-options="iconCls:'glyphicon glyphicon-floppy-save'">Descargar</div>
+    @*<div onclick="eliminarArchivoAdjunto()" data-options="iconCls:'glyphicon glyphicon-trash'">Eliminar</div>*@
+</div>
+
+<div id="menu-archivo-solicitudes" class="easyui-menu" style="width:120px;">
+    <div onclick="descargarArchivoAdjunto('3')" data-options="iconCls:'glyphicon glyphicon-floppy-save'">Descargar</div>
+    @*<div onclick="eliminarArchivoAdjunto()" data-options="iconCls:'glyphicon glyphicon-trash'">Eliminar</div>*@
+</div>
+
+
+

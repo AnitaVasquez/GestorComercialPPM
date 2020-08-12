@@ -276,6 +276,16 @@
           <Property Name="porcentaje_iva" Type="numeric" Precision="18" Scale="2" />
           <Property Name="estado_comercio" Type="bit" />
         </EntityType>
+        <EntityType Name="ConsolidacionPrefactura">
+          <Key>
+            <PropertyRef Name="IDConsolidacionPrefactura" />
+          </Key>
+          <Property Name="IDConsolidacionPrefactura" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id_facturacion_safi" Type="int" Nullable="false" />
+          <Property Name="id_facturacion_safi_consolidada" Type="int" Nullable="false" />
+          <Property Name="FechaConsolidacion" Type="datetime" Nullable="false" />
+          <Property Name="UsuarioID" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="Contactos">
           <Key>
             <PropertyRef Name="id_contacto" />
@@ -1219,6 +1229,12 @@
         <Function Name="ListadoPresupuestosAprobacionEjecutivo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="id_usuario" Type="int" Mode="In" />
         </Function>
+        <Function Name="ListadoPresupuestosAprobadosEjecutivo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="id_usuario" Type="int" Mode="In" />
+        </Function>
+        <Function Name="ListadoPresupuestosAprobadosEjecutivoFinal" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="id_usuario" Type="int" Mode="In" />
+        </Function>
         <Function Name="ListadoPresupuestosFacturar" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="ListadoProducto" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="ListadoProductosGestor" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
@@ -1229,6 +1245,12 @@
           <Parameter Name="pagenum" Type="bigint" Mode="In" />
           <Parameter Name="searchText" Type="nvarchar" Mode="In" />
           <Parameter Name="filtro" Type="nvarchar(max)" Mode="In" />
+        </Function>
+        <Function Name="ListadoResumenPrefacturasAprobadas" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="id_usuario" Type="int" Mode="In" />
+        </Function>
+        <Function Name="ListadoResumenPrefacturasAprobadasHistorico" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="id_usuario" Type="int" Mode="In" />
         </Function>
         <Function Name="ListadoResumenSolicitudesSolicitante" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="ListadoRol" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
@@ -1396,6 +1418,7 @@
           <EntitySet Name="CodigoProducto" EntityType="Self.CodigoProducto" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ComentarioSolicitud" EntityType="Self.ComentarioSolicitud" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Comercio" EntityType="Self.Comercio" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ConsolidacionPrefactura" EntityType="Self.ConsolidacionPrefactura" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Contactos" EntityType="Self.Contactos" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ContactosClientes" EntityType="Self.ContactosClientes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ContactosCodigoCotizacion" EntityType="Self.ContactosCodigoCotizacion" Schema="dbo" store:Type="Tables" />
@@ -1923,6 +1946,19 @@
             <Parameter Name="tipoAccion" Mode="In" Type="Int32" />
             <Parameter Name="numeroPrefactura" Mode="In" Type="String" />
             <Parameter Name="numeroPrefacturaConsolidada" Mode="In" Type="String" />
+          </FunctionImport>
+          <EntitySet Name="ConsolidacionPrefactura" EntityType="GestionPPMModel.ConsolidacionPrefactura" />
+          <FunctionImport Name="ListadoPresupuestosAprobadosEjecutivo" ReturnType="Collection(GestionPPMModel.ListadoPresupuestosAprobadosEjecutivo)">
+          <Parameter Name="id_usuario" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="ListadoPresupuestosAprobadosEjecutivoFinal" ReturnType="Collection(GestionPPMModel.ListadoPresupuestosAprobadosEjecutivoFinal)">
+          <Parameter Name="id_usuario" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="ListadoResumenPrefacturasAprobadas" ReturnType="Collection(GestionPPMModel.ListadoResumenPrefacturasAprobadas)">
+          <Parameter Name="id_usuario" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="ListadoResumenPrefacturasAprobadasHistorico" ReturnType="Collection(GestionPPMModel.ListadoResumenPrefacturasAprobadas)">
+            <Parameter Name="id_usuario" Mode="In" Type="Int32" />
           </FunctionImport>
         </EntityContainer>
         <ComplexType Name="usp_b_lista_usuario">
@@ -5064,6 +5100,7 @@
           <Property Type="String" Name="EstadoDocumento" Nullable="false" MaxLength="7" />
           <Property Type="Int32" Name="Anulada" Nullable="false" />
           <Property Type="String" Name="MKT" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="IdSolicitud" Nullable="false" />
         </ComplexType>
         <ComplexType Name="ConsultarPresupuestoFacturados">
           <Property Type="Int32" Name="id_facturacion_safi" Nullable="false" />
@@ -5287,6 +5324,180 @@
           <Property Type="String" Name="MKT" Nullable="true" MaxLength="50" />
           <Property Type="Int64" Name="IdTipoRechazo" Nullable="true" />
           <Property Type="String" Name="MotivoRechazo" Nullable="true" MaxLength="500" />
+        </ComplexType>
+        <EntityType Name="ConsolidacionPrefactura">
+          <Key>
+            <PropertyRef Name="IDConsolidacionPrefactura" />
+          </Key>
+          <Property Name="IDConsolidacionPrefactura" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id_facturacion_safi" Type="Int32" Nullable="false" />
+          <Property Name="id_facturacion_safi_consolidada" Type="Int32" Nullable="false" />
+          <Property Name="FechaConsolidacion" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UsuarioID" Type="Int32" Nullable="false" />
+        </EntityType>
+        <ComplexType Name="ListadoPresupuestosAprobadosEjecutivo">
+          <Property Type="Int32" Name="id_facturacion_safi" Nullable="false" />
+          <Property Type="Int32" Name="id_codigo_cotizacion" Nullable="true" />
+          <Property Type="String" Name="codigo_cotizacion" Nullable="true" />
+          <Property Type="String" Name="TipoIntermediario" Nullable="true" MaxLength="150" />
+          <Property Type="Int32" Name="id_cliente" Nullable="true" />
+          <Property Type="String" Name="nombre_comercial_cliente" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="direccion" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="Ciudad" Nullable="true" MaxLength="150" />
+          <Property Type="String" Name="Ejecutivo" Nullable="true" MaxLength="351" />
+          <Property Type="Int32" Name="EjecutivoID" Nullable="true" />
+          <Property Type="String" Name="TelefonoEjecutivo" Nullable="true" MaxLength="15" />
+          <Property Type="String" Name="nombre_proyecto" Nullable="true" MaxLength="250" />
+          <Property Type="Int32" Name="UltimaIDCotizacion" Nullable="true" />
+          <Property Type="Decimal" Name="UltimaVersionCotizacion" Nullable="true" Precision="18" Scale="1" />
+          <Property Type="Decimal" Name="TotalCotizacion" Nullable="true" Precision="18" Scale="6" />
+          <Property Type="String" Name="ObservacionCotizacion" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="detalle_cotizacion" Nullable="true" />
+          <Property Type="Int32" Name="numero_pago" Nullable="true" />
+          <Property Type="Int32" Name="id_codigo_producto" Nullable="true" />
+          <Property Type="String" Name="nombre_producto" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="codigo_producto" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="cantidad" Nullable="false" />
+          <Property Type="Decimal" Name="precio_unitario" Nullable="false" Precision="18" Scale="4" />
+          <Property Type="Decimal" Name="subtotal_pago" Nullable="false" Precision="18" Scale="4" />
+          <Property Type="Decimal" Name="iva_pago" Nullable="false" Precision="18" Scale="4" />
+          <Property Type="Decimal" Name="descuento_pago" Nullable="false" Precision="18" Scale="4" />
+          <Property Type="Decimal" Name="total_pago" Nullable="false" Precision="18" Scale="4" />
+          <Property Type="DateTime" Name="fecha_prefactura" Nullable="true" Precision="23" />
+          <Property Type="String" Name="numero_prefactura" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="fecha_factura" Nullable="true" Precision="23" />
+          <Property Type="String" Name="numero_factura" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="fecha_nota_credito" Nullable="true" Precision="23" />
+          <Property Type="String" Name="numero_nota_credito" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="numero_retencion" Nullable="true" MaxLength="50" />
+          <Property Type="Boolean" Name="aprobacion_prefactura_ejecutivo" Nullable="true" />
+          <Property Type="Boolean" Name="aprobacion_final" Nullable="true" />
+          <Property Type="DateTime" Name="fecha_aprobacion_prefactura_ejecutivo" Nullable="true" Precision="23" />
+          <Property Type="Boolean" Name="prefactura_consolidada" Nullable="true" />
+          <Property Type="DateTime" Name="fecha_aprobacion_final" Nullable="true" Precision="23" />
+          <Property Type="String" Name="NombresCompletosUsuarioAprobacionInicial" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="NombresCompletosUsuarioAprobacionFinal" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="AprobacionPrefacturaEjecutivo" Nullable="false" MaxLength="2" />
+          <Property Type="String" Name="AprobacionFinal" Nullable="false" MaxLength="2" />
+          <Property Type="String" Name="PrefacturaConsolidada" Nullable="false" MaxLength="2" />
+          <Property Type="String" Name="TipoDocumento" Nullable="false" MaxLength="15" />
+          <Property Type="Boolean" Name="UtilizadoEnActa" Nullable="true" />
+          <Property Type="Boolean" Name="UtilizadoEnActaCliente" Nullable="true" />
+          <Property Type="Boolean" Name="UtilizadoEnActaContabilidad" Nullable="true" />
+          <Property Type="Boolean" Name="estado" Nullable="true" />
+          <Property Type="String" Name="EstadoDocumento" Nullable="false" MaxLength="7" />
+          <Property Type="Int32" Name="Anulada" Nullable="false" />
+          <Property Type="String" Name="MKT" Nullable="true" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="ListadoPresupuestosAprobadosEjecutivoFinal">
+          <Property Type="Int32" Name="id_facturacion_safi" Nullable="false" />
+          <Property Type="Int32" Name="id_codigo_cotizacion" Nullable="true" />
+          <Property Type="String" Name="codigo_cotizacion" Nullable="true" />
+          <Property Type="String" Name="TipoIntermediario" Nullable="true" MaxLength="150" />
+          <Property Type="Int32" Name="id_cliente" Nullable="true" />
+          <Property Type="String" Name="nombre_comercial_cliente" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="direccion" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="Ciudad" Nullable="true" MaxLength="150" />
+          <Property Type="String" Name="Ejecutivo" Nullable="true" MaxLength="351" />
+          <Property Type="Int32" Name="EjecutivoID" Nullable="true" />
+          <Property Type="String" Name="TelefonoEjecutivo" Nullable="true" MaxLength="15" />
+          <Property Type="String" Name="nombre_proyecto" Nullable="true" MaxLength="250" />
+          <Property Type="Int32" Name="UltimaIDCotizacion" Nullable="true" />
+          <Property Type="Decimal" Name="UltimaVersionCotizacion" Nullable="true" Precision="18" Scale="1" />
+          <Property Type="Decimal" Name="TotalCotizacion" Nullable="true" Precision="18" Scale="6" />
+          <Property Type="String" Name="ObservacionCotizacion" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="detalle_cotizacion" Nullable="true" />
+          <Property Type="Int32" Name="numero_pago" Nullable="true" />
+          <Property Type="Int32" Name="id_codigo_producto" Nullable="true" />
+          <Property Type="String" Name="nombre_producto" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="codigo_producto" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="cantidad" Nullable="false" />
+          <Property Type="Decimal" Name="precio_unitario" Nullable="false" Precision="18" Scale="4" />
+          <Property Type="Decimal" Name="subtotal_pago" Nullable="false" Precision="18" Scale="4" />
+          <Property Type="Decimal" Name="iva_pago" Nullable="false" Precision="18" Scale="4" />
+          <Property Type="Decimal" Name="descuento_pago" Nullable="false" Precision="18" Scale="4" />
+          <Property Type="Decimal" Name="total_pago" Nullable="false" Precision="18" Scale="4" />
+          <Property Type="DateTime" Name="fecha_prefactura" Nullable="true" Precision="23" />
+          <Property Type="String" Name="numero_prefactura" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="fecha_factura" Nullable="true" Precision="23" />
+          <Property Type="String" Name="numero_factura" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="fecha_nota_credito" Nullable="true" Precision="23" />
+          <Property Type="String" Name="numero_nota_credito" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="numero_retencion" Nullable="true" MaxLength="50" />
+          <Property Type="Boolean" Name="aprobacion_prefactura_ejecutivo" Nullable="true" />
+          <Property Type="Boolean" Name="aprobacion_final" Nullable="true" />
+          <Property Type="DateTime" Name="fecha_aprobacion_prefactura_ejecutivo" Nullable="true" Precision="23" />
+          <Property Type="Boolean" Name="prefactura_consolidada" Nullable="true" />
+          <Property Type="DateTime" Name="fecha_aprobacion_final" Nullable="true" Precision="23" />
+          <Property Type="String" Name="NombresCompletosUsuarioAprobacionInicial" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="NombresCompletosUsuarioAprobacionFinal" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="AprobacionPrefacturaEjecutivo" Nullable="false" MaxLength="2" />
+          <Property Type="String" Name="AprobacionFinal" Nullable="false" MaxLength="2" />
+          <Property Type="String" Name="PrefacturaConsolidada" Nullable="false" MaxLength="2" />
+          <Property Type="String" Name="TipoDocumento" Nullable="false" MaxLength="15" />
+          <Property Type="Boolean" Name="UtilizadoEnActa" Nullable="true" />
+          <Property Type="Boolean" Name="UtilizadoEnActaCliente" Nullable="true" />
+          <Property Type="Boolean" Name="UtilizadoEnActaContabilidad" Nullable="true" />
+          <Property Type="Boolean" Name="estado" Nullable="true" />
+          <Property Type="String" Name="EstadoDocumento" Nullable="false" MaxLength="7" />
+          <Property Type="Int32" Name="Anulada" Nullable="false" />
+          <Property Type="String" Name="MKT" Nullable="true" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="ListadoResumenPrefacturasAprobadas">
+          <Property Type="Int32" Name="id_facturacion_safi" Nullable="false" />
+          <Property Type="Int32" Name="id_codigo_cotizacion" Nullable="true" />
+          <Property Type="String" Name="codigo_cotizacion" Nullable="true" />
+          <Property Type="String" Name="TipoIntermediario" Nullable="true" MaxLength="150" />
+          <Property Type="Int32" Name="id_cliente" Nullable="true" />
+          <Property Type="String" Name="nombre_comercial_cliente" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="direccion" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="Ciudad" Nullable="true" MaxLength="150" />
+          <Property Type="String" Name="Ejecutivo" Nullable="true" MaxLength="351" />
+          <Property Type="Int32" Name="EjecutivoID" Nullable="true" />
+          <Property Type="String" Name="TelefonoEjecutivo" Nullable="true" MaxLength="15" />
+          <Property Type="String" Name="nombre_proyecto" Nullable="true" MaxLength="250" />
+          <Property Type="Int32" Name="UltimaIDCotizacion" Nullable="true" />
+          <Property Type="Decimal" Name="UltimaVersionCotizacion" Nullable="true" Precision="18" Scale="1" />
+          <Property Type="Decimal" Name="TotalCotizacion" Nullable="true" Precision="18" Scale="6" />
+          <Property Type="String" Name="ObservacionCotizacion" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="detalle_cotizacion" Nullable="true" />
+          <Property Type="Int32" Name="numero_pago" Nullable="true" />
+          <Property Type="Int32" Name="id_codigo_producto" Nullable="true" />
+          <Property Type="String" Name="nombre_producto" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="codigo_producto" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="cantidad" Nullable="false" />
+          <Property Type="Decimal" Name="precio_unitario" Nullable="false" Precision="18" Scale="4" />
+          <Property Type="Decimal" Name="subtotal_pago" Nullable="false" Precision="18" Scale="4" />
+          <Property Type="Decimal" Name="iva_pago" Nullable="false" Precision="18" Scale="4" />
+          <Property Type="Decimal" Name="descuento_pago" Nullable="false" Precision="18" Scale="4" />
+          <Property Type="Decimal" Name="total_pago" Nullable="false" Precision="18" Scale="4" />
+          <Property Type="DateTime" Name="fecha_prefactura" Nullable="true" Precision="23" />
+          <Property Type="String" Name="numero_prefactura" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="fecha_factura" Nullable="true" Precision="23" />
+          <Property Type="String" Name="numero_factura" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="fecha_nota_credito" Nullable="true" Precision="23" />
+          <Property Type="String" Name="numero_nota_credito" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="numero_retencion" Nullable="true" MaxLength="50" />
+          <Property Type="Boolean" Name="aprobacion_prefactura_ejecutivo" Nullable="true" />
+          <Property Type="Boolean" Name="aprobacion_final" Nullable="true" />
+          <Property Type="DateTime" Name="fecha_aprobacion_prefactura_ejecutivo" Nullable="true" Precision="23" />
+          <Property Type="Boolean" Name="prefactura_consolidada" Nullable="true" />
+          <Property Type="DateTime" Name="fecha_aprobacion_final" Nullable="true" Precision="23" />
+          <Property Type="String" Name="NombresCompletosUsuarioAprobacionInicial" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="NombresCompletosUsuarioAprobacionFinal" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="AprobacionPrefacturaEjecutivo" Nullable="false" MaxLength="2" />
+          <Property Type="String" Name="AprobacionFinal" Nullable="false" MaxLength="2" />
+          <Property Type="String" Name="PrefacturaConsolidada" Nullable="false" MaxLength="2" />
+          <Property Type="String" Name="TipoDocumento" Nullable="false" MaxLength="15" />
+          <Property Type="Boolean" Name="UtilizadoEnActa" Nullable="true" />
+          <Property Type="Boolean" Name="UtilizadoEnActaCliente" Nullable="true" />
+          <Property Type="Boolean" Name="UtilizadoEnActaContabilidad" Nullable="true" />
+          <Property Type="Boolean" Name="estado" Nullable="true" />
+          <Property Type="String" Name="EstadoDocumento" Nullable="false" MaxLength="7" />
+          <Property Type="Int32" Name="Anulada" Nullable="false" />
+          <Property Type="String" Name="MKT" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="FechaSolicitud" Nullable="true" MaxLength="10" />
+          <Property Type="Int32" Name="DiasEnAprobacion" Nullable="true" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -9018,6 +9229,7 @@
                 <ScalarProperty Name="EstadoDocumento" ColumnName="EstadoDocumento" />
                 <ScalarProperty Name="Anulada" ColumnName="Anulada" />
                 <ScalarProperty Name="MKT" ColumnName="MKT" />
+                <ScalarProperty Name="IdSolicitud" ColumnName="IdSolicitud" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -9507,6 +9719,253 @@
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="ActualizarPresupuestosSAFI" FunctionName="GestionPPMModel.Store.ActualizarPresupuestosSAFI" />
+          <EntitySetMapping Name="ConsolidacionPrefactura">
+            <EntityTypeMapping TypeName="GestionPPMModel.ConsolidacionPrefactura">
+              <MappingFragment StoreEntitySet="ConsolidacionPrefactura">
+                <ScalarProperty Name="UsuarioID" ColumnName="UsuarioID" />
+                <ScalarProperty Name="FechaConsolidacion" ColumnName="FechaConsolidacion" />
+                <ScalarProperty Name="id_facturacion_safi_consolidada" ColumnName="id_facturacion_safi_consolidada" />
+                <ScalarProperty Name="id_facturacion_safi" ColumnName="id_facturacion_safi" />
+                <ScalarProperty Name="IDConsolidacionPrefactura" ColumnName="IDConsolidacionPrefactura" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="ListadoPresupuestosAprobadosEjecutivo" FunctionName="GestionPPMModel.Store.ListadoPresupuestosAprobadosEjecutivo">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GestionPPMModel.ListadoPresupuestosAprobadosEjecutivo">
+                <ScalarProperty Name="id_facturacion_safi" ColumnName="id_facturacion_safi" />
+                <ScalarProperty Name="id_codigo_cotizacion" ColumnName="id_codigo_cotizacion" />
+                <ScalarProperty Name="codigo_cotizacion" ColumnName="codigo_cotizacion" />
+                <ScalarProperty Name="TipoIntermediario" ColumnName="TipoIntermediario" />
+                <ScalarProperty Name="id_cliente" ColumnName="id_cliente" />
+                <ScalarProperty Name="nombre_comercial_cliente" ColumnName="nombre_comercial_cliente" />
+                <ScalarProperty Name="direccion" ColumnName="direccion" />
+                <ScalarProperty Name="Ciudad" ColumnName="Ciudad" />
+                <ScalarProperty Name="Ejecutivo" ColumnName="Ejecutivo" />
+                <ScalarProperty Name="EjecutivoID" ColumnName="EjecutivoID" />
+                <ScalarProperty Name="TelefonoEjecutivo" ColumnName="TelefonoEjecutivo" />
+                <ScalarProperty Name="nombre_proyecto" ColumnName="nombre_proyecto" />
+                <ScalarProperty Name="UltimaIDCotizacion" ColumnName="UltimaIDCotizacion" />
+                <ScalarProperty Name="UltimaVersionCotizacion" ColumnName="UltimaVersionCotizacion" />
+                <ScalarProperty Name="TotalCotizacion" ColumnName="TotalCotizacion" />
+                <ScalarProperty Name="ObservacionCotizacion" ColumnName="ObservacionCotizacion" />
+                <ScalarProperty Name="detalle_cotizacion" ColumnName="detalle_cotizacion" />
+                <ScalarProperty Name="numero_pago" ColumnName="numero_pago" />
+                <ScalarProperty Name="id_codigo_producto" ColumnName="id_codigo_producto" />
+                <ScalarProperty Name="nombre_producto" ColumnName="nombre_producto" />
+                <ScalarProperty Name="codigo_producto" ColumnName="codigo_producto" />
+                <ScalarProperty Name="cantidad" ColumnName="cantidad" />
+                <ScalarProperty Name="precio_unitario" ColumnName="precio_unitario" />
+                <ScalarProperty Name="subtotal_pago" ColumnName="subtotal_pago" />
+                <ScalarProperty Name="iva_pago" ColumnName="iva_pago" />
+                <ScalarProperty Name="descuento_pago" ColumnName="descuento_pago" />
+                <ScalarProperty Name="total_pago" ColumnName="total_pago" />
+                <ScalarProperty Name="fecha_prefactura" ColumnName="fecha_prefactura" />
+                <ScalarProperty Name="numero_prefactura" ColumnName="numero_prefactura" />
+                <ScalarProperty Name="fecha_factura" ColumnName="fecha_factura" />
+                <ScalarProperty Name="numero_factura" ColumnName="numero_factura" />
+                <ScalarProperty Name="fecha_nota_credito" ColumnName="fecha_nota_credito" />
+                <ScalarProperty Name="numero_nota_credito" ColumnName="numero_nota_credito" />
+                <ScalarProperty Name="numero_retencion" ColumnName="numero_retencion" />
+                <ScalarProperty Name="aprobacion_prefactura_ejecutivo" ColumnName="aprobacion_prefactura_ejecutivo" />
+                <ScalarProperty Name="aprobacion_final" ColumnName="aprobacion_final" />
+                <ScalarProperty Name="fecha_aprobacion_prefactura_ejecutivo" ColumnName="fecha_aprobacion_prefactura_ejecutivo" />
+                <ScalarProperty Name="prefactura_consolidada" ColumnName="prefactura_consolidada" />
+                <ScalarProperty Name="fecha_aprobacion_final" ColumnName="fecha_aprobacion_final" />
+                <ScalarProperty Name="NombresCompletosUsuarioAprobacionInicial" ColumnName="NombresCompletosUsuarioAprobacionInicial" />
+                <ScalarProperty Name="NombresCompletosUsuarioAprobacionFinal" ColumnName="NombresCompletosUsuarioAprobacionFinal" />
+                <ScalarProperty Name="AprobacionPrefacturaEjecutivo" ColumnName="AprobacionPrefacturaEjecutivo" />
+                <ScalarProperty Name="AprobacionFinal" ColumnName="AprobacionFinal" />
+                <ScalarProperty Name="PrefacturaConsolidada" ColumnName="PrefacturaConsolidada" />
+                <ScalarProperty Name="TipoDocumento" ColumnName="TipoDocumento" />
+                <ScalarProperty Name="UtilizadoEnActa" ColumnName="UtilizadoEnActa" />
+                <ScalarProperty Name="UtilizadoEnActaCliente" ColumnName="UtilizadoEnActaCliente" />
+                <ScalarProperty Name="UtilizadoEnActaContabilidad" ColumnName="UtilizadoEnActaContabilidad" />
+                <ScalarProperty Name="estado" ColumnName="estado" />
+                <ScalarProperty Name="EstadoDocumento" ColumnName="EstadoDocumento" />
+                <ScalarProperty Name="Anulada" ColumnName="Anulada" />
+                <ScalarProperty Name="MKT" ColumnName="MKT" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="ListadoPresupuestosAprobadosEjecutivoFinal" FunctionName="GestionPPMModel.Store.ListadoPresupuestosAprobadosEjecutivoFinal">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GestionPPMModel.ListadoPresupuestosAprobadosEjecutivoFinal">
+                <ScalarProperty Name="id_facturacion_safi" ColumnName="id_facturacion_safi" />
+                <ScalarProperty Name="id_codigo_cotizacion" ColumnName="id_codigo_cotizacion" />
+                <ScalarProperty Name="codigo_cotizacion" ColumnName="codigo_cotizacion" />
+                <ScalarProperty Name="TipoIntermediario" ColumnName="TipoIntermediario" />
+                <ScalarProperty Name="id_cliente" ColumnName="id_cliente" />
+                <ScalarProperty Name="nombre_comercial_cliente" ColumnName="nombre_comercial_cliente" />
+                <ScalarProperty Name="direccion" ColumnName="direccion" />
+                <ScalarProperty Name="Ciudad" ColumnName="Ciudad" />
+                <ScalarProperty Name="Ejecutivo" ColumnName="Ejecutivo" />
+                <ScalarProperty Name="EjecutivoID" ColumnName="EjecutivoID" />
+                <ScalarProperty Name="TelefonoEjecutivo" ColumnName="TelefonoEjecutivo" />
+                <ScalarProperty Name="nombre_proyecto" ColumnName="nombre_proyecto" />
+                <ScalarProperty Name="UltimaIDCotizacion" ColumnName="UltimaIDCotizacion" />
+                <ScalarProperty Name="UltimaVersionCotizacion" ColumnName="UltimaVersionCotizacion" />
+                <ScalarProperty Name="TotalCotizacion" ColumnName="TotalCotizacion" />
+                <ScalarProperty Name="ObservacionCotizacion" ColumnName="ObservacionCotizacion" />
+                <ScalarProperty Name="detalle_cotizacion" ColumnName="detalle_cotizacion" />
+                <ScalarProperty Name="numero_pago" ColumnName="numero_pago" />
+                <ScalarProperty Name="id_codigo_producto" ColumnName="id_codigo_producto" />
+                <ScalarProperty Name="nombre_producto" ColumnName="nombre_producto" />
+                <ScalarProperty Name="codigo_producto" ColumnName="codigo_producto" />
+                <ScalarProperty Name="cantidad" ColumnName="cantidad" />
+                <ScalarProperty Name="precio_unitario" ColumnName="precio_unitario" />
+                <ScalarProperty Name="subtotal_pago" ColumnName="subtotal_pago" />
+                <ScalarProperty Name="iva_pago" ColumnName="iva_pago" />
+                <ScalarProperty Name="descuento_pago" ColumnName="descuento_pago" />
+                <ScalarProperty Name="total_pago" ColumnName="total_pago" />
+                <ScalarProperty Name="fecha_prefactura" ColumnName="fecha_prefactura" />
+                <ScalarProperty Name="numero_prefactura" ColumnName="numero_prefactura" />
+                <ScalarProperty Name="fecha_factura" ColumnName="fecha_factura" />
+                <ScalarProperty Name="numero_factura" ColumnName="numero_factura" />
+                <ScalarProperty Name="fecha_nota_credito" ColumnName="fecha_nota_credito" />
+                <ScalarProperty Name="numero_nota_credito" ColumnName="numero_nota_credito" />
+                <ScalarProperty Name="numero_retencion" ColumnName="numero_retencion" />
+                <ScalarProperty Name="aprobacion_prefactura_ejecutivo" ColumnName="aprobacion_prefactura_ejecutivo" />
+                <ScalarProperty Name="aprobacion_final" ColumnName="aprobacion_final" />
+                <ScalarProperty Name="fecha_aprobacion_prefactura_ejecutivo" ColumnName="fecha_aprobacion_prefactura_ejecutivo" />
+                <ScalarProperty Name="prefactura_consolidada" ColumnName="prefactura_consolidada" />
+                <ScalarProperty Name="fecha_aprobacion_final" ColumnName="fecha_aprobacion_final" />
+                <ScalarProperty Name="NombresCompletosUsuarioAprobacionInicial" ColumnName="NombresCompletosUsuarioAprobacionInicial" />
+                <ScalarProperty Name="NombresCompletosUsuarioAprobacionFinal" ColumnName="NombresCompletosUsuarioAprobacionFinal" />
+                <ScalarProperty Name="AprobacionPrefacturaEjecutivo" ColumnName="AprobacionPrefacturaEjecutivo" />
+                <ScalarProperty Name="AprobacionFinal" ColumnName="AprobacionFinal" />
+                <ScalarProperty Name="PrefacturaConsolidada" ColumnName="PrefacturaConsolidada" />
+                <ScalarProperty Name="TipoDocumento" ColumnName="TipoDocumento" />
+                <ScalarProperty Name="UtilizadoEnActa" ColumnName="UtilizadoEnActa" />
+                <ScalarProperty Name="UtilizadoEnActaCliente" ColumnName="UtilizadoEnActaCliente" />
+                <ScalarProperty Name="UtilizadoEnActaContabilidad" ColumnName="UtilizadoEnActaContabilidad" />
+                <ScalarProperty Name="estado" ColumnName="estado" />
+                <ScalarProperty Name="EstadoDocumento" ColumnName="EstadoDocumento" />
+                <ScalarProperty Name="Anulada" ColumnName="Anulada" />
+                <ScalarProperty Name="MKT" ColumnName="MKT" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="ListadoResumenPrefacturasAprobadas" FunctionName="GestionPPMModel.Store.ListadoResumenPrefacturasAprobadas">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GestionPPMModel.ListadoResumenPrefacturasAprobadas">
+                <ScalarProperty Name="id_facturacion_safi" ColumnName="id_facturacion_safi" />
+                <ScalarProperty Name="id_codigo_cotizacion" ColumnName="id_codigo_cotizacion" />
+                <ScalarProperty Name="codigo_cotizacion" ColumnName="codigo_cotizacion" />
+                <ScalarProperty Name="TipoIntermediario" ColumnName="TipoIntermediario" />
+                <ScalarProperty Name="id_cliente" ColumnName="id_cliente" />
+                <ScalarProperty Name="nombre_comercial_cliente" ColumnName="nombre_comercial_cliente" />
+                <ScalarProperty Name="direccion" ColumnName="direccion" />
+                <ScalarProperty Name="Ciudad" ColumnName="Ciudad" />
+                <ScalarProperty Name="Ejecutivo" ColumnName="Ejecutivo" />
+                <ScalarProperty Name="EjecutivoID" ColumnName="EjecutivoID" />
+                <ScalarProperty Name="TelefonoEjecutivo" ColumnName="TelefonoEjecutivo" />
+                <ScalarProperty Name="nombre_proyecto" ColumnName="nombre_proyecto" />
+                <ScalarProperty Name="UltimaIDCotizacion" ColumnName="UltimaIDCotizacion" />
+                <ScalarProperty Name="UltimaVersionCotizacion" ColumnName="UltimaVersionCotizacion" />
+                <ScalarProperty Name="TotalCotizacion" ColumnName="TotalCotizacion" />
+                <ScalarProperty Name="ObservacionCotizacion" ColumnName="ObservacionCotizacion" />
+                <ScalarProperty Name="detalle_cotizacion" ColumnName="detalle_cotizacion" />
+                <ScalarProperty Name="numero_pago" ColumnName="numero_pago" />
+                <ScalarProperty Name="id_codigo_producto" ColumnName="id_codigo_producto" />
+                <ScalarProperty Name="nombre_producto" ColumnName="nombre_producto" />
+                <ScalarProperty Name="codigo_producto" ColumnName="codigo_producto" />
+                <ScalarProperty Name="cantidad" ColumnName="cantidad" />
+                <ScalarProperty Name="precio_unitario" ColumnName="precio_unitario" />
+                <ScalarProperty Name="subtotal_pago" ColumnName="subtotal_pago" />
+                <ScalarProperty Name="iva_pago" ColumnName="iva_pago" />
+                <ScalarProperty Name="descuento_pago" ColumnName="descuento_pago" />
+                <ScalarProperty Name="total_pago" ColumnName="total_pago" />
+                <ScalarProperty Name="fecha_prefactura" ColumnName="fecha_prefactura" />
+                <ScalarProperty Name="numero_prefactura" ColumnName="numero_prefactura" />
+                <ScalarProperty Name="fecha_factura" ColumnName="fecha_factura" />
+                <ScalarProperty Name="numero_factura" ColumnName="numero_factura" />
+                <ScalarProperty Name="fecha_nota_credito" ColumnName="fecha_nota_credito" />
+                <ScalarProperty Name="numero_nota_credito" ColumnName="numero_nota_credito" />
+                <ScalarProperty Name="numero_retencion" ColumnName="numero_retencion" />
+                <ScalarProperty Name="aprobacion_prefactura_ejecutivo" ColumnName="aprobacion_prefactura_ejecutivo" />
+                <ScalarProperty Name="aprobacion_final" ColumnName="aprobacion_final" />
+                <ScalarProperty Name="fecha_aprobacion_prefactura_ejecutivo" ColumnName="fecha_aprobacion_prefactura_ejecutivo" />
+                <ScalarProperty Name="prefactura_consolidada" ColumnName="prefactura_consolidada" />
+                <ScalarProperty Name="fecha_aprobacion_final" ColumnName="fecha_aprobacion_final" />
+                <ScalarProperty Name="NombresCompletosUsuarioAprobacionInicial" ColumnName="NombresCompletosUsuarioAprobacionInicial" />
+                <ScalarProperty Name="NombresCompletosUsuarioAprobacionFinal" ColumnName="NombresCompletosUsuarioAprobacionFinal" />
+                <ScalarProperty Name="AprobacionPrefacturaEjecutivo" ColumnName="AprobacionPrefacturaEjecutivo" />
+                <ScalarProperty Name="AprobacionFinal" ColumnName="AprobacionFinal" />
+                <ScalarProperty Name="PrefacturaConsolidada" ColumnName="PrefacturaConsolidada" />
+                <ScalarProperty Name="TipoDocumento" ColumnName="TipoDocumento" />
+                <ScalarProperty Name="UtilizadoEnActa" ColumnName="UtilizadoEnActa" />
+                <ScalarProperty Name="UtilizadoEnActaCliente" ColumnName="UtilizadoEnActaCliente" />
+                <ScalarProperty Name="UtilizadoEnActaContabilidad" ColumnName="UtilizadoEnActaContabilidad" />
+                <ScalarProperty Name="estado" ColumnName="estado" />
+                <ScalarProperty Name="EstadoDocumento" ColumnName="EstadoDocumento" />
+                <ScalarProperty Name="Anulada" ColumnName="Anulada" />
+                <ScalarProperty Name="MKT" ColumnName="MKT" />
+                <ScalarProperty Name="FechaSolicitud" ColumnName="FechaSolicitud" />
+                <ScalarProperty Name="DiasEnAprobacion" ColumnName="DiasEnAprobacion" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="ListadoResumenPrefacturasAprobadasHistorico" FunctionName="GestionPPMModel.Store.ListadoResumenPrefacturasAprobadasHistorico">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GestionPPMModel.ListadoResumenPrefacturasAprobadas">
+                <ScalarProperty Name="id_facturacion_safi" ColumnName="id_facturacion_safi" />
+                <ScalarProperty Name="id_codigo_cotizacion" ColumnName="id_codigo_cotizacion" />
+                <ScalarProperty Name="codigo_cotizacion" ColumnName="codigo_cotizacion" />
+                <ScalarProperty Name="TipoIntermediario" ColumnName="TipoIntermediario" />
+                <ScalarProperty Name="id_cliente" ColumnName="id_cliente" />
+                <ScalarProperty Name="nombre_comercial_cliente" ColumnName="nombre_comercial_cliente" />
+                <ScalarProperty Name="direccion" ColumnName="direccion" />
+                <ScalarProperty Name="Ciudad" ColumnName="Ciudad" />
+                <ScalarProperty Name="Ejecutivo" ColumnName="Ejecutivo" />
+                <ScalarProperty Name="EjecutivoID" ColumnName="EjecutivoID" />
+                <ScalarProperty Name="TelefonoEjecutivo" ColumnName="TelefonoEjecutivo" />
+                <ScalarProperty Name="nombre_proyecto" ColumnName="nombre_proyecto" />
+                <ScalarProperty Name="UltimaIDCotizacion" ColumnName="UltimaIDCotizacion" />
+                <ScalarProperty Name="UltimaVersionCotizacion" ColumnName="UltimaVersionCotizacion" />
+                <ScalarProperty Name="TotalCotizacion" ColumnName="TotalCotizacion" />
+                <ScalarProperty Name="ObservacionCotizacion" ColumnName="ObservacionCotizacion" />
+                <ScalarProperty Name="detalle_cotizacion" ColumnName="detalle_cotizacion" />
+                <ScalarProperty Name="numero_pago" ColumnName="numero_pago" />
+                <ScalarProperty Name="id_codigo_producto" ColumnName="id_codigo_producto" />
+                <ScalarProperty Name="nombre_producto" ColumnName="nombre_producto" />
+                <ScalarProperty Name="codigo_producto" ColumnName="codigo_producto" />
+                <ScalarProperty Name="cantidad" ColumnName="cantidad" />
+                <ScalarProperty Name="precio_unitario" ColumnName="precio_unitario" />
+                <ScalarProperty Name="subtotal_pago" ColumnName="subtotal_pago" />
+                <ScalarProperty Name="iva_pago" ColumnName="iva_pago" />
+                <ScalarProperty Name="descuento_pago" ColumnName="descuento_pago" />
+                <ScalarProperty Name="total_pago" ColumnName="total_pago" />
+                <ScalarProperty Name="fecha_prefactura" ColumnName="fecha_prefactura" />
+                <ScalarProperty Name="numero_prefactura" ColumnName="numero_prefactura" />
+                <ScalarProperty Name="fecha_factura" ColumnName="fecha_factura" />
+                <ScalarProperty Name="numero_factura" ColumnName="numero_factura" />
+                <ScalarProperty Name="fecha_nota_credito" ColumnName="fecha_nota_credito" />
+                <ScalarProperty Name="numero_nota_credito" ColumnName="numero_nota_credito" />
+                <ScalarProperty Name="numero_retencion" ColumnName="numero_retencion" />
+                <ScalarProperty Name="aprobacion_prefactura_ejecutivo" ColumnName="aprobacion_prefactura_ejecutivo" />
+                <ScalarProperty Name="aprobacion_final" ColumnName="aprobacion_final" />
+                <ScalarProperty Name="fecha_aprobacion_prefactura_ejecutivo" ColumnName="fecha_aprobacion_prefactura_ejecutivo" />
+                <ScalarProperty Name="prefactura_consolidada" ColumnName="prefactura_consolidada" />
+                <ScalarProperty Name="fecha_aprobacion_final" ColumnName="fecha_aprobacion_final" />
+                <ScalarProperty Name="NombresCompletosUsuarioAprobacionInicial" ColumnName="NombresCompletosUsuarioAprobacionInicial" />
+                <ScalarProperty Name="NombresCompletosUsuarioAprobacionFinal" ColumnName="NombresCompletosUsuarioAprobacionFinal" />
+                <ScalarProperty Name="AprobacionPrefacturaEjecutivo" ColumnName="AprobacionPrefacturaEjecutivo" />
+                <ScalarProperty Name="AprobacionFinal" ColumnName="AprobacionFinal" />
+                <ScalarProperty Name="PrefacturaConsolidada" ColumnName="PrefacturaConsolidada" />
+                <ScalarProperty Name="TipoDocumento" ColumnName="TipoDocumento" />
+                <ScalarProperty Name="UtilizadoEnActa" ColumnName="UtilizadoEnActa" />
+                <ScalarProperty Name="UtilizadoEnActaCliente" ColumnName="UtilizadoEnActaCliente" />
+                <ScalarProperty Name="UtilizadoEnActaContabilidad" ColumnName="UtilizadoEnActaContabilidad" />
+                <ScalarProperty Name="estado" ColumnName="estado" />
+                <ScalarProperty Name="EstadoDocumento" ColumnName="EstadoDocumento" />
+                <ScalarProperty Name="Anulada" ColumnName="Anulada" />
+                <ScalarProperty Name="MKT" ColumnName="MKT" />
+                <ScalarProperty Name="FechaSolicitud" ColumnName="FechaSolicitud" />
+                <ScalarProperty Name="DiasEnAprobacion" ColumnName="DiasEnAprobacion" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
